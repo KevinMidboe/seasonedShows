@@ -1,2 +1,3 @@
-# seasonedShows
-seasonedShows | Your best show organizer
+# *Seasoned*: an intelligent folder creater for your shows
+
+
