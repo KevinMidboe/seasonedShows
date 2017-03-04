@@ -3,7 +3,7 @@
 # @Author: KevinMidboe
 # @Date:   2017-03-04 16:50:09
 # @Last Modified by:   KevinMidboe
-# @Last Modified time: 2017-03-04 22:15:21
+# @Last Modified time: 2017-03-05 00:49:03
 
 import os, sqlite3, re
 from fuzzywuzzy import process
@@ -14,9 +14,6 @@ showDir = '/Volumes/media/tv/'
 dbPath = 'shows.db'
 mediaExtensions = ['mkv', 'mp4', 'avi']
 subExtensions = ['srt']
-
-def XOR(list1, list2):
-	return set(list1) ^ set(list2)
 
 def getFuzzyName(query):
 	return process.extractOne(query, getShowNames().keys())
@@ -50,11 +47,17 @@ def getShowNames():
 	conn.close()
 	return returnList
 
+def XOR(list1, list2):
+	return set(list1) ^ set(list2)
+
+
+
 def getNewFolderContents():
 	showNames = getShowNames().keys()
 	folderContents = filter( lambda f: not f.startswith('.'), os.listdir(showDir))
 
 	return XOR(folderContents, showNames)
+
 
 def checkForSingleEpisodes(folderItem):
 	showName, hit = getFuzzyName(folderItem)
@@ -62,6 +65,8 @@ def checkForSingleEpisodes(folderItem):
 	
 	if episodeMatch:
 		return True
+
+
 
 def getByIdentifier(folderItem, identifier):
 	itemMatch = re.findall(identifier + '[0-9]{1,2}', folderItem)
@@ -84,7 +89,6 @@ def getItemChildren(folder):
 
 	return media_items, subtitles, trash
 
-
 def getEpisodeInfo(folderItem):
 	showName, hit = getFuzzyName(folderItem)
 	season = getByIdentifier(folderItem, 'S')
@@ -103,6 +107,7 @@ def getEpisodeInfo(folderItem):
 
 
 	return episodeInfo
+
 
 
 def main():
