@@ -1,3 +1,3 @@
-# *Seasoned*: an intelligent folder creater for your shows
+# *Seasoned*: an intelligent organizer for your shows
 
 
