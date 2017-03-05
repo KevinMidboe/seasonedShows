@@ -3,9 +3,9 @@
 # @Author: KevinMidboe
 # @Date:   2017-03-04 16:50:09
 # @Last Modified by:   KevinMidboe
-# @Last Modified time: 2017-03-05 13:09:10
+# @Last Modified time: 2017-03-05 14:48:17
 
-import os, sqlite3, re
+import os, sqlite3, re, json
 from fuzzywuzzy import process
 from langdetect import detect
 from pprint import pprint
@@ -116,20 +116,22 @@ def addToDB(episodeInfo):
 	conn = sqlite3.connect(dbPath)
 	c = conn.cursor()
 
-	original = '"' + episodeInfo['original'] + '",'
-	full_path = '"' + episodeInfo['full_path'] + '",'
-	name = '"' + episodeInfo['name'] + '",'
-	season = '"' + episodeInfo['season'] + '",'
-	episode = '"' + episodeInfo['episode'] + '",'
-	media_items = '"' + str(episodeInfo['media_items']) + '",'
-	subtitles = '"' + str(episodeInfo['subtitles']) + '",'
-	trash = '"' + str(episodeInfo['trash']) + '",'
+	original = episodeInfo['original']
+	full_path = episodeInfo['full_path']
+	name = episodeInfo['name']
+	season = episodeInfo['season']
+	episode = episodeInfo['episode']
+	media_items = json.dumps(episodeInfo['media_items'])
+	subtitles = json.dumps(episodeInfo['subtitles'])
+	trash = json.dumps(episodeInfo['trash'])
 	tweet_id = episodeInfo['tweet_id'] + ','
-	verified = '"' + episodeInfo['verified'] + '"'
+	verified = episodeInfo['verified']
 
+	print((media_items))
 	try:
-		c.execute('INSERT INTO stray_episodes VALUES ('+ original + full_path + name + season\
-	 		+ episode + media_items + subtitles + trash + 'NULL,' + verified + ')')
+		c.execute('INSERT INTO stray_episodes VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [original,\
+			full_path, name, season, episode, media_items, subtitles, trash, None, verified])
+		
 	except sqlite3.IntegrityError:
 		print('Episode already registered')
 
