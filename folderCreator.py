@@ -3,9 +3,9 @@
 # @Author: KevinMidboe
 # @Date:   2017-03-05 13:52:45
 # @Last Modified by:   KevinMidboe
-# @Last Modified time: 2017-03-05 17:00:23
+# @Last Modified time: 2017-03-05 17:01:42
 
-import sqlite3, json, os
+import sqlite3, json, os, tweepy
 from re import sub
 
 dbPath = 'shows.db'
