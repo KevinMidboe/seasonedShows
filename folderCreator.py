@@ -3,7 +3,7 @@
 # @Author: KevinMidboe
 # @Date:   2017-03-05 13:52:45
 # @Last Modified by:   KevinMidboe
-# @Last Modified time: 2017-03-05 17:01:42
+# @Last Modified time: 2017-03-05 17:07:44
 
 import sqlite3, json, os, tweepy
 from re import sub
@@ -98,7 +98,9 @@ def moveFiles(episode):
 			new_location = showDir + seasonFormat + episodeFormat + item[1]
 			os.rename(old_location, new_location)
 
-	shutil.rmtree(showDir + episode['original'])
+	# shutil.rmtree(showDir + episode['original'])
+	os.remove(showDir + episode['original'] + '/*')
+	os.rmdir(showDir + episode['original'])
 	
 	updateMovedStatus(episode)
 
