@@ -3,7 +3,7 @@
 # @Author: KevinMidboe
 # @Date:   2017-03-04 16:50:09
 # @Last Modified by:   KevinMidboe
-# @Last Modified time: 2017-03-05 16:55:53
+# @Last Modified time: 2017-03-05 17:20:04
 
 import os, sqlite3, re, json
 from fuzzywuzzy import process
@@ -13,6 +13,7 @@ from pprint import pprint
 showDir = '/media/hdd1/tv/'
 dbPath = 'shows.db'
 mediaExtensions = ['mkv', 'mp4', 'avi']
+mediaExcluders = ['sample', 'RARBG']
 subExtensions = ['srt']
 
 def getFuzzyName(query):
@@ -80,7 +81,7 @@ def getItemChildren(folder):
 	subtitles = []
 	trash = []
 	for childItem in children:
-		if childItem[-3:] in mediaExtensions:
+		if childItem[-3:] in mediaExtensions and childItem[:-4] not in mediaExcluders:
 			media_items.append([childItem, removeUploader(childItem)])
 		elif childItem[-3:] in subExtensions:
 			subtitles.append([childItem, removeUploader(childItem), getLanguage(showDir + folder + '/', childItem)])
