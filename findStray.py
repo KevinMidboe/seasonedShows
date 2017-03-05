@@ -10,7 +10,7 @@ from fuzzywuzzy import process
 from langdetect import detect
 from pprint import pprint
 
-showDir = '/Volumes/media/tv/'
+showDir = '/media/hdd1/tv/'
 dbPath = 'shows.db'
 mediaExtensions = ['mkv', 'mp4', 'avi']
 subExtensions = ['srt']
@@ -24,7 +24,7 @@ def removeUploader(mediaItem):
 		uploader, ext = match.group(0).split('.')
 		return uploader
 
-	return subtitles
+	return ''
 
 def getLanguage(path, subtitles):
 	f = open(path + subtitles, 'r', encoding= 'ISO-8859-15')
