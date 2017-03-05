@@ -3,12 +3,19 @@
 # @Author: KevinMidboe
 # @Date:   2017-03-05 13:52:45
 # @Last Modified by:   KevinMidboe
-# @Last Modified time: 2017-03-05 16:45:31
+# @Last Modified time: 2017-03-05 16:53:40
 
 import sqlite3, json, os
 from re import sub
 
 dbPath = 'shows.db'
+
+consumer_key, consumer_secret = 'yvVTrxNtVsLkoHxKWxh4xvgjg', '39OW6Q8fIKDXvTPPCaEJDULcYaHC5XZ3fe7HHCGtdepBKui2jK'
+access_token, access_token_secret = '3214835117-OXVVLYeqUScRAPMqfVw5hS8NI63zPnWOVK63C5I', 'ClcGnF8vW6DbvgRgjwU6YjDc9f2oxMzOvUAN8kzpsmbcL'
+
+auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
+auth.set_access_token(access_token, access_token_secret)
+api = tweepy.API(auth)
 
 def unpackEpisodes():
 	conn = sqlite3.connect(dbPath)
@@ -94,7 +101,7 @@ def moveFiles(episode):
 	shutil.rmtree(showDir + episode['original'])
 	
 	updateMovedStatus(episode)
-	
+
 
 def findVerified():
 	episodes = unpackEpisodes()
