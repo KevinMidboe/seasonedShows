@@ -32,7 +32,7 @@ def unpackEpisodes():
 
 
 def createFolders(episode):
-	showDir = '/Volumes/media/tv/%s/'% episode['name']
+	showDir = '/media/hdd1/tv/%s/'% episode['name']
 	episodeFormat = '%s S%sE%s/'% (episode['name'], episode['season'], episode['episode'])
 	seasonFormat = '%s Season %s/'% (episode['name'], episode['season'])
 
@@ -74,7 +74,7 @@ def updateMovedStatus(episodeDict):
 	conn.close()
 
 def moveFiles(episode):
-	showDir = '/Volumes/media/tv/'
+	showDir = '/media/hdd1/tv/'
 	episodeFormat = '%s S%sE%s/'% (episode['name'], episode['season'], episode['episode'])
 	seasonFormat = '%s/%s Season %s/'% (episode['name'], episode['name'], episode['season'])
 	
