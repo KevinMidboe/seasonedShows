@@ -3,7 +3,7 @@
 # @Author: KevinMidboe
 # @Date:   2017-03-05 13:52:45
 # @Last Modified by:   KevinMidboe
-# @Last Modified time: 2017-03-05 16:39:27
+# @Last Modified time: 2017-03-05 16:45:31
 
 import sqlite3, json, os
 from re import sub
@@ -91,9 +91,10 @@ def moveFiles(episode):
 			new_location = showDir + seasonFormat + episodeFormat + item[1]
 			os.rename(old_location, new_location)
 
+	shutil.rmtree(showDir + episode['original'])
+	
 	updateMovedStatus(episode)
-
-
+	
 
 def findVerified():
 	episodes = unpackEpisodes()
