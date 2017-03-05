@@ -3,7 +3,7 @@
 # @Author: KevinMidboe
 # @Date:   2017-03-05 13:52:45
 # @Last Modified by:   KevinMidboe
-# @Last Modified time: 2017-03-05 16:53:40
+# @Last Modified time: 2017-03-05 17:00:23
 
 import sqlite3, json, os
 from re import sub
@@ -101,6 +101,8 @@ def moveFiles(episode):
 	shutil.rmtree(showDir + episode['original'])
 	
 	updateMovedStatus(episode)
+
+	api.create_favorite(episode['response_id'])
 
 
 def findVerified():
