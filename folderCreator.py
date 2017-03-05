@@ -3,7 +3,7 @@
 # @Author: KevinMidboe
 # @Date:   2017-03-05 13:52:45
 # @Last Modified by:   KevinMidboe
-# @Last Modified time: 2017-03-05 15:53:04
+# @Last Modified time: 2017-03-05 16:39:27
 
 import sqlite3, json, os
 from re import sub
@@ -80,14 +80,16 @@ def moveFiles(episode):
 	
 	newMediaitems = newnameMediaitems(episode['media_items'])
 	for item in newMediaitems:
-		print(showDir + episode['original'] + '/' + item[0])
-		print(showDir + seasonFormat + episodeFormat + item[1] + '\n')
+		old_location = showDir + episode['original'] + '/' + item[0]
+		new_location = showDir + seasonFormat + episodeFormat + item[1]
+		os.rename(old_location, new_location)
 	
 	if episode['subtitles']: 
 		newSubtitles = newnameSubtitles(episode['subtitles'])
 		for item in newSubtitles:
-			print(showDir + episode['original'] + '/' + item[0])
-			print(showDir + seasonFormat + episodeFormat + item[1] + '\n')
+			old_location = showDir + episode['original'] + '/' + item[0]
+			new_location = showDir + seasonFormat + episodeFormat + item[1]
+			os.rename(old_location, new_location)
 
 	updateMovedStatus(episode)
 
