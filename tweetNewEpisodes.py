@@ -3,7 +3,7 @@
 # @Author: KevinMidboe
 # @Date:   2017-03-04 16:50:09
 # @Last Modified by:   KevinMidboe
-# @Last Modified time: 2017-03-05 13:07:08
+# @Last Modified time: 2017-03-05 15:54:31
 
 import tweepy, sqlite3
 from pasteee import Paste
@@ -72,7 +72,7 @@ def tweetEpisode(episode):
 	updateTweetID(episode, tweet_id)
 
 
-def tweetNewEpisodes():
+def lookForNewEpisodes():
 	conn = sqlite3.connect(dbPath)
 	c = conn.cursor()
 
@@ -125,9 +125,10 @@ def checkForReply():
 			getReply(tweet)
 
 
-def main():
-	tweetNewEpisodes()
+def tweetNewEpisodes():
+	lookForNewEpisodes()
 	checkForReply()
 
 if __name__ == '__main__':
-	main()
+	tweetNewEpisodes()
+	

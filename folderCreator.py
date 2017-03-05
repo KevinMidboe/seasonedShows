@@ -3,7 +3,7 @@
 # @Author: KevinMidboe
 # @Date:   2017-03-05 13:52:45
 # @Last Modified by:   KevinMidboe
-# @Last Modified time: 2017-03-05 15:22:30
+# @Last Modified time: 2017-03-05 15:53:04
 
 import sqlite3, json, os
 from re import sub
@@ -14,7 +14,7 @@ def unpackEpisodes():
 	conn = sqlite3.connect(dbPath)
 	c = conn.cursor()
 
-	cursor = c.execute('SELECT * FROM stray_episodes WHERE verified = 1')
+	cursor = c.execute('SELECT * FROM stray_episodes WHERE verified = 1 AND moved = 0')
 	episodeList = []
 	for row in c.fetchall():
 		columnNames = [description[0] for description in cursor.description]
@@ -50,7 +50,7 @@ def newnameMediaitems(media_items):
 
 	returnList = []
 	for item in media_items:
-		returnList.append([item[0], sub(item[1], '', item[0])])
+		returnList.append([item[0], item[0].replace(item[1], '')])
 
 	return returnList
 
@@ -59,10 +59,19 @@ def newnameSubtitles(subtitles):
 
 	returnList = []
 	for item in subtitles:
-		returnList.append([item[0], sub(item[1], '.' + item[2], item[0])])
+		returnList.append([item[0], item[0].replace(item[1], '.' + item[2])])
 
 	return returnList
 
+
+def updateMovedStatus(episodeDict):
+	conn = sqlite3.connect(dbPath)
+	c = conn.cursor()
+
+	c.execute('UPDATE stray_episodes SET moved = 1 WHERE original is "' + episodeDict['original'] + '"')
+
+	conn.commit()
+	conn.close()
 
 def moveFiles(episode):
 	showDir = '/Volumes/media/tv/'
@@ -80,6 +89,8 @@ def moveFiles(episode):
 			print(showDir + episode['original'] + '/' + item[0])
 			print(showDir + seasonFormat + episodeFormat + item[1] + '\n')
 
+	updateMovedStatus(episode)
+
 
 
 def findVerified():
@@ -88,12 +99,8 @@ def findVerified():
 		for episode in episodes:
 			createFolders(episode)
 			moveFiles(episode)
-	
-	# for item in c.fetchall():
-		# print(item)
 
-def main():
-	findVerified()
 
 if __name__ == '__main__':
-	main()
+	findVerified()
+	

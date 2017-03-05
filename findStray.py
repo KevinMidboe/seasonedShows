@@ -3,7 +3,7 @@
 # @Author: KevinMidboe
 # @Date:   2017-03-04 16:50:09
 # @Last Modified by:   KevinMidboe
-# @Last Modified time: 2017-03-05 14:48:17
+# @Last Modified time: 2017-03-05 15:53:19
 
 import os, sqlite3, re, json
 from fuzzywuzzy import process
@@ -105,7 +105,8 @@ def getEpisodeInfo(folderItem):
 		'subtitles': subtitles,
 		'trash': trash, 
 		'tweet_id': 'NULL',
-		'verified': '0'}
+		'verified': '0',
+		'moved': '0'}
 
 
 	addToDB(episodeInfo)
@@ -126,11 +127,12 @@ def addToDB(episodeInfo):
 	trash = json.dumps(episodeInfo['trash'])
 	tweet_id = episodeInfo['tweet_id'] + ','
 	verified = episodeInfo['verified']
+	moved = episodeInfo['moved']
 
 	print((media_items))
 	try:
-		c.execute('INSERT INTO stray_episodes VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [original,\
-			full_path, name, season, episode, media_items, subtitles, trash, None, verified])
+		c.execute('INSERT INTO stray_episodes VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [original,\
+			full_path, name, season, episode, media_items, subtitles, trash, None, verified, moved])
 		
 	except sqlite3.IntegrityError:
 		print('Episode already registered')
@@ -138,11 +140,11 @@ def addToDB(episodeInfo):
 	conn.commit()
 	conn.close()
 
-def main():
+def findStray():
 	for item in getNewFolderContents():
 		if checkForSingleEpisodes(item):
 			pprint(getEpisodeInfo(item))
 
 
 if __name__ == '__main__':
-	main()
+	findStray()
