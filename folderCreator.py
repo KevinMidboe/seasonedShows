@@ -3,7 +3,7 @@
 # @Author: KevinMidboe
 # @Date:   2017-03-05 13:52:45
 # @Last Modified by:   KevinMidboe
-# @Last Modified time: 2017-03-05 17:11:57
+# @Last Modified time: 2017-03-05 17:14:25
 
 import sqlite3, json, os, tweepy
 from re import sub
@@ -101,7 +101,7 @@ def moveFiles(episode):
 	# shutil.rmtree(showDir + episode['original'])
 	if episode['trash']:
 		for trash in json.loads(episode['trash']):
-			os.remove(showDir + episode['original'] + trash)
+			os.remove(showDir + episode['original'] + '/'+ trash)
 	
 	os.rmdir(showDir + episode['original'])
 	
