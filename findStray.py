@@ -3,7 +3,7 @@
 # @Author: KevinMidboe
 # @Date:   2017-03-04 16:50:09
 # @Last Modified by:   KevinMidboe
-# @Last Modified time: 2017-03-05 15:53:19
+# @Last Modified time: 2017-03-05 16:55:53
 
 import os, sqlite3, re, json
 from fuzzywuzzy import process
@@ -104,7 +104,8 @@ def getEpisodeInfo(folderItem):
 		'media_items': media_items,
 		'subtitles': subtitles,
 		'trash': trash, 
-		'tweet_id': 'NULL',
+		'tweet_id': None,
+		'reponse_id': None,
 		'verified': '0',
 		'moved': '0'}
 
@@ -125,14 +126,15 @@ def addToDB(episodeInfo):
 	media_items = json.dumps(episodeInfo['media_items'])
 	subtitles = json.dumps(episodeInfo['subtitles'])
 	trash = json.dumps(episodeInfo['trash'])
-	tweet_id = episodeInfo['tweet_id'] + ','
+	tweet_id = episodeInfo['tweet_id']
+	reponse_id = episodeInfo['reponse_id']
 	verified = episodeInfo['verified']
 	moved = episodeInfo['moved']
 
 	print((media_items))
 	try:
-		c.execute('INSERT INTO stray_episodes VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [original,\
-			full_path, name, season, episode, media_items, subtitles, trash, None, verified, moved])
+		c.execute('INSERT INTO stray_episodes VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [original,\
+			full_path, name, season, episode, media_items, subtitles, trash, tweet_id, reponse_id, verified, moved])
 		
 	except sqlite3.IntegrityError:
 		print('Episode already registered')
