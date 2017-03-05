@@ -3,7 +3,7 @@
 # @Author: KevinMidboe
 # @Date:   2017-03-04 16:50:09
 # @Last Modified by:   KevinMidboe
-# @Last Modified time: 2017-03-05 15:54:31
+# @Last Modified time: 2017-03-05 16:51:35
 
 import tweepy, sqlite3
 from pasteee import Paste
@@ -90,11 +90,11 @@ def lookForNewEpisodes():
 def getLastTweets(user, count=1):
 	return api.user_timeline(screen_name=user,count=count)
 
-def verifyByID(id):
+def verifyByID(id, reponse_id):
 	conn = sqlite3.connect(dbPath)
 	c = conn.cursor()
 
-	c.execute('UPDATE stray_episodes SET verified = 1 WHERE tweet_id is "' + id + '"')
+	c.execute('UPDATE stray_episodes SET verified = 1, response_id = ' + reponse_id + ' WHERE tweet_id is "' + id + '"')
 
 	conn.commit()
 	conn.close()
@@ -102,7 +102,7 @@ def verifyByID(id):
 def parseReply(tweet):
 	if b'\xf0\x9f\x91\x8d' in tweet.text.encode('utf-8'):
 		print('Verified!')
-		verifyByID(tweet.in_reply_to_status_id_str)
+		verifyByID(tweet.in_reply_to_status_id_str, tweet.id_str)
 
 def getReply(tweet):
 	conn = sqlite3.connect(dbPath)
