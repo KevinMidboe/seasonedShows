@@ -7,12 +7,12 @@
 
 from findStray import findStray
 from tweetNewEpisodes import tweetNewEpisodes
-from folderCreator import folderCreator
+from folderCreator import findVerified
 
 def main():
 	findStray()
 	tweetNewEpisodes()
-	folderCreator()
+	findVerified()
 
 if __name__ == '__main__':
 	main()
