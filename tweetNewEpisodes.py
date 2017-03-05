@@ -47,8 +47,9 @@ def createPasteee(episode):
 	return Paste(prettifyEpisode(episode), private=False, desc="My first paste", views=10)
 
 def tweetString(episode):
-	tweetString = '@KevinMidboe\nAdded episode:\n' + episode['name'] + ' S' + episode['season']\
-	 + 'E' + episode['episode'] + '\nDetails: '
+	print(type(episode['episode']), episode)
+	tweetString = '@KevinMidboe\nAdded episode:\n' + episode['name'] + ' S' + str(episode['season'])\
+	 + 'E' + str(episode['episode']) + '\nDetails: '
 	return tweetString
 
 # TODO What if error when tweeting, no id_str
@@ -100,7 +101,7 @@ def verifyByID(id):
 
 def parseReply(tweet):
 	if b'\xf0\x9f\x91\x8d' in tweet.text.encode('utf-8'):
-		print('👍')
+		print('Verified!')
 		verifyByID(tweet.in_reply_to_status_id_str)
 
 def getReply(tweet):
