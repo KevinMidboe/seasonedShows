@@ -73,24 +73,11 @@ def tweetEpisode(episode):
 	updateTweetID(episode, tweet_id)
 
 
-def lookForNewEpisodes():
-	conn = sqlite3.connect(dbPath)
-	c = conn.cursor()
-
-	c.execute('SELECT * FROM stray_episodes WHERE tweet_id is NULL')
-
-	for row in c.fetchall():
-		episode = unpackEpisode(row)
-		tweetEpisode(episode)
-
-	conn.close()
-
-
 
 def getLastTweets(user, count=1):
-	return api.user_timeline(screen_name=user,count=count)
+	return api.(screen_name=user,count=count)
 
-def verifyByID(id, reponse_id):
+def verifyByID(id, reponse_iduser_timeline):
 	conn = sqlite3.connect(dbPath)
 	c = conn.cursor()
 
@@ -99,6 +86,7 @@ def verifyByID(id, reponse_id):
 	conn.commit()
 	conn.close()
 
+# TODO Add more parsing than confirm
 def parseReply(tweet):
 	if b'\xf0\x9f\x91\x8d' in tweet.text.encode('utf-8'):
 		print('Verified!')
@@ -119,7 +107,21 @@ def getReply(tweet):
 		parseReply(tweet)
 
 	conn.close()
-	
+
+
+
+def lookForNewEpisodes():
+	conn = sqlite3.connect(dbPath)
+	c = conn.cursor()
+
+	c.execute('SELECT * FROM stray_episodes WHERE tweet_id is NULL')
+
+	for row in c.fetchall():
+		episode = unpackEpisode(row)
+		tweetEpisode(episode)
+
+	conn.close()
+
 def checkForReply():
 	for tweet in getLastTweets('KevinMidboe', 10):
 		if tweet.in_reply_to_status_id_str != None:
