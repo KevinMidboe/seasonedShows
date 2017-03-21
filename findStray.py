@@ -52,26 +52,11 @@ def XOR(list1, list2):
 	return set(list1) ^ set(list2)
 
 
-
-def getNewFolderContents():
-	showNames = getShowNames().keys()
-	folderContents = filter( lambda f: not f.startswith('.'), os.listdir(showDir))
-
-	return XOR(folderContents, showNames)
-
-
-def checkForSingleEpisodes(folderItem):
-	showName, hit = getFuzzyName(folderItem)
-	episodeMatch = re.findall(re.sub(' ', '.', showName)+'\.S[0-9]{1,2}E[0-9]{1,2}\.', folderItem)
-	
-	if episodeMatch:
-		return True
-
-
-
 def getByIdentifier(folderItem, identifier):
 	itemMatch = re.findall(identifier + '[0-9]{1,2}', folderItem)
+	# TODO Should be more precise than first item in list
 	item = re.sub(identifier, '', itemMatch[0])
+	# TODO Should be checking for errors
 	return item 
 
 def getItemChildren(folder):
@@ -90,31 +75,7 @@ def getItemChildren(folder):
 
 	return media_items, subtitles, trash
 
-def getEpisodeInfo(folderItem):
-	showName, hit = getFuzzyName(folderItem)
-	season = getByIdentifier(folderItem, 'S')
-	episode = getByIdentifier(folderItem, 'E')
-	media_items, subtitles, trash = getItemChildren(folderItem)
 	
-	episodeInfo = []
-	episodeInfo = {'original': folderItem, 
-		'full_path': showDir + folderItem,
-		'name': showName, 
-		'season': season, 
-		'episode': episode,
-		'media_items': media_items,
-		'subtitles': subtitles,
-		'trash': trash, 
-		'tweet_id': None,
-		'reponse_id': None,
-		'verified': '0',
-		'moved': '0'}
-
-
-	addToDB(episodeInfo)
-	return episodeInfo
-
-
 def addToDB(episodeInfo):
 	conn = sqlite3.connect(dbPath)
 	c = conn.cursor()
@@ -143,7 +104,56 @@ def addToDB(episodeInfo):
 	conn.commit()
 	conn.close()
 
+
+
+
+def getNewFolderContents():
+	# TODO Should not do on keys, if empty.
+	showNames = getShowNames().keys()
+	# TODO Better way to filter non dotfiles, dirread in filter?
+	# Should maybe all dirs be checked at start?
+	folderContents = filter( lambda f: not f.startswith('.'), os.listdir(showDir))
+
+	return XOR(folderContents, showNames) # OK
+
+
+def checkForSingleEpisodes(folderItem):
+	# TODO also if empty, should be checked earlier
+	showName, hit = getFuzzyName(folderItem)
+
+	episodeMatch = re.findall(re.sub(' ', '.', showName)+'\.S[0-9]{1,2}E[0-9]{1,2}\.', folderItem)
+	if episodeMatch:
+		return True  # OK
+
+
+def getEpisodeInfo(folderItem):
+	showName, hit = getFuzzyName(folderItem)
+	season = getByIdentifier(folderItem, 'S')
+	episode = getByIdentifier(folderItem, 'E')
+	media_items, subtitles, trash = getItemChildren(folderItem)
+	
+	episodeInfo = []
+	episodeInfo = {'original': folderItem, 
+		'full_path': showDir + folderItem,
+		'name': showName, 
+		'season': season, 
+		'episode': episode,
+		'media_items': media_items,
+		'subtitles': subtitles,
+		'trash': trash, 
+		'tweet_id': None,
+		'reponse_id': None,
+		'verified': '0',
+		'moved': '0'}
+
+
+	addToDB(episodeInfo)
+	return episodeInfo
+
+
+
 def findStray():
+	# TODO What if null or tries to pass down error
 	for item in getNewFolderContents():
 		if checkForSingleEpisodes(item):
 			pprint(getEpisodeInfo(item))

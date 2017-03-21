@@ -17,40 +17,6 @@ auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
 auth.set_access_token(access_token, access_token_secret)
 api = tweepy.API(auth)
 
-def unpackEpisodes():
-	conn = sqlite3.connect(dbPath)
-	c = conn.cursor()
-
-	cursor = c.execute('SELECT * FROM stray_episodes WHERE verified = 1 AND moved = 0')
-	episodeList = []
-	for row in c.fetchall():
-		columnNames = [description[0] for description in cursor.description]
-		
-		episodeDict = dict.fromkeys(columnNames)
-		
-		for i, key in enumerate(episodeDict.keys()):
-			episodeDict[key] = row[i]
-
-		episodeList.append(episodeDict)
-	
-	conn.close()
-
-	return episodeList
-
-
-def createFolders(episode):
-	showDir = '/media/hdd1/tv/%s/'% episode['name']
-	episodeFormat = '%s S%sE%s/'% (episode['name'], episode['season'], episode['episode'])
-	seasonFormat = '%s Season %s/'% (episode['name'], episode['season'])
-
-	if not os.path.isdir(showDir + seasonFormat):
-		os.makedirs(showDir + seasonFormat)
-
-	if not os.path.isdir(showDir + seasonFormat + episodeFormat):
-		os.makedirs(showDir + seasonFormat + episodeFormat)
-
-
-
 def newnameMediaitems(media_items):
 	# media_items = [['New.Girl.S06E18.720p.HDTV.x264-EZTV.srt', '-EZTV', 'nl'], ['New.Girl.S06E18.720p.HDTV.x264-FLEET.srt', '-FLEET', 'en']]
 	media_items = json.loads(media_items)
@@ -80,11 +46,46 @@ def updateMovedStatus(episodeDict):
 	conn.commit()
 	conn.close()
 
+
+
+def unpackEpisodes():
+	conn = sqlite3.connect(dbPath)
+	c = conn.cursor()
+
+	cursor = c.execute('SELECT * FROM stray_episodes WHERE verified = 1 AND moved = 0')
+	episodeList = []
+	for row in c.fetchall():
+		columnNames = [description[0] for description in cursor.description]
+		
+		episodeDict = dict.fromkeys(columnNames)
+		
+		for i, key in enumerate(episodeDict.keys()):
+			episodeDict[key] = row[i]
+
+		episodeList.append(episodeDict)
+	
+	conn.close()
+
+	return episodeList
+
+def createFolders(episode):
+	showDir = '/media/hdd1/tv/%s/'% episode['name']
+	episodeFormat = '%s S%sE%s/'% (episode['name'], episode['season'], episode['episode'])
+	seasonFormat = '%s Season %s/'% (episode['name'], episode['season'])
+
+	if not os.path.isdir(showDir + seasonFormat):
+		os.makedirs(showDir + seasonFormat)
+
+	if not os.path.isdir(showDir + seasonFormat + episodeFormat):
+		os.makedirs(showDir + seasonFormat + episodeFormat)
+
 def moveFiles(episode):
+	# TODO All this should be imported from config file
 	showDir = '/media/hdd1/tv/'
 	episodeFormat = '%s S%sE%s/'% (episode['name'], episode['season'], episode['episode'])
 	seasonFormat = '%s/%s Season %s/'% (episode['name'], episode['name'], episode['season'])
 	
+	# TODO All this is pretty ballsy to do this hard/stict.
 	newMediaitems = newnameMediaitems(episode['media_items'])
 	for item in newMediaitems:
 		old_location = showDir + episode['original'] + '/' + item[0]
@@ -103,6 +104,7 @@ def moveFiles(episode):
 		for trash in json.loads(episode['trash']):
 			os.remove(showDir + episode['original'] + '/'+ trash)
 	
+	# TODO Maybe move to delete folder instead, than user can dump.
 	os.rmdir(showDir + episode['original'])
 	
 	updateMovedStatus(episode)
