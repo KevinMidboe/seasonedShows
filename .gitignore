@@ -4,3 +4,4 @@ shows.db
 .DS_Store
 env.py
 modules/env.py
+node_modules
