@@ -38,6 +38,7 @@ router.get('/seasoned', function(req, res) {
 				fn(row)
 		})
 	  });
+		db.close();
 	}
 
 	getEpisode(id, function(episode){
@@ -47,7 +48,30 @@ router.get('/seasoned', function(req, res) {
 });
 
 router.post('/seasoned', function (req, res) {
-	console.log(req.body);
+	console.log(req.body['id']);
+
+	var db_path = 'shows.db';
+	var db = new sqlite3.Database(db_path);
+	var UPDATE_DATA = "UPDATE stray_eps SET verified=$verified WHERE id=$id";
+	db.serialize(function() {
+		// var stmt = db.prepare("UPDATE stray_eps SET verified=? WHERE id=?");
+		// for (key in req.body) {
+		// 	stmt.run(req.body[key]);
+		// 	console.log(req.body[key]);
+		// }
+		db.run(UPDATE_DATA, {$verified: req.body['verified'], $id: req.body['id']}, function(err) {
+	        if (err) {
+	            console.log(err);
+	        } else {
+	            console.log('UPDATE DATA');
+	        }
+	    });
+		// stmt.run([req.body['verified'], req.body['id']]);
+		// stmt.finalize();
+		db.close();
+	});
+	res.setHeader('Access-Control-Allow-Origin', 'https://kevinmidboe.com');
+	res.json({message: 'updated'});
 })
 // more routes for our API will happen here
 
