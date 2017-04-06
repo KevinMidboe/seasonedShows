@@ -7,15 +7,7 @@
 var express    = require('express');        // call express
 var app        = express();                 // define our app using express
 var bodyParser = require('body-parser');
-var fs = require('fs');
-var https = require('https');
 var sqlite3 = require('sqlite3').verbose(); 
-
-var options = {
-   key  : fs.readFileSync('certificates/server.key'),
-   cert : fs.readFileSync('certificates/server.crt')
-};
-
 
 
 // configure app to use bodyParser()
@@ -53,6 +45,10 @@ router.get('/seasoned', function(req, res) {
 		res.json({episode}); // this is where you get the return value
 	});
 });
+
+router.post('/seasoned', function (req, res) {
+	console.log(req.body);
+})
 // more routes for our API will happen here
 
 // REGISTER OUR ROUTES -------------------------------
@@ -61,6 +57,5 @@ app.use('/api', router);
 
 // START THE SERVER
 // =============================================================================
-https.createServer(options, app).listen(port, function () {
-	console.log('Magic happens on port ' + port);
-});
+app.listen(port);
+console.log('Magic happens on port ' + port);
