@@ -7,7 +7,15 @@
 var express    = require('express');        // call express
 var app        = express();                 // define our app using express
 var bodyParser = require('body-parser');
+var fs = require('fs');
+var https = require('https');
 var sqlite3 = require('sqlite3').verbose(); 
+
+var options = {
+   key  : fs.readFileSync('server.key'),
+   cert : fs.readFileSync('server.crt')
+};
+
 
 
 // configure app to use bodyParser()
@@ -53,5 +61,6 @@ app.use('/api', router);
 
 // START THE SERVER
 // =============================================================================
-app.listen(port);
-console.log('Magic happens on port ' + port);
+https.createServer(options, app).listen(port, function () {
+	console.log('Magic happens on port ' + port);
+});
