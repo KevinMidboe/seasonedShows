@@ -75,9 +75,9 @@ def tweetEpisode(episode):
 
 
 def getLastTweets(user, count=1):
-	return api.(screen_name=user,count=count)
+	return api.user_timeline(screen_name=user,count=count)
 
-def verifyByID(id, reponse_iduser_timeline):
+def verifyByID(id, reponse_id):
 	conn = sqlite3.connect(dbPath)
 	c = conn.cursor()
 
