@@ -31,18 +31,18 @@ router.get('/seasoned', function(req, res) {
 	var db = new sqlite3.Database(db_path);
 	var returnMsg;
 	var id = req.param('id');
-	db.serialize(function() {
-		db.get("SELECT * FROM stray_eps WHERE id = '" + id + "'", function(err, row) {  
-			returnMsg = row;
-			// res.json({message: row});
-            		// returnList.push(row.original, row.full_path, row.last_name);    
-    		}), console.log(returnMsg);
-	}), console.log(returnMsg);   
-	// console.log(returnMsg);
-	// db.close();
-	db.close();
-	res.json({message: toString(returnMsg)});	
-	//console.log(returnMsg);
+
+	function getEpisode(id, fn){
+		db.serialize(function() {
+			db.get("SELECT * FROM stray_eps WHERE id = '" + id + "'", function(err, row) {
+				fn(row)
+		})
+	  });
+	}
+
+	getEpisode(id, function(episode){
+	  res.json({episode}); // this is where you get the return value
+	});
 });
 // more routes for our API will happen here
 
