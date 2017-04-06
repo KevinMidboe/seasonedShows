@@ -41,7 +41,8 @@ router.get('/seasoned', function(req, res) {
 	}
 
 	getEpisode(id, function(episode){
-	  res.json({episode}); // this is where you get the return value
+		res.setHeader('Access-Control-Allow-Origin', 'https://kevinmidboe.com');
+		res.json({episode}); // this is where you get the return value
 	});
 });
 // more routes for our API will happen here
