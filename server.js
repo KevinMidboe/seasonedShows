@@ -12,8 +12,8 @@ var https = require('https');
 var sqlite3 = require('sqlite3').verbose(); 
 
 var options = {
-   key  : fs.readFileSync('server.key'),
-   cert : fs.readFileSync('server.crt')
+   key  : fs.readFileSync('certificates/server.key'),
+   cert : fs.readFileSync('certificates/server.crt')
 };
 
 
