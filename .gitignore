@@ -2,6 +2,5 @@ __pycache__
 nohup.out
 shows.db
 .DS_Store
-env.py
-modules/env.py
+env_variables.py
 node_modules
