@@ -3,27 +3,52 @@
 # @Author: KevinMidboe
 # @Date:   2017-04-05 18:40:11
 # @Last Modified by:   KevinMidboe
-# @Last Modified time: 2017-04-05 23:49:40
-import os.path, hashlib, time, glob, sqlite3, re
+# @Last Modified time: 2017-04-06 15:58:48
+import os.path, hashlib, time, glob, sqlite3, re, json, tweepy
 from functools import reduce
 from fuzzywuzzy import process
+from langdetect import detect
 from time import sleep
 import env
 
 dirHash = None
 childList = []
 
+class twitter(object):
+	def __init__(self):
+		if '' in [env.consumer_key, env.consumer_secret, env.access_token, env.access_token_secret]:
+			print('not set')
+		
+		self.consumer_key = env.consumer_key
+		self.consumer_secret = env.consumer_secret
+		self.access_token = env.access_token
+		self.access_token_secret = env.access_token_secret
+
+		self.authenticate()
+
+	def authenticate(self):
+		auth = tweepy.OAuthHandler(self.consumer_key, self.consumer_secret)
+		auth.set_access_token(self.access_token, self.access_token_secret)
+		self.api_token = tweepy.API(auth)
+
+	def api(self):
+		return self.api_token
+
 class mediaItem(object):
 	def __init__(self, parent, childrenList):
 		self.parent = parent
 		self.children = childrenList
-		self.seriesName = self.findSeriesName()
+		self._id = hashlib.md5("b'{}'".format(self.parent).encode()).hexdigest()[:6]
+		self.showName = self.findSeriesName()
 		self.season = self.getSeasonNumber()
 		self.episode = self.getEpisodeNumber()
 		self.videoFiles = []
 		self.subtitles = []
 		self.trash = []
 		self.getMediaItems()
+
+		self.saveToDB()
+		self.notifyInsert()
 	
 
 	def findSeriesName(self):
@@ -33,6 +58,9 @@ class mediaItem(object):
 			name, hit = process.extractOne(m.group(0), getShowNames().keys())
 			if hit >= 90: 
 				return name
+			else:
+				# This should be logged or handled somehow
+				pass
 
 	def getSeasonNumber(self):
 		m = re.search('[sS][0-9]{1,2}', self.parent)
@@ -44,27 +72,59 @@ class mediaItem(object):
 		if m:
 			return re.sub('[eE]', '', m.group(0))
 
-	def removeSignature(self, file):
+	def uploaderSignature(self, file):
 		match = re.search('-[a-zA-Z\[\]\-]*.[a-z]{3}', file)
 		if match:
 			uploader = match.group(0)[:-4]
-			if 'sdh' in uploader.lower():
-				return re.sub(uploader, '.sdh', file)
-			
 			return re.sub(uploader, '', file)
 
 		return ''
 
+	def getSubtitlesLang(self, subFile):
+		f = open('/'.join([env.show_dir, self.parent, subFile]), 'r', encoding='ISO-8859-15')
+		language = detect(f.read())
+		f.close()
+		if 'sdh' in subFile.lower():
+			return 'sdh.' + language
+		return language
+
 	def getMediaItems(self):
 		for child in self.children:
 			if child[-3:] in env.mediaExt and child[:-4] not in env.mediaExcluders:
-				self.videoFiles.append([child, self.removeSignature(child)])
+				self.videoFiles.append([child, self.uploaderSignature(child)])
 			elif child[-3:] in env.subExt:
-				# print([child, removeSignature(child), getLanguage(showDir + folder + '/', child)])
-				self.subtitles.append([child, self.removeSignature(child)])
-				print(self.subtitles)
+				self.subtitles.append([child, self.uploaderSignature(child), self.getSubtitlesLang(child)])
 			else:
 				self.trash.append(child)
+
+	def notifyInsert(self):
+		# Send unique id. (time)
+		tweetObj = twitter()
+		api = tweetObj.api()
+		tweetString = 'Added episode:\n' + self.showName + ' S' + self.season\
+	 		+ 'E' + self.episode + '\nDetails: \n https://kevinmidboe.com/seasoned/verified.html?id=' + self._id
+		response = api.send_direct_message('kevinmidboe', text=tweetString)
+
+
+	def saveToDB(self):
+		# TODO Setup script
+		conn = sqlite3.connect(env.db_path)
+		c = conn.cursor()
+
+		path = '/'.join([env.show_dir, self.parent])
+		video_files = json.dumps(self.videoFiles)
+		subtitles = json.dumps(self.subtitles)
+		trash = json.dumps(self.trash)
+
+		try:
+			c.execute("INSERT INTO stray_eps ('id', 'parent', 'path', 'name', 'season', 'episode', 'video_files', 'subtitles', 'trash') VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", \
+				[self._id, self.parent, path, self.showName, self.season, self.episode, video_files, subtitles, trash])
+		except sqlite3.IntegrityError:
+			print('Episode already registered')
+
+		conn.commit()
+		conn.close()
+
 
 
 def getDirContent(dir=env.show_dir):
@@ -72,6 +132,7 @@ def getDirContent(dir=env.show_dir):
 		return [d for d in os.listdir(dir) if d[0] != '.']
 	except FileNotFoundError:
 		print('Error: "' + dir + '" is not a directory.')
+		exit(0)
 
 # Hashes the contents of media folder to easily check for changes.
 def directoryChecksum():
@@ -105,12 +166,12 @@ def XOR(list1, list2):
 
 def filterChildItems(parent):
 	try:
-		children = getDirContent(env.show_dir + parent)
+		children = getDirContent('/'.join([env.show_dir, parent]))
 		if children:
 			childList.append(mediaItem(parent, children))
 	except FileNotFoundError:
 		# Log to error file
-		print('"' + env.show_dir + parent + '" is not a valid directory.')
+		print('Error: "' + '/'.join([env.show_dir, parent]) + '" is not a valid directory.')
 
 def getNewItems():
 	newItems = XOR(getDirContent(), getShowNames())
@@ -122,9 +183,26 @@ def main():
 	# TODO Verify env variables (showDir)
 	start_time = time.time()
 	if directoryChecksum():
+		conn = sqlite3.connect(env.db_path)
+		c = conn.cursor()
+
+		cursor = c.execute('SELECT * FROM stray_eps WHERE id = "9110df"')
+		episodeList = []
+		for row in c.fetchall():
+			columnNames = [description[0] for description in cursor.description]
+			
+			episodeDict = dict.fromkeys(columnNames)
+			
+			for i, key in enumerate(episodeDict.keys()):
+				episodeDict[key] = row[i]
+
+			episodeList.append(episodeDict)
+		
+		conn.close()
+		print(json.dumps(episodeList))
 		getNewItems()
 
-	print("--- %s seconds ---" % (time.time() - start_time))
+	print("--- %s seconds ---" % '{0:.4f}'.format((time.time() - start_time)))
 
 
 if __name__ == '__main__':
