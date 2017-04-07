@@ -15,7 +15,7 @@ var sqlite3 = require('sqlite3').verbose();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-var port = 3147;        // set our port
+var port = 31459;        // set our port
 
 // ROUTES FOR OUR API
 // =============================================================================
