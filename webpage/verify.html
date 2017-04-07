@@ -2,40 +2,63 @@
 <html>
 <head>
 	<title>seasoned | verify</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+	<!-- Compiled and minified CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.1/css/materialize.min.css">
+
+  <!-- Compiled and minified JavaScript -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.1/js/materialize.min.js"></script>
+	
+	<link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
-<h1 id='title'></h1>
-	<div>
-<!-- 		<span>path:</span>
-			<span id="path"></span><button onclick="foo('#path')">Edit</button><br>
-		<span>name:</span>
-			<span id="name"></span><button onclick="foo('#name')">Edit</button><br>
-		<span>season:</span>
-			<span id="season"></span><button onclick="foo('#season')">Edit</button><br>
-		<span>episode:</span>
-			<span id="episode"></span><button onclick="foo('#episode')">Edit</button><br>
-		<span>videoFiles:</span>
-			<span id="video_files"></span><button onclick="foo('#video_files')">Edit</button><br>
-		<span>subtitles:</span>
-			<span id="subtitles"></span><button onclick="foo('#subtitles')">Edit</button><br>
-		<span>trash:</span>
-			<span id="trash"></span><button onclick="foo('#trash')">Edit</button><br> -->
+	<h3 id='title'></h3>
+
+	<div class="row formContainer">
+	  <form action="/" id="searchForm" class="col s12">
+	   <div class="row">
+	     <div class="input-field col s12">
+	       <input placeholder="Parent" id="parent" type="text">
+	       <label for="parent">Parent</label>
+	     </div>
+	     <div class="col s12"></div>
+	     <div class="input-field col s4">
+	       <input placeholder="" id="name" type="text">
+	       <label for="name">Name</label>
+	     </div>
+	     <div class="input-field col s4">
+	       <input placeholder="" id="season" type="text" class="validate">
+	       <label for="season">Season</label>
+	     </div>
+	     <div class="input-field col s4">
+	       <input placeholder="" id="episode" type="text" class="validate">
+	       <label for="episode">Episode</label>
+	     </div>
+	     <div class="col s12"></div>
+	     <div class="input-field col s12">
+	       <input placeholder="" id="video_files" type="text" class="validate">
+	       <label for="video_files">Video files</label>
+	     </div>
+	     <div class="input-field col s12">
+	       <input placeholder="" id="subtitles" type="text" class="validate">
+	       <label for="subtitles">Subtitles</label>
+	     </div>
+	     <div class="input-field col s12">
+	       <input placeholder="" id="trash" type="text" class="validate">
+	       <label for="trash">Trash</label>
+	     </div>
+	   </div>
+	   
+	   <button type="submit" class="btn waves-effect waves-light" type="submit" name="action">Submit
+	   </button>
+	 </form>
 	</div>
-	 <form action="/" id="searchForm">
-            <span>Parent:</span><input type="text" size="100" name="parent" id="parent"><br>
-            <span>Name:</span><input type="text" size="100" name="name" id="name"><br>
-            <span>Season:</span><input type="text" size="100" name="season" id="season"><br>
-            <span>Episode:</span><input type="text" size="100" name="episode" id="episode"><br>
-            <span>Video_files:</span><input type="text" size="100" name="video_files" id="video_files"><br>
-            <span>Subtitles:</span><input type="text" size="100" name="subtitles" id="subtitles"><br>
-            <span>Trash:</span><input type="text" size="100" name="trash" id="trash"><br>
-            <input type="submit" value="Search" /><br>
-        </form>
 </body>
 
 <script>
-	function getEpisodeId() {
+	function getURLId() {
 		var sPageURL = window.location.search.substring(1);
 		var sParameterName = sPageURL.split('=');
 		if (sParameterName[0] == 'id') {
@@ -64,7 +87,7 @@
 		var formJsonObj = objectifyForm($("#searchForm").serializeArray());
 
 		formJsonObj['verified'] = 1;
-		formJsonObj['id'] = getEpisodeId();
+		formJsonObj['id'] = getURLId();
 		console.log(formJsonObj);
 
 		var url = 'https://apollo.kevinmidboe.com/api/seasoned';
@@ -74,7 +97,7 @@
 		  type: 'POST',
 		  data: JSON.stringify(formJsonObj),
 		  success: function (data) {
-		  		console.log(episode);
+		  		Materialize.toast('Verification successfully sent!', 4000);
 		  },
 		  error: function() {
 		  	console.log('erorr');
@@ -94,7 +117,7 @@
 	}
 
 	function getShow() {
-		var url = 'https://apollo.kevinmidboe.com/api/seasoned?id=' + getEpisodeId();
+		var url = 'https://apollo.kevinmidboe.com/api/seasoned?id=' + getURLId();
 		$.ajax({
 		  url: url,
 		  dataType: "json",
