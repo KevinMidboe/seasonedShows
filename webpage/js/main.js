@@ -1,3 +1,4 @@
+
 function getURLId() {
 	var sPageURL = window.location.search.substring(1);
 	var sParameterName = sPageURL.split('=');
@@ -30,7 +31,7 @@ $("#searchForm").submit(function(e) {
 	formJsonObj['id'] = getURLId();
 	console.log(formJsonObj);
 
-	var url = 'https://apollo.kevinmidboe.com/api/seasoned';
+	var url = env_variables.url;
 	$.ajax({
 	  url: url,
 	  dataType: 'json',
@@ -57,7 +58,7 @@ function foo(id) {
 }
 
 function getShow() {
-	var url = 'https://apollo.kevinmidboe.com/api/seasoned?id=' + getURLId();
+	var url = env_variables.url + '?id=' + getURLId();
 	$.ajax({
 	  url: url,
 	  dataType: "json",
