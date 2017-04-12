@@ -15,28 +15,12 @@ $(document).ready(function() {
 });
 
 
-function objectifyForm(formArray) {//serialize data function
-  var returnArray = {};
-  for (var i = 0; i < formArray.length; i++){
-    returnArray[formArray[i]['name']] = formArray[i]['value'];
-  }
-  return returnArray;
-}
-
 // this is the id of the form
 $("#searchForm").submit(function(e) {
-	var formJsonObj = objectifyForm($("#searchForm").serializeArray());
-
-	formJsonObj['verified'] = 1;
-	formJsonObj['id'] = getURLId();
-	console.log(formJsonObj);
-
-	var url = env_variables.url;
+	var url = env_variables.url + 'verify/' + getURLId();
 	$.ajax({
 	  url: url,
-	  dataType: 'json',
 	  type: 'POST',
-	  data: JSON.stringify(formJsonObj),
 	  success: function (data) {
 	  		Materialize.toast('Verification successfully sent!', 4000);
 	  },
@@ -58,21 +42,20 @@ function foo(id) {
 }
 
 function getShow() {
-	var url = env_variables.url + '?id=' + getURLId();
+	var url = env_variables.url + getURLId();
 	$.ajax({
 	  url: url,
 	  dataType: "json",
 	  success: function (data) {
-	  		var episode = data['episode'];
-	  		$('#parent').val(episode['parent']);
-	  		$('#name').val(episode['name']);
-	  		$('#season').val(episode['season']);
-	  		$('#episode').val(episode['episode']);
-	  		$('#video_files').val(episode['video_files']);
-	  		$('#subtitles').val(episode['subtitles']);
-	  		$('#trash').val(episode['trash']);
+	  		$('#parent').val(data['parent']);
+	  		$('#name').val(data['name']);
+	  		$('#season').val(data['season']);
+	  		$('#episode').val(data['episode']);
+	  		$('#video_files').val(data['video_files']);
+	  		$('#subtitles').val(data['subtitles']);
+	  		$('#trash').val(data['trash']);
 
-	  		console.log(episode);
+	  		console.log(data);
 	  },
 	  error: function() {
 	  	console.log('erorr');
