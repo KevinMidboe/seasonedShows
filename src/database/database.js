@@ -1,5 +1,5 @@
 const configuration = require('src/config/configuration').getInstance();
-const SqliteDatabase = require('src/database/SqliteDatabase');
+const SqliteDatabase = require('src/database/sqliteDatabase');
 const database = new SqliteDatabase(configuration.get('database', 'host'));
 
 /**

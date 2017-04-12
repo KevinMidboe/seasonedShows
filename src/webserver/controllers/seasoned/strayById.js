@@ -1,5 +1,5 @@
 const configuration = require('src/config/configuration').getInstance();
-const StrayRepository = require('src/seasoned/StrayRepository');
+const StrayRepository = require('src/seasoned/strayRepository');
 const strayRepository = new StrayRepository();
 
 function strayByIdController(req, res) {
