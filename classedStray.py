@@ -3,7 +3,7 @@
 # @Author: KevinMidboe
 # @Date:   2017-04-05 18:40:11
 # @Last Modified by:   KevinMidboe
-# @Last Modified time: 2017-04-07 11:28:59
+# @Last Modified time: 2017-04-12 17:46:44
 import os.path, hashlib, time, glob, sqlite3, re, json, tweepy
 from functools import reduce
 from fuzzywuzzy import process
@@ -37,7 +37,7 @@ class strayEpisode(object):
 	def __init__(self, parent, childrenList):
 		self.parent = parent
 		self.children = childrenList
-		self._id = self.getID()
+		self._id = self.getUniqueID()
 		self.showName = self.findSeriesName()
 		self.season = self.getSeasonNumber()
 		self.episode = self.getEpisodeNumber()
@@ -49,8 +49,12 @@ class strayEpisode(object):
 		self.saveToDB()
 		# self.notifyInsert()
 	
-	def getID(self):
-		return hashlib.md5("b'{}'".format(self.parent).encode()).hexdigest()[:6]
+	def getUniqueID(self):
+		# conn = sqlite3.connect(env.db_path)
+		# c = conn.cursor()
+
+		# c.execute("SELECT id FROM stray_eps WHERE id is " + )
+		return hashlib.md5("b'{}'".format(self.parent).encode()).hexdigest()[:8]
 
 	def findSeriesName(self):
 		find = re.compile("^[a-zA-Z. ]*")
@@ -132,7 +136,9 @@ def getDirContent(dir=env.show_dir):
 	try:
 		return [d for d in os.listdir(dir) if d[0] != '.']
 	except FileNotFoundError:
+		# TODO Log to error file
 		print('Error: "' + dir + '" is not a directory.')
+		# TODO Remove this exit(0)
 		exit(0)
 
 # Hashes the contents of media folder to easily check for changes.
@@ -171,7 +177,7 @@ def filterChildItems(parent):
 		if children:
 			strayEpisode(parent, children)
 	except FileNotFoundError:
-		# Log to error file
+		# TODO Log to error file
 		print('Error: "' + '/'.join([env.show_dir, parent]) + '" is not a valid directory.')
 
 def getNewItems():
