@@ -4,3 +4,5 @@ shows.db
 .DS_Store
 env_variables.py
 node_modules
+*.pyc
+npm-debug.log
