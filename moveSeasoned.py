@@ -3,7 +3,7 @@
 # @Author: KevinMidboe
 # @Date:   2017-04-12 23:27:51
 # @Last Modified by:   KevinMidboe
-# @Last Modified time: 2017-04-13 12:11:34
+# @Last Modified time: 2017-04-13 12:42:38
 
 import sys, sqlite3, json, os
 import env_variables as env
@@ -55,6 +55,7 @@ def moveStray(strayId):
 
 	for item in ep.trash:
 		os.remove(ep.typeDir('parent', mergeItem=item))
+	
 	os.rmdir(ep.typeDir('parent'))
 
 if __name__ == '__main__':
