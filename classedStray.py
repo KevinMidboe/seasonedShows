@@ -3,7 +3,7 @@
 # @Author: KevinMidboe
 # @Date:   2017-04-05 18:40:11
 # @Last Modified by:   KevinMidboe
-# @Last Modified time: 2017-04-13 11:31:42
+# @Last Modified time: 2017-04-13 12:17:04
 import os.path, hashlib, time, glob, sqlite3, re, json, tweepy
 from functools import reduce
 from fuzzywuzzy import process
@@ -46,8 +46,8 @@ class strayEpisode(object):
 		self.trash = []
 		self.sortMediaItems()
 
-		self.saveToDB()
-		# self.notifyInsert()
+		if self.saveToDB():
+			self.notifyInsert()
 	
 	def getUniqueID(self):
 		# conn = sqlite3.connect(env.db_path)
@@ -129,9 +129,11 @@ class strayEpisode(object):
 				[self._id, self.parent, path, self.showName, self.season, self.episode, video_files, subtitles, trash])
 		except sqlite3.IntegrityError:
 			print('Episode already registered')
+			return False
 
 		conn.commit()
 		conn.close()
+		return True
 
 
 
