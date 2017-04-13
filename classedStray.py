@@ -3,7 +3,7 @@
 # @Author: KevinMidboe
 # @Date:   2017-04-05 18:40:11
 # @Last Modified by:   KevinMidboe
-# @Last Modified time: 2017-04-12 17:46:44
+# @Last Modified time: 2017-04-13 11:31:42
 import os.path, hashlib, time, glob, sqlite3, re, json, tweepy
 from functools import reduce
 from fuzzywuzzy import process
@@ -77,28 +77,31 @@ class strayEpisode(object):
 		if m:
 			return re.sub('[eE]', '', m.group(0))
 
-	def uploaderSignature(self, file):
+	def removeUploadSign(self, file):
 		match = re.search('-[a-zA-Z\[\]\-]*.[a-z]{3}', file)
 		if match:
 			uploader = match.group(0)[:-4]
 			return re.sub(uploader, '', file)
 
-		return ''
+		return file
 
-	def getSubtitlesLang(self, subFile):
+	def analyseSubtitles(self, subFile):
 		f = open('/'.join([env.show_dir, self.parent, subFile]), 'r', encoding='ISO-8859-15')
 		language = detect(f.read())
 		f.close()
+
+		file = self.removeUploadSign(subFile)
 		if 'sdh' in subFile.lower():
-			return 'sdh.' + language
-		return language
+			return '.'.join([file[:-4], 'sdh', language, file[-3:]])
+
+		return '.'.join([file[:-4], language, file[-3:]])
 
 	def sortMediaItems(self):
 		for child in self.children:
 			if child[-3:] in env.mediaExt and child[:-4] not in env.mediaExcluders:
-				self.videoFiles.append([child, self.uploaderSignature(child)])
+				self.videoFiles.append([child, self.removeUploadSign(child)])
 			elif child[-3:] in env.subExt:
-				self.subtitles.append([child, self.uploaderSignature(child), self.getSubtitlesLang(child)])
+				self.subtitles.append([child, self.analyseSubtitles(child)])
 			else:
 				self.trash.append(child)
 
