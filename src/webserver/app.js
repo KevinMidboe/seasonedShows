@@ -35,6 +35,8 @@ router.post('/v1/seasoned/verify/:strayId', require('./controllers/seasoned/veri
 // router.get('/v1/plex/search', require('./controllers/plex/searchMedia.js'));
 // router.post('/v1/plex/request/:mediaId', require('./controllers/plex/request.js'));
 
+router.post('/v1/git/hooks', require('./controllers/git/dumpHook.js'));
+
 
 // REGISTER OUR ROUTES -------------------------------
 // all of our routes will be prefixed with /api
