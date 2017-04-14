@@ -1,14 +1,15 @@
-/*
-* @Author: KevinMidboe
-* @Date:   2017-04-14 17:11:58
-* @Last Modified by:   KevinMidboe
-* @Last Modified time: 2017-04-14 17:13:40
-*/
-
 const configuration = require('src/config/configuration').getInstance();
+const GitRepository = require('src/git/gitRepository');
+const gitRepository = new GitRepository();
 
 function dumpHookController(req, res) {
-	console.log(req);
+	gitRepository.dumpHook(req.body)
+	.then(() => {
+		res.status(200);
+	})
+	.catch((error) => {
+		res.status(500);
+	})
 }
 
 module.exports = dumpHookController;
