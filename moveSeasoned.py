@@ -3,7 +3,7 @@
 # @Author: KevinMidboe
 # @Date:   2017-04-12 23:27:51
 # @Last Modified by:   KevinMidboe
-# @Last Modified time: 2017-04-13 12:42:38
+# @Last Modified time: 2017-04-13 16:22:23
 
 import sys, sqlite3, json, os
 import env_variables as env
@@ -26,17 +26,15 @@ class episode(object):
 		self.trash = json.loads(returnMsg[6])
 		c.close()
 
-	def query(self, dType):
-		queries = {
+		self.queries = {
 			'parent': [env.show_dir, self.parent],
 			'season': [env.show_dir, self.name, self.name + ' Season ' + "%02d" % self.season],
 			'episode': [env.show_dir, self.name, self.name + ' Season ' + "%02d" % self.season, \
 				self.name + ' S' + "%02d" % self.season + 'E' + "%02d" % self.episode],
 		}
-		return queries[dType]
 
 	def typeDir(self, dType, create=False, mergeItem=None):
-		url = '/'.join(self.query(dType))
+		url = '/'.join(self.queries[dType])
 		if create and not os.path.isdir(url):
 			os.makedirs(url)
 		if mergeItem:
