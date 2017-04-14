@@ -3,7 +3,7 @@
 # @Author: KevinMidboe
 # @Date:   2017-04-05 18:40:11
 # @Last Modified by:   KevinMidboe
-# @Last Modified time: 2017-04-13 12:17:04
+# @Last Modified time: 2017-04-14 17:00:04
 import os.path, hashlib, time, glob, sqlite3, re, json, tweepy
 from functools import reduce
 from fuzzywuzzy import process
@@ -32,6 +32,9 @@ class twitter(object):
 
 	def api(self):
 		return self.api_token
+
+	def dm(self, message, user='kevinmidboe'):
+		response = self.api_token.send_direct_message(user, text=message)
 
 class strayEpisode(object):
 	def __init__(self, parent, childrenList):
@@ -108,10 +111,9 @@ class strayEpisode(object):
 	def notifyInsert(self):
 		# Send unique id. (time)
 		tweetObj = twitter()
-		api = tweetObj.api()
-		tweetString = 'Added episode:\n' + self.showName + ' S' + self.season\
+		message = 'Added episode:\n' + self.showName + ' S' + self.season\
 	 		+ 'E' + self.episode + '\nDetails: \n https://kevinmidboe.com/seasoned/verified.html?id=' + self._id
-		response = api.send_direct_message('kevinmidboe', text=tweetString)
+		tweetObj.dm(message)
 
 
 	def saveToDB(self):
