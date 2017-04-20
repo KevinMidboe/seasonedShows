@@ -30,7 +30,9 @@ router.get('/v1/seasoned/:strayId', require('./controllers/seasoned/strayById.js
 router.post('/v1/seasoned/verify/:strayId', require('./controllers/seasoned/verifyStray.js'));
 
 router.get('/v1/plex/search', require('./controllers/plex/searchMedia.js'));
-// router.post('/v1/plex/request/:mediaId', require('./controllers/plex/request.js'));
+// router.get('/v1/plex/request', require('./controllers/plex/searchRequest.js'));
+
+router.get('/v1/tmdb/search', require('./controllers/tmdb/searchMovies.js'));
 
 router.post('/v1/git/dump', require('./controllers/git/dumpHook.js'));
 
