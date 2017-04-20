@@ -4,13 +4,6 @@ var rp = require('request-promise');
 
 class PlexRepository {
 
-	read(strayId) {
-		return this.database.get(this.queries.read, strayId).then((row) => {
-			assert.notEqual(row, undefined, `Could not find list with id ${strayId}.`);
-			return row;
-		})
-	}
-
 	searchMedia(query) {
 		var options = {
 			uri: 'http://10.0.0.41:32400/search?query=' + query,
