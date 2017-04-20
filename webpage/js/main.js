@@ -30,6 +30,7 @@ $("#searchForm").submit(function(e) {
 	  		Materialize.toast('Verification successfully sent!', 4000);
 	  },
 	  error: function(data) {
+	  	Materialize.toast(data.responseJSON.error, 4000);
 	  	console.log(data.responseJSON.error);
     	e.preventDefault(); // avoid to execute the actual submit of the form.
 	  }
@@ -39,16 +40,14 @@ $("#searchForm").submit(function(e) {
 
 
 function foo(id) {
-	var el = $(id);
-	if (el.attr('contenteditable') == 'true'){
-		el.attr('contenteditable', 'false');
-	} else {
-		el.attr('contenteditable', 'true')
-	}
-}
-
-var toType = function(obj) {
-  return ({}).toString.call(obj).match(/\s([a-zA-Z]+)/)[1].toLowerCase()
+	console.log(id[0]);
+	var el = $(id[0]);
+	// if (el.attr('contenteditable') == 'true'){
+	// 	el.attr('contenteditable', 'false');
+	// } else {
+	// 	el.attr('contenteditable', 'true')
+	// }
+	el.attr('contenteditable', 'true');
 }
 
 function getShow() {
@@ -57,20 +56,20 @@ function getShow() {
 	  url: url,
 	  dataType: "json",
 	  success: function (data) {
-	  		$('#parent').val(data['parent']);
-	  		$('#name').val(data['name']);
-	  		$('#season').val(data['season']);
-	  		$('#episode').val(data['episode']);
+	  		$('#parent').append('<p>' + data['parent'] + '</p>');
+	  		$('#name').append('<p>' + data['name'] + '</p>');
+	  		$('#season').append('<p>' + data['season'] + '</p>');
+	  		$('#episode').append('<p>' + data['episode'] + '</p>');
 	  		var itemList= JSON.parse(data['video_files']);
 	  		for (item in itemList) {
 	  			$('#video_files').append('<p>' + itemList[item][0] + '</p>');
-	  			$('#video_files').append('<p>' + itemList[item][1] + '</p>');
+	  			$('#video_files').append('<p onclick="foo($(this));">' + itemList[item][1] + '</p>');
 	  		}
 
 	  		var itemList= JSON.parse(data['subtitles']);
 	  		for (item in itemList) {
 	  			$('#subtitles').append('<p>' + itemList[item][0] + '</p>');
-	  			$('#subtitles').append('<p>' + itemList[item][1] + '</p>');
+	  			$('#subtitles').append('<p onclick="foo($(this));">' + itemList[item][1] + '</p>');
 	  		}
 
 	  		var itemList= JSON.parse(data['trash']);
