@@ -3,7 +3,8 @@ const PlexRepository = require('src/plex/plexRepository');
 const plexRepository = new PlexRepository();
 
 function searchMediaController(req, res) {
-	const { query } = req.query;
+	const { query, page } = req.query;
+	console.log(query);
 
 	plexRepository.searchMedia(query)
 	.then((movies) => {
