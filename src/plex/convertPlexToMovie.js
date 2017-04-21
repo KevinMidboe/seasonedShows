@@ -6,6 +6,8 @@ function converPlexToMovie(plexMovie) {
 	movie.year = plexMovie.year;
 	movie.library = plexMovie.librarySectionTitle;
 	movie.type = plexMovie.type;
+	movie.poster = plexMovie.thumb;
+	movie.background = plexMovie.art;
 
 	return movie;
 }
