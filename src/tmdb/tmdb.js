@@ -6,10 +6,10 @@ class TMDB {
 		this.tmdbLibrary = tmdbLibrary || moviedb(apiKey);
 	}
 
-	search(text, page = 1) {
+	search(text, page = 1, type = 'searchMulti') {
 		const query = { query: text, page };
 		return Promise.resolve()
-		 .then(() => this.tmdb('searchMulti', query))
+		 .then(() => this.tmdb(type, query))
 		 .catch(() => { throw new Error('Could not search for movies.'); })
 		 .then((reponse) => {
 		 	try {
