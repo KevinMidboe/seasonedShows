@@ -9,7 +9,7 @@ class TMDB {
 	search(text, page = 1) {
 		const query = { query: text, page };
 		return Promise.resolve()
-		 .then(() => this.tmdb('searchMovie', query))
+		 .then(() => this.tmdb('searchMulti', query))
 		 .catch(() => { throw new Error('Could not search for movies.'); })
 		 .then((reponse) => {
 		 	try {
