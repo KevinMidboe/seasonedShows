@@ -21,7 +21,7 @@ router.use(function(req, res, next) {
 });
 
 router.get('/', function(req, res) {
-    res.json({ message: 'hooray! welcome to our api!' });
+    res.json({ message: 'hooray! welcome to this api!' });
 });
 
 
@@ -30,9 +30,14 @@ router.get('/v1/seasoned/:strayId', require('./controllers/seasoned/strayById.js
 router.post('/v1/seasoned/verify/:strayId', require('./controllers/seasoned/verifyStray.js'));
 
 router.get('/v1/plex/search', require('./controllers/plex/searchMedia.js'));
-// router.get('/v1/plex/request', require('./controllers/plex/searchRequest.js'));
+router.get('/v1/plex/playing', require('./controllers/plex/plexPlaying.js'));
+router.get('/v1/plex/request', require('./controllers/plex/searchRequest.js'));
+router.get('/v1/plex/request/:mediaId', require('./controllers/plex/readRequest.js'));
+// router.post('/v1/plex/request/:mediaId', require('./controllers/plex/submitRequest.js'));
+router.get('/v1/plex/hook', require('./controllers/plex/hookDump.js'));
 
-router.get('/v1/tmdb/search', require('./controllers/tmdb/searchMovies.js'));
+router.get('/v1/tmdb/search', require('./controllers/tmdb/searchMedia.js'));
+router.get('/v1/tmdb/:mediaId', require('./controllers/tmdb/readMedia.js'));
 
 router.post('/v1/git/dump', require('./controllers/git/dumpHook.js'));
 
