@@ -1,16 +1,17 @@
-const Movie = require('src/movie/movie');
+const Movie = require('src/media_classes/movie');
 
 function convertTmdbToMovie(tmdbMovie) {
 	const movie = new Movie();
-	if (tmdbMovie.media_type === 'movie') {
+	movie.id = tmdbMovie.id;
+	if (tmdbMovie.media_type === 'movie' || tmdbMovie.release_date !== undefined) {
 		movie.title = tmdbMovie.title;
-		movie.type = tmdbMovie.media_type;
+		movie.type = 'movie';
 
 		if (tmdbMovie.release_date !== undefined) {
 			movie.release_date = new Date(tmdbMovie.release_date);
 			movie.year = movie.release_date.getFullYear();
 		}
-	} else if (tmdbMovie.media_type === 'tv') {
+	} else if (tmdbMovie.first_air_date !== undefined) {
 		movie.title = tmdbMovie.name;
 		movie.type = 'show';
 		if (tmdbMovie.first_air_date !== undefined) {
