@@ -1,8 +1,15 @@
-const Movie = require('src/movie/movie');
+const Movie = require('src/media_classes/movie');
 
-function converPlexToMovie(plexMovie) {
+function convertPlexToMovie(plexMovie) {
 	const movie = new Movie();
 	movie.title = plexMovie.title;
+	
+	if (plexMovie.type === 'episode') {
+		movie.title = plexMovie.grandparentTitle;
+		movie.childTitle = plexMovie.title;
+		movie.season = plexMovie.parentIndex;
+		movie.episode = plexMovie.index;
+	}
 	movie.year = plexMovie.year;
 	movie.library = plexMovie.librarySectionTitle;
 	movie.type = plexMovie.type;
@@ -12,4 +19,4 @@ function converPlexToMovie(plexMovie) {
 	return movie;
 }
 
-module.exports = converPlexToMovie;
+module.exports = convertPlexToMovie;
