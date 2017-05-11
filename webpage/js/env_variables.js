@@ -1,3 +1,3 @@
 var env_variables = {
-	url : "http://localhost:31459/api/v1/seasoned/",
+	url : "http://10.0.0.41:31459/api/v1/seasoned/",
 }
