@@ -1,4 +1,3 @@
-const configuration = require('src/config/configuration').getInstance();
 const PlexRepository = require('src/plex/plexRepository');
 const plexRepository = new PlexRepository();
 
