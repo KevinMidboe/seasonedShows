@@ -56,7 +56,10 @@ function getShow() {
 	  url: url,
 	  dataType: "json",
 	  success: function (data) {
-	  		$('#parent').append('<p>' + data['parent'] + '</p>');
+	  		$('#parent').append('<br><span>' + data['parent'] + '</span>');
+	  		if (data['verified']) {
+	  			$('#verified').append('<img src="images/verified.svg">');
+	  		}
 	  		$('#name').append('<p>' + data['name'] + '</p>');
 	  		$('#season').append('<p>' + data['season'] + '</p>');
 	  		$('#episode').append('<p>' + data['episode'] + '</p>');
