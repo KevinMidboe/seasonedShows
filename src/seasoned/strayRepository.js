@@ -13,7 +13,7 @@ class StrayRepository {
 		this.database = database || establishedDatabase;
 		this.queries = {
 			'read': 'SELECT * FROM stray_eps WHERE id = ?',
-			'readAll': 'SELECT id, name, season, episode FROM stray_eps',
+			'readAll': 'SELECT id, name, season, episode, verified FROM stray_eps',
 			'checkVerified': 'SELECT id FROM stray_eps WHERE verified = 0 AND id = ?',
 			'verify': 'UPDATE stray_eps SET verified = 1 WHERE id = ?',
 		};
@@ -33,6 +33,7 @@ class StrayRepository {
 				stray.name = row.name;
 				stray.season = row.season;
 				stray.episode = row.episode;
+				stray.verified = row.verified;
 				return stray;
 			}))
 	}
