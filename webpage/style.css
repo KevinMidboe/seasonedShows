@@ -2,11 +2,21 @@
 * @Author: KevinMidboe
 * @Date:   2017-04-07 00:47:40
 * @Last Modified by:   KevinMidboe
-* @Last Modified time: 2017-04-07 01:13:27
+* @Last Modified time: 2017-05-13 13:10:41
 */
 
 h3 {
 	padding-left: 40px;
+}
+
+#verified {
+	position: relative;
+}
+
+#verified img {
+	position: absolute;
+	width: 22px;
+	margin-left: 12px;
 }
 
 /* valid color */
