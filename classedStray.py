@@ -3,7 +3,7 @@
 # @Author: KevinMidboe
 # @Date:   2017-04-05 18:40:11
 # @Last Modified by:   KevinMidboe
-# @Last Modified time: 2017-04-14 17:00:04
+# @Last Modified time: 2017-05-14 08:17:05
 import os.path, hashlib, time, glob, sqlite3, re, json, tweepy
 from functools import reduce
 from fuzzywuzzy import process
@@ -64,10 +64,11 @@ class strayEpisode(object):
 		m = re.match(find, self.parent)
 		if m:
 			name, hit = process.extractOne(m.group(0), getShowNames().keys())
-			if hit >= 90: 
+			if hit >= 60: 
 				return name
 			else:
 				# This should be logged or handled somehow
+				return 'Unmatched!'
 				pass
 
 	def getSeasonNumber(self):
