@@ -3,8 +3,9 @@
 # @Author: KevinMidboe
 # @Date:   2017-04-05 18:40:11
 # @Last Modified by:   KevinMidboe
-# @Last Modified time: 2017-05-14 08:17:05
+# @Last Modified time: 2017-05-15 11:55:52
 import os.path, hashlib, time, glob, sqlite3, re, json, tweepy
+import logging
 from functools import reduce
 from fuzzywuzzy import process
 from langdetect import detect
@@ -16,7 +17,7 @@ dirHash = None
 class twitter(object):
 	def __init__(self):
 		if '' in [env.consumer_key, env.consumer_secret, env.access_token, env.access_token_secret]:
-			print('not set')
+			logging.warning('Twitter api keys not set!')
 		
 		self.consumer_key = env.consumer_key
 		self.consumer_secret = env.consumer_secret
@@ -69,7 +70,6 @@ class strayEpisode(object):
 			else:
 				# This should be logged or handled somehow
 				return 'Unmatched!'
-				pass
 
 	def getSeasonNumber(self):
 		m = re.search('[sS][0-9]{1,2}', self.parent)
@@ -131,7 +131,7 @@ class strayEpisode(object):
 			c.execute("INSERT INTO stray_eps ('id', 'parent', 'path', 'name', 'season', 'episode', 'video_files', 'subtitles', 'trash') VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", \
 				[self._id, self.parent, path, self.showName, self.season, self.episode, video_files, subtitles, trash])
 		except sqlite3.IntegrityError:
-			print('Episode already registered')
+			logging.info(self._id + ': episode already registered')
 			return False
 
 		conn.commit()
@@ -145,7 +145,7 @@ def getDirContent(dir=env.show_dir):
 		return [d for d in os.listdir(dir) if d[0] != '.']
 	except FileNotFoundError:
 		# TODO Log to error file
-		print('Error: "' + dir + '" is not a directory.')
+		logging.info('Error: "' + dir + '" is not a directory.')
 		# TODO Remove this exit(0)
 		exit(0)
 
@@ -186,7 +186,7 @@ def filterChildItems(parent):
 			strayEpisode(parent, children)
 	except FileNotFoundError:
 		# TODO Log to error file
-		print('Error: "' + '/'.join([env.show_dir, parent]) + '" is not a valid directory.')
+		logging.info('Error: "' + '/'.join([env.show_dir, parent]) + '" is not a valid directory.')
 
 def getNewItems():
 	newItems = XOR(getDirContent(), getShowNames())
@@ -200,10 +200,16 @@ def main():
 	if directoryChecksum():
 		getNewItems()
 
-	print("--- %s seconds ---" % '{0:.4f}'.format((time.time() - start_time)))
+	logging.debug("--- %s seconds ---" % '{0:.4f}'.format((time.time() - start_time)))
 
 
 if __name__ == '__main__':
+	if (os.path.exists(env.logfile)):
+		logging.basicConfig(filename=env.logfile, level=logging.INFO)
+	else:
+		print('Logfile could not be found at ' + env.logfile + '. Verifiy presence or disable logging in config.')
+		exit(0)
+		
 	while True:
 		main()
 		sleep(30)
