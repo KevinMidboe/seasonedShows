@@ -14,6 +14,7 @@ class StrayRepository {
 		this.queries = {
 			'read': 'SELECT * FROM stray_eps WHERE id = ?',
 			'readAll': 'SELECT id, name, season, episode, verified FROM stray_eps',
+			'readAllFiltered': 'SELECT id, name, season, episode, verified FROM stray_eps WHERE verified = ',
 			'checkVerified': 'SELECT id FROM stray_eps WHERE verified = 0 AND id = ?',
 			'verify': 'UPDATE stray_eps SET verified = 1 WHERE id = ?',
 		};
@@ -26,8 +27,12 @@ class StrayRepository {
 		})
 	}
 
-	readAll() {
-		return this.database.all(this.queries.readAll).then(rows =>
+	readAll(verified = null, page = 1) {
+		var dbSearchQuery = this.queries.readAll;
+		if (verified != null) {
+			dbSearchQuery = this.queries.readAllFiltered + verified.toString();
+		}
+		return this.database.all(dbSearchQuery).then(rows =>
 			rows.map((row) => {
 				const stray = new Stray(row.id);
 				stray.name = row.name;

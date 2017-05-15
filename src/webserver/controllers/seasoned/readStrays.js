@@ -3,7 +3,8 @@ const strayRepository = new StrayRepository();
 
 
 function readStraysController(req, res) {
-	strayRepository.readAll()
+	const { verified, page } = req.query;
+	strayRepository.readAll(verified, page)
 	.then((strays) => {
 		res.send(strays);
 	})
