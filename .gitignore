@@ -3,6 +3,7 @@ nohup.out
 shows.db
 .DS_Store
 env_variables.py
+conf/classedOutput.log
 node_modules
 *.pyc
 npm-debug.log
