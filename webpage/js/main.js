@@ -27,7 +27,7 @@ $("#searchForm").submit(function(e) {
 	  url: url,
 	  type: 'POST',
 	  success: function (data) {
-	  		Materialize.toast('Verification successfully sent!', 4000);
+	  		Materialize.toast('Episode successfully verified and moved!', 4000);
 	  },
 	  error: function(data) {
 	  	Materialize.toast(data.responseJSON.error, 4000);
