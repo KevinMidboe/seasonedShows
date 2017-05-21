@@ -3,7 +3,7 @@
 # @Author: KevinMidboe
 # @Date:   2017-04-05 18:40:11
 # @Last Modified by:   KevinMidboe
-# @Last Modified time: 2017-05-15 11:55:52
+# @Last Modified time: 2017-05-21 23:38:33
 import os.path, hashlib, time, glob, sqlite3, re, json, tweepy
 import logging
 from functools import reduce
@@ -90,7 +90,7 @@ class strayEpisode(object):
 		return file
 
 	def analyseSubtitles(self, subFile):
-		f = open('/'.join([env.show_dir, self.parent, subFile]), 'r', encoding='ISO-8859-15')
+		f = open(os.path.join([env.show_dir, self.parent, subFile]), 'r', encoding='ISO-8859-15')
 		language = detect(f.read())
 		f.close()
 
