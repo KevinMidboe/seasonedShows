@@ -1,0 +1,1 @@
+So to get people to sign up for a account could be to have them sign up for shows that they can be alerted when are added. They can choose by SMS, twitter, email or maybe newsletter. 
