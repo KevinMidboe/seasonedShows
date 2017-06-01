@@ -1,0 +1,13 @@
+{
+  "name": "seasoned",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/KevinMidboe/seasonedShows",
+  "author": "Kevin Midboe",
+  "license": "MIT",
+  "dependencies": {
+    "path": "^0.12.7",
+    "webpack": "^2.6.1",
+    "webpack-dev-server": "^2.4.5"
+  }
+}
