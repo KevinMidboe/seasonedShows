@@ -3,7 +3,7 @@
 # @Author: KevinMidboe
 # @Date:   2017-04-05 18:40:11
 # @Last Modified by:   KevinMidboe
-# @Last Modified time: 2017-05-21 23:38:33
+# @Last Modified time: 2017-06-01 19:02:04
 import os.path, hashlib, time, glob, sqlite3, re, json, tweepy
 import logging
 from functools import reduce
@@ -90,6 +90,7 @@ class strayEpisode(object):
 		return file
 
 	def analyseSubtitles(self, subFile):
+		# TODO verify that it is a file
 		f = open(os.path.join([env.show_dir, self.parent, subFile]), 'r', encoding='ISO-8859-15')
 		language = detect(f.read())
 		f.close()
@@ -112,8 +113,11 @@ class strayEpisode(object):
 	def notifyInsert(self):
 		# Send unique id. (time)
 		tweetObj = twitter()
-		message = 'Added episode:\n' + self.showName + ' S' + self.season\
-	 		+ 'E' + self.episode + '\nDetails: \n https://kevinmidboe.com/seasoned/verified.html?id=' + self._id
+		if self.showName is None:
+			message = 'Error adding ep: ' + self._id
+		else:
+			message = 'Added episode:\n' + self.showName + ' S' + self.season\
+	 			+ 'E' + self.episode + '\nDetails: \n https://kevinmidboe.com/seasoned/verified.html?id=' + self._id
 		tweetObj.dm(message)
 
 
@@ -141,13 +145,13 @@ class strayEpisode(object):
 
 
 def getDirContent(dir=env.show_dir):
+	# TODO What if item in db is not in this list?
 	try:
 		return [d for d in os.listdir(dir) if d[0] != '.']
 	except FileNotFoundError:
 		# TODO Log to error file
 		logging.info('Error: "' + dir + '" is not a directory.')
 		# TODO Remove this exit(0)
-		exit(0)
 
 # Hashes the contents of media folder to easily check for changes.
 def directoryChecksum():
