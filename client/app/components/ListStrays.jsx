@@ -29,7 +29,6 @@ class ListStrays extends React.Component {
 				{this.state.strays.map((strayObj) => {
 					if (strayObj.verified == 0) {
 						var url = "https://kevinmidboe.com/seasoned/verified.html?id=" + strayObj.id;
-						console.log(url);
 						return ([
 							<span key={strayObj.id}>{strayObj.name}</span>,
 							<a href={url}>{strayObj.id}</a>
