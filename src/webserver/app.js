@@ -2,9 +2,6 @@
 var express    = require('express');        // call express
 var app        = express();                 // define our app using express
 var bodyParser = require('body-parser'); 
-var fs = require('fs')
-var morgan = require('morgan')
-var path = require('path')
 
 // this will let us get the data from a POST
 // configure app to use bodyParser()
@@ -12,8 +9,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 var port = 31459;        // set our port
-var accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), {flags: 'a'})
-var logger = morgan('combined', {stream: accessLogStream});
 
 var router = express.Router();
 
@@ -21,9 +16,6 @@ router.use(function(req, res, next) {
     // do logging
     console.log('Something is happening.');
 	res.setHeader('Access-Control-Allow-Origin', 'https://kevinmidboe.com');
-	logger(req, res, function (err) {
-		if (err) return done(err)
-	});
     next();
 });
 
