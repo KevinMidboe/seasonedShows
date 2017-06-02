@@ -6,6 +6,7 @@
 import React from 'react';
 import FetchData from './FetchData.js';
 import ListStrays from './ListStrays.jsx'
+import SearchRequest from './SearchRequest.jsx';
 
 export default class App extends React.Component {
 	render() {
@@ -17,6 +18,8 @@ export default class App extends React.Component {
 					<ListStrays />
 
 					<FetchData />
+
+					<SearchRequest />
 			</div>
 		);
 	}
