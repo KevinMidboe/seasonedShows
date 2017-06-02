@@ -147,7 +147,7 @@ def getDirContent(dir=env.show_dir):
 		# TODO Log to error file
 		logging.info('Error: "' + dir + '" is not a directory.')
 		# TODO Remove this exit(0)
-		exit(0)
+		# exit(0)
 
 # Hashes the contents of media folder to easily check for changes.
 def directoryChecksum():
@@ -205,7 +205,7 @@ def main():
 
 if __name__ == '__main__':
 	if (os.path.exists(env.logfile)):
-		logging.basicConfig(filename=env.logfile, level=logging.INFO)
+		logging.basicConfig(filename=env.logfile, level=logging.DEBUG)
 	else:
 		print('Logfile could not be found at ' + env.logfile + '. Verifiy presence or disable logging in config.')
 		exit(0)
