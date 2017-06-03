@@ -34,9 +34,12 @@ router.post('/v1/seasoned/verify/:strayId', require('./controllers/seasoned/veri
 
 router.get('/v1/plex/search', require('./controllers/plex/searchMedia.js'));
 router.get('/v1/plex/playing', require('./controllers/plex/plexPlaying.js'));
+
+// router.get('/v1/plex/request/all', require('./controllers/plex/searchRequest.js'));
 router.get('/v1/plex/request', require('./controllers/plex/searchRequest.js'));
 router.get('/v1/plex/request/:mediaId', require('./controllers/plex/readRequest.js'));
-// router.post('/v1/plex/request/:mediaId', require('./controllers/plex/submitRequest.js'));
+router.post('/v1/plex/request/:mediaId', require('./controllers/plex/submitRequest.js'));
+
 router.get('/v1/plex/hook', require('./controllers/plex/hookDump.js'));
 
 router.get('/v1/tmdb/search', require('./controllers/tmdb/searchMedia.js'));
