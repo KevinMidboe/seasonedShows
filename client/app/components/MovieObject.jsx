@@ -7,7 +7,8 @@ class MovieObject {
 		this.year = object.year;
 		// Check if object.poster != undefined
 		this.poster = object.poster;
-		this.matchedInPlex = object.matchedInPlex
+		this.matchedInPlex = object.matchedInPlex;
+		this.overview = object.overview;
 	}
 
 	requestExisting(id) {
@@ -34,6 +35,8 @@ class MovieObject {
 		} else {
 			returnList.push(<button onClick={() => this.requestMovie(this.id)}>Request</button>)
 		}
+
+		returnList.push(<span>{this.overview}</span>);
 
 		returnList.push(<br></br>);
 		return returnList;
