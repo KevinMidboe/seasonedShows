@@ -7,8 +7,22 @@ const TMDB = require('src/tmdb/tmdb');
 const tmdb = new TMDB(configuration.get('tmdb', 'apiKey'));
 var Promise = require('bluebird');
 var rp = require('request-promise');
+var pythonShell = require('python-shell');
+
+const establishedDatabase = require('src/database/database');
 
 class RequestRepository {
+
+	constructor(database) {
+		this.database = database || establishedDatabase;
+		this.queries = {
+			// 'read': 'SELECT * FROM stray_eps WHERE id = ?',
+			// 'readAll': 'SELECT id, name, season, episode, verified FROM stray_eps',
+			// 'readAllFiltered': 'SELECT id, name, season, episode, verified FROM stray_eps WHERE verified = ',
+			'checkRequested': 'SELECT id, title FROM request WHERE id = ?',
+			'request': 'UPDATE request SET matched = 1 WHERE id = ?',
+		};
+	}
 
 	searchRequest(query, page, type) {
 		return Promise.resolve()
@@ -53,6 +67,36 @@ class RequestRepository {
 			});
 			return tmdbMovie;
 		});
+	}
+
+	submitRequest(movieId) {
+		console.log(movieId);
+		return Promise.resolve()
+			.then(() => {
+				pythonShell.run('moveSeasoned.py', function (err, results) {
+				  // if (err) throw err;
+				  // TODO Add error handling!! StrayRepository.ERROR
+				  // results is an array consisting of messages collected during execution
+				  console.log('results: %j', results);
+				})
+			})
+			.catch((error) => {
+				console.log(error);
+				return error;
+			})
+
+		// return this.database.get(this.queries.checkRequested, movieId).then((row) => {
+		// 	// TODO send back the name, not ID
+		// 	assert.notEqual(row, undefined, `Stray '${movieId}' already verified.`);
+
+		// 	var options = {
+		// 		args: [movieId]
+		// 	}
+
+			
+
+		// 	return this.database.run(this.queries.verify, movieId);
+		// })
 	}
 
 }
