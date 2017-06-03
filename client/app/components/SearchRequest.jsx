@@ -23,7 +23,12 @@ class SearchRequest extends React.Component {
 
   _handleKeyPress(e) {
     if (e.key === 'Enter') {
-      var query = 'https://apollo.kevinmidboe.com/api/v1/plex/request?query=' + this.state.searchQuery;
+      this.fetchQuery();
+    }
+  }
+
+  fetchQuery() {
+    var query = 'https://apollo.kevinmidboe.com/api/v1/plex/request?query=' + this.state.searchQuery;
 
       fetch(query)
       .then(response => response.json())
@@ -31,7 +36,6 @@ class SearchRequest extends React.Component {
           items: data
         })
       ).catch(err => console.error('Error submit: ', err.toString()));
-    }
   }
 
   printMovies(item) {
@@ -57,6 +61,7 @@ class SearchRequest extends React.Component {
           onChange={event => this.handleChange(event)}
           value={this.state.searchQuery}
           />
+          <button onClick={() => this.fetchQuery()}>Search</button>
           <br></br>
 
           {this.state.searchQuery}
