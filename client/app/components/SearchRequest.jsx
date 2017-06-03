@@ -58,7 +58,7 @@ class SearchRequest extends React.Component {
         <input
           type="text"
           onKeyPress={(event) => this._handleKeyPress(event)}
-          onChange={event => this.handleChange(event)}
+          onChange={(event) => this.handleChange(event)}
           value={this.state.searchQuery}
           />
           <button onClick={() => this.fetchQuery()}>Search</button>

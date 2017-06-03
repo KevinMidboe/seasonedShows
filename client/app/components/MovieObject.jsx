@@ -16,7 +16,9 @@ class MovieObject {
 	}
 
 	requestMovie(id) {
-		console.log(id);
+		fetch('http://localhost:31459/api/v1/plex/request/' + id, {
+		  method: 'POST'
+		})
 	}
 
 	getElement() {
