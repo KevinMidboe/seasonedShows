@@ -4,7 +4,7 @@ class FetchData extends React.Component {
 	constructor(props){
 		super(props)
 		this.state = {
-			imgUrls: [],
+			playing: [],
       		hei: '1',
       		intervalId: null,
       		url: ''
@@ -16,11 +16,9 @@ class FetchData extends React.Component {
 		fetch("https://apollo.kevinmidboe.com/api/v1/plex/playing").then(
 			function(response){
 				response.json().then(function(data){
-					console.log(data.size);
 					that.setState({
-						imgUrls: that.state.imgUrls.concat(data.video)
+						playing: that.state.playing.concat(data.video)
 					})
-					console.log(data.video.title);
 				})
 			}
 		)
@@ -32,23 +30,30 @@ class FetchData extends React.Component {
 	}
 
 	getPlaying() {
-		console.log('Should not reach')
-		// Need callback to work
-		// Should try to clear out old requests to limit mem use
+		if (this.state.playing.length != 0) {
+			return this.state.playing.map((playingObj) => {
+				if (playingObj.type === 'episode') {
+					console.log('episode')
+					return ([
+						<span>{playingObj.title}</span>,
+						<span>{playingObj.season}</span>,
+						<span>{playingObj.episode}</span>
+					])
+				} else if (playingObj.type === 'movie') {
+					console.log('movie')
+					return ([
+						<span>{playingObj.title}</span>
+					])
+				}
+			})
+		} else {
+			return (<span>Nothing playing</span>)
+		}
 	}
 
 	render(){
 			return(
-			<div className="FetchData">
-			{this.state.imgUrls.map((imgObj) => {
-				return ([
-					<span>{imgObj.title}</span>,
-					<span>{imgObj.season}</span>,
-					<span>{imgObj.episode}</span>,
-				]);
-			})}
-
-			</div>
+			<div className="FetchData">{this.getPlaying()}</div>
 		);
 	}
 

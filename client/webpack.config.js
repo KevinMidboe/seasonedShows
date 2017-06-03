@@ -2,7 +2,7 @@
 * @Author: KevinMidboe
 * @Date:   2017-06-01 19:09:16
 * @Last Modified by:   KevinMidboe
-* @Last Modified time: 2017-06-01 22:11:51
+* @Last Modified time: 2017-06-02 19:38:45
 */
 
 const path = require('path');
@@ -21,7 +21,7 @@ module.exports = {
 		filename: 'index_bundle.js'
 	},
 	devServer: {
-		headers: { "Access-Control-Allow-Origin": "*" }
+		headers: {'Access-Control-Allow-Origin': '*'}
 	},
 	module: {
 		loaders: [
