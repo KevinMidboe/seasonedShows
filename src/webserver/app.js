@@ -8,14 +8,18 @@ var bodyParser = require('body-parser');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-var port = 31459;        // set our port
 
+var port = 31459;        // set our port
 var router = express.Router();
+var allowedOrigins = ['https://kevinmidboe.com', 'http://localhost:8080']
+
 
 router.use(function(req, res, next) {
-    // do logging
     console.log('Something is happening.');
-	res.setHeader('Access-Control-Allow-Origin', 'https://kevinmidboe.com');
+    var origin = req.headers.origin;
+    if (allowedOrigins.indexOf(origin) > -1) {
+		res.setHeader('Access-Control-Allow-Origin', origin);
+	}
     next();
 });
 
