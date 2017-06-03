@@ -22,6 +22,7 @@ function convertTmdbToMovie(tmdbMovie) {
 
 	movie.poster = tmdbMovie.poster_path;
 	movie.background = tmdbMovie.backdrop_path;
+	movie.overview = tmdbMovie.overview;
 
 	return movie;
 }
