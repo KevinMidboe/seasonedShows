@@ -8,9 +8,10 @@ const requestRepository = new RequestRepository();
  * @returns {Callback}
  */
 function readRequestController(req, res) {
-  const mediaId = req.params.mediaId;
+  const requestId = req.params.requestId;
   const { type } = req.query;
-  requestRepository.lookup(mediaId, type)
+  
+  requestRepository.lookup(requestId, type)
   .then((movies) => {
     res.send(movies);
   }).catch((error) => {
