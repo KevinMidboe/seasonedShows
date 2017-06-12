@@ -3,7 +3,7 @@
 # @Author: KevinMidboe
 # @Date:   2017-04-12 23:27:51
 # @Last Modified by:   KevinMidboe
-# @Last Modified time: 2017-04-13 16:22:23
+# @Last Modified time: 2017-06-12 20:28:03
 
 import sys, sqlite3, json, os
 import env_variables as env
@@ -42,6 +42,11 @@ class episode(object):
 		return url
 
 
+def fix_ownership(path):
+	uid = int(os.environ.get('SUDO_UID'))
+	gid = int(os.environ.get('SUDO_GID'))
+	os.chown(path, uid, gid)
+
 def moveStray(strayId):
 	ep = episode(strayId)
 
@@ -54,6 +59,7 @@ def moveStray(strayId):
 	for item in ep.trash:
 		os.remove(ep.typeDir('parent', mergeItem=item))
 	
+	fix_ownership(ep.typeDir('parent'))
 	os.rmdir(ep.typeDir('parent'))
 
 if __name__ == '__main__':
