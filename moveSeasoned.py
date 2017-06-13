@@ -45,7 +45,7 @@ class episode(object):
 def fix_ownership(path):
 	uid = int(os.environ.get('SUDO_UID'))
 	gid = int(os.environ.get('SUDO_GID'))
-	os.chown(path, uid, gid)
+	os.chown(path, '1000', '1000')
 
 def moveStray(strayId):
 	ep = episode(strayId)
