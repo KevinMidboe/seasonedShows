@@ -37,6 +37,7 @@ class episode(object):
 		url = '/'.join(self.queries[dType])
 		if create and not os.path.isdir(url):
 			os.makedirs(url)
+			fix_ownership(url)
 		if mergeItem:
 			return '/'.join([url, str(mergeItem)])
 		return url
@@ -45,7 +46,7 @@ class episode(object):
 def fix_ownership(path):
 	uid = int(os.environ.get('SUDO_UID'))
 	gid = int(os.environ.get('SUDO_GID'))
-	os.chown(path, '1000', '1000')
+	os.chown(path, '1000', '113')
 
 def moveStray(strayId):
 	ep = episode(strayId)
