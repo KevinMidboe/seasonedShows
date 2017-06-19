@@ -3,7 +3,7 @@
 # @Author: KevinMidboe
 # @Date:   2017-04-05 18:40:11
 # @Last Modified by:   KevinMidboe
-# @Last Modified time: 2017-06-18 21:45:42
+# @Last Modified time: 2017-06-18 21:47:48
 import os.path, hashlib, time, glob, sqlite3, re, json, tweepy
 import logging
 from functools import reduce
@@ -92,8 +92,9 @@ class strayEpisode(object):
 	def analyseSubtitles(self, subFile):
 		# TODO verify that it is a file
 		try:
-			subtitlesPath = os.path.join([env.show_dir, self.parent, subFile])
+			subtitlePath = os.path.join([env.show_dir, self.parent, subFile])
 		except TypeError:
+			# TODO don't get a list in subtitlePath
 			return removeUploadSign(subFile)
 		f = open(subtitlesPath, 'r', encoding='ISO-8859-15')
 		language = detect(f.read())
