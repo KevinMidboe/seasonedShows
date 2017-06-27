@@ -3,7 +3,7 @@
 # @Author: KevinMidboe
 # @Date:   2017-04-12 23:27:51
 # @Last Modified by:   KevinMidboe
-# @Last Modified time: 2017-06-27 15:37:26
+# @Last Modified time: 2017-06-27 15:48:00
 
 import sys, sqlite3, json, os
 import logging
@@ -75,6 +75,8 @@ def moveStray(strayId):
 			logging.warning(ep.typeDir('parent', mergeItem=item) + 'does not exist, cannot be removed.')
 	
 	fix_ownership(ep.typeDir('episode'))
+	for item in ep.typeDir('episode'):
+		fix_ownership(item)
 	
 
 	# TODO because we might jump over same files, the dir might no longer 
