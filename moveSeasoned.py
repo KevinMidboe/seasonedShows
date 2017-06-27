@@ -3,7 +3,7 @@
 # @Author: KevinMidboe
 # @Date:   2017-04-12 23:27:51
 # @Last Modified by:   KevinMidboe
-# @Last Modified time: 2017-06-27 15:24:10
+# @Last Modified time: 2017-06-27 15:25:04
 
 import sys, sqlite3, json, os
 import logging
@@ -44,6 +44,7 @@ class episode(object):
 
 
 def fix_ownership(path):
+	# TODO find this from username from config
 	uid = int(os.environ.get('1000'))
 	gid = int(os.environ.get('105'))
 	os.chown(path, uid, gid)
