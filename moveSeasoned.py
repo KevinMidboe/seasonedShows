@@ -3,7 +3,7 @@
 # @Author: KevinMidboe
 # @Date:   2017-04-12 23:27:51
 # @Last Modified by:   KevinMidboe
-# @Last Modified time: 2017-06-27 15:48:00
+# @Last Modified time: 2017-06-27 15:49:19
 
 import sys, sqlite3, json, os
 import logging
@@ -76,6 +76,7 @@ def moveStray(strayId):
 	
 	fix_ownership(ep.typeDir('episode'))
 	for item in ep.typeDir('episode'):
+		print(item)
 		fix_ownership(item)
 	
 
