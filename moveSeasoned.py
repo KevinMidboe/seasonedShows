@@ -3,7 +3,7 @@
 # @Author: KevinMidboe
 # @Date:   2017-04-12 23:27:51
 # @Last Modified by:   KevinMidboe
-# @Last Modified time: 2017-06-27 15:55:41
+# @Last Modified time: 2017-06-27 15:56:33
 
 import sys, sqlite3, json, os
 import logging
@@ -77,7 +77,7 @@ def moveStray(strayId):
 	fix_ownership(ep.typeDir('episode'))
 	for root, dirs, files in os.walk(ep.typeDir('episode')):  
 		for item in files:
-			fix_ownership(os.path.join([ep.typeDir('episode'), item])
+			fix_ownership(os.path.join([ep.typeDir('episode'), item]))
 	
 
 	# TODO because we might jump over same files, the dir might no longer 
