@@ -3,7 +3,7 @@
 # @Author: KevinMidboe
 # @Date:   2017-04-12 23:27:51
 # @Last Modified by:   KevinMidboe
-# @Last Modified time: 2017-06-27 15:33:12
+# @Last Modified time: 2017-06-27 15:37:26
 
 import sys, sqlite3, json, os
 import logging
@@ -75,7 +75,14 @@ def moveStray(strayId):
 			logging.warning(ep.typeDir('parent', mergeItem=item) + 'does not exist, cannot be removed.')
 	
 	fix_ownership(ep.typeDir('episode'))
-	os.rmdir(ep.typeDir('parent'))
+	
+
+	# TODO because we might jump over same files, the dir might no longer 
+	# be empty and cannot remove dir like this.
+	try: 
+		os.rmdir(ep.typeDir('parent'))
+	except FileNotFoundError:
+		logging.warning('Cannot remove ' + ep.typeDir('parent') + ', file no longer exists.')
 
 if __name__ == '__main__':
 	if (os.path.exists(env.logfile)):
