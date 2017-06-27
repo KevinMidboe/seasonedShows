@@ -3,9 +3,10 @@
 # @Author: KevinMidboe
 # @Date:   2017-04-12 23:27:51
 # @Last Modified by:   KevinMidboe
-# @Last Modified time: 2017-06-12 20:28:03
+# @Last Modified time: 2017-06-27 15:15:50
 
 import sys, sqlite3, json, os
+import logging
 import env_variables as env
 
 class episode(object):
@@ -51,16 +52,35 @@ def moveStray(strayId):
 	ep = episode(strayId)
 
 	for item in ep.video_files:
-		os.rename(ep.typeDir('parent', mergeItem=item[0]), ep.typeDir('episode', mergeItem=item[1], create=True))
+		try: 
+			old_dir = ep.typeDir('parent', mergeItem=item[0])
+			new_dir = ep.typeDir('episode', mergeItem=item[1], create=True)
+			os.rename(old_dir, new_dir)
+		except FileNotFoundError:
+			logging.warning(old_dir + ' does not exits, cannot be moved.')
 
 	for item in ep.subtitles:
-		os.rename(ep.typeDir('parent', mergeItem=item[0]), ep.typeDir('episode', mergeItem=item[1], create=True))
+		try:
+			old_dir = ep.typeDir('parent', mergeItem=item[0])
+			new_dir = ep.typeDir('episode', mergeItem=item[1], create=True)
+			os.rename(old_dir, new_dir)
+		except FileNotFoundError:
+			logging.warning(old_dir + ' does not exits, cannot be moved.')
 
 	for item in ep.trash:
-		os.remove(ep.typeDir('parent', mergeItem=item))
+		try:
+			os.remove(ep.typeDir('parent', mergeItem=item))
+		except FileNotFoundError:
+			logging.warning(ep.typeDir('parent', mergeItem=item) + 'does not exist, cannot be removed.')
 	
-	fix_ownership(ep.typeDir('parent'))
+	fix_ownership(ep.typeDir('episode'))
 	os.rmdir(ep.typeDir('parent'))
 
 if __name__ == '__main__':
+	if (os.path.exists(env.logfile)):
+		logging.basicConfig(filename=env.logfile, level=logging.INFO)
+	else:
+		print('Logfile could not be found at ' + env.logfile + '. Verifiy presence or disable logging in config.')
+
 	moveStray(sys.argv[-1])
+
