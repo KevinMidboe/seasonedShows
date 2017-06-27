@@ -38,6 +38,7 @@ class episode(object):
 		url = '/'.join(self.queries[dType])
 		if create and not os.path.isdir(url):
 			os.makedirs(url)
+			fix_ownership(url)
 		if mergeItem:
 			return '/'.join([url, str(mergeItem)])
 		return url
@@ -94,4 +95,3 @@ if __name__ == '__main__':
 		print('Logfile could not be found at ' + env.logfile + '. Verifiy presence or disable logging in config.')
 
 	moveStray(sys.argv[-1])
-

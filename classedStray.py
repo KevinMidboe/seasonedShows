@@ -3,7 +3,7 @@
 # @Author: KevinMidboe
 # @Date:   2017-04-05 18:40:11
 # @Last Modified by:   KevinMidboe
-# @Last Modified time: 2017-06-01 19:02:04
+# @Last Modified time: 2017-06-18 21:49:33
 import os.path, hashlib, time, glob, sqlite3, re, json, tweepy
 import logging
 from functools import reduce
@@ -91,7 +91,12 @@ class strayEpisode(object):
 
 	def analyseSubtitles(self, subFile):
 		# TODO verify that it is a file
-		f = open(os.path.join([env.show_dir, self.parent, subFile]), 'r', encoding='ISO-8859-15')
+		try:
+			subtitlePath = os.path.join([env.show_dir, self.parent, subFile])
+		except TypeError:
+			# TODO don't get a list in subtitlePath
+			return self.removeUploadSign(subFile)
+		f = open(subtitlesPath, 'r', encoding='ISO-8859-15')
 		language = detect(f.read())
 		f.close()
 
@@ -151,7 +156,6 @@ def getDirContent(dir=env.show_dir):
 	except FileNotFoundError:
 		# TODO Log to error file
 		logging.info('Error: "' + dir + '" is not a directory.')
-		# TODO Remove this exit(0)
 
 # Hashes the contents of media folder to easily check for changes.
 def directoryChecksum():
@@ -209,7 +213,7 @@ def main():
 
 if __name__ == '__main__':
 	if (os.path.exists(env.logfile)):
-		logging.basicConfig(filename=env.logfile, level=logging.INFO)
+		logging.basicConfig(filename=env.logfile, level=logging.DEBUG)
 	else:
 		print('Logfile could not be found at ' + env.logfile + '. Verifiy presence or disable logging in config.')
 		exit(0)
