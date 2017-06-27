@@ -3,7 +3,7 @@
 # @Author: KevinMidboe
 # @Date:   2017-04-12 23:27:51
 # @Last Modified by:   KevinMidboe
-# @Last Modified time: 2017-06-27 15:29:47
+# @Last Modified time: 2017-06-27 15:33:12
 
 import sys, sqlite3, json, os
 import logging
@@ -46,7 +46,7 @@ class episode(object):
 def fix_ownership(path):
 	# TODO find this from username from config
 	uid = 1000
-	gid = 105
+	gid = 113
 	os.chown(path, uid, gid)
 
 def moveStray(strayId):
