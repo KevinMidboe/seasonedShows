@@ -13,12 +13,13 @@ class SearchRequest extends React.Component {
 
   componentDidMount(){
   	var that = this;
-		fetch("https://apollo.kevinmidboe.com/api/v1/plex/request?query=interstellar")
-    .then(response => response.json())
-    .then(data => this.setState({
-        items: data
-      })
-    ).catch(err => console.error('Error load: ', err.toString()));
+  	this.setState({items: []})
+		// fetch("https://apollo.kevinmidboe.com/api/v1/plex/request?query=interstellar")
+  //   .then(response => response.json())
+  //   .then(data => this.setState({
+  //       items: data
+  //     })
+  //   ).catch(err => console.error('Error load: ', err.toString()));
   }
 
   _handleKeyPress(e) {
@@ -27,15 +28,32 @@ class SearchRequest extends React.Component {
     }
   }
 
+  handleErrors(response) {
+  	if (!response.ok) {
+  		throw Error(response.statusText);
+  	}
+  	return response;
+  }
+
   fetchQuery() {
     var query = 'https://apollo.kevinmidboe.com/api/v1/plex/request?query=' + this.state.searchQuery;
 
       fetch(query)
-      .then(response => response.json())
-      .then(data => this.setState({
-          items: data
-        })
-      ).catch(err => console.error('Error submit: ', err.toString()));
+      	// Check if the response is ok
+      	.then(response => this.handleErrors(response))
+      	.then(response => response.json()) // Convert to json object and pass to next then
+	      .then(data => {  // Parse the data of the JSON response
+	      	if (data.length > 0) {
+	      		this.setState({
+	          	items: data
+	        	})
+	      	} else {
+	      		this.setState({
+	      			items: null
+	      		})
+	      	}
+	      })
+	      .catch(error => console.log('Error submit: ', error.toString()));
   }
 
   printMovies(item) {
@@ -52,13 +70,27 @@ class SearchRequest extends React.Component {
     });
   }
 
+  mapResponseToMovies() {
+  	// Here we have some movie response items in our state
+  	if (this.state.items) {
+  		console.log('something')
+  	}
+   // And here we are going to print a 404 message because the response was empty
+  	else {
+  		console.log('nothing')
+  	}
+  	for (var i = this.state.items.length - 1; i >= 0; i--) {
+  		this.printMovies(this.state.items[i])
+  	}
+  }
+
   render(){
     return(
       <div>
         <input
           type="text"
           onKeyPress={(event) => this._handleKeyPress(event)}
-          onChange={(event) => this.handleChange(event)}
+          onChange={event => this.handleChange(event)}
           value={this.state.searchQuery}
           />
           <button onClick={() => this.fetchQuery()}>Search</button>
@@ -67,7 +99,7 @@ class SearchRequest extends React.Component {
           {this.state.searchQuery}
           <br></br>
             
-          {this.state.items.map((item) => this.printMovies(item))}
+          {this.mapResponseToMovies()}
       </div>
     )
   }
