@@ -1,4 +1,3 @@
-const configuration = require('src/config/configuration').getInstance();
 const StrayRepository = require('src/seasoned/strayRepository');
 const strayRepository = new StrayRepository();
 

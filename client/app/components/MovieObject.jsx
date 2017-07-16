@@ -7,15 +7,18 @@ class MovieObject {
 		this.year = object.year;
 		// Check if object.poster != undefined
 		this.poster = object.poster;
-		this.matchedInPlex = object.matchedInPlex
+		this.matchedInPlex = object.matchedInPlex;
+		this.overview = object.overview;
 	}
 
-	requestExisting(id) {
-		console.log('Exists', id)
+	requestExisting(movie) {
+		console.log('Exists', movie)
 	}
 
 	requestMovie(id) {
-		console.log(id);
+		fetch('http://localhost:31459/api/v1/plex/request/' + id, {
+		  method: 'POST'
+		})
 	}
 
 	getElement() {
@@ -30,10 +33,12 @@ class MovieObject {
 		returnList.push(<img src={posterPath}></img>);
 
 		if (this.matchedInPlex) {
-			returnList.push(<button onClick={() => this.requestExisting(this.id)}>Request anyway</button>)
+			returnList.push(<button onClick={() => this.requestExisting(this)}>Request anyway</button>)
 		} else {
-			returnList.push(<button onClick={() => this.requestMovie(this.id)}>Request</button>)
+			returnList.push(<button onClick={() => this.requestMovie(this)}>Request</button>)
 		}
+
+		returnList.push(<span>{this.overview}</span>);
 
 		returnList.push(<br></br>);
 		return returnList;
