@@ -11,8 +11,8 @@ class MovieObject {
 		this.overview = object.overview;
 	}
 
-	requestExisting(id) {
-		console.log('Exists', id)
+	requestExisting(movie) {
+		console.log('Exists', movie)
 	}
 
 	requestMovie(id) {
@@ -33,9 +33,9 @@ class MovieObject {
 		returnList.push(<img src={posterPath}></img>);
 
 		if (this.matchedInPlex) {
-			returnList.push(<button onClick={() => this.requestExisting(this.id)}>Request anyway</button>)
+			returnList.push(<button onClick={() => this.requestExisting(this)}>Request anyway</button>)
 		} else {
-			returnList.push(<button onClick={() => this.requestMovie(this.id)}>Request</button>)
+			returnList.push(<button onClick={() => this.requestMovie(this)}>Request</button>)
 		}
 
 		returnList.push(<span>{this.overview}</span>);
