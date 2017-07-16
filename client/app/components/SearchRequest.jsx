@@ -2,6 +2,8 @@ import React from 'react';
 
 import MovieObject from './MovieObject.jsx';
 
+// TODO add option for searching multi, movies or tv shows
+
 class SearchRequest extends React.Component {
 	constructor(props){
     super(props)
