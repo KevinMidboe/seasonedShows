@@ -8,6 +8,8 @@ const tmdb = new TMDB(configuration.get('tmdb', 'apiKey'));
 var Promise = require('bluebird');
 var rp = require('request-promise');
 
+var pythonShell = require('python-shell');
+
 class RequestRepository {
 
 	searchRequest(query, page, type) {
@@ -53,6 +55,30 @@ class RequestRepository {
 			});
 			return tmdbMovie;
 		});
+	}
+
+	sendRequest(identifier) {
+		// TODO try a cache hit on the movie item
+
+		console.log(identifier)
+		tmdb.lookup(identifier).then(movie => {
+			console.log(movie.title)
+
+			var options = {
+			args: [movie.title, movie.year, movie.poster]
+			}
+
+			pythonShell.run('sendRequest.py', options, function (err, results) {
+				if (err) throw err;
+				// TODO Add error handling!! RequestRepository.ERROR
+				// results is an array consisting of messages collected during execution
+
+				console.log('results: %j', results)
+			})
+			return true;
+		})
+
+		
 	}
 
 }
