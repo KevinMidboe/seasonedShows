@@ -10,3 +10,4 @@ npm-debug.log
 webpage/js/env_variables.js
 client/dist
 src/webserver/access.log
+conf/development.json
