@@ -5,101 +5,96 @@ import MovieObject from './MovieObject.jsx';
 class SearchRequest extends React.Component {
 	constructor(props){
     super(props)
+    // Constructor with states holding the search query and the element of reponse.
     this.state = {
       searchQuery: '',
-      items: []
+      responseMovieList: null
+    }
+
+    this.URLs = {
+    	request: 'https://apollo.kevinmidboe.com/api/v1/plex/request?query=',
+    	sendRequest: 'https://apollo.kevinmidboe.com/api/v1/plex/request?query='
     }
   }
 
   componentDidMount(){
   	var that = this;
-  	this.setState({items: []})
-		// fetch("https://apollo.kevinmidboe.com/api/v1/plex/request?query=interstellar")
-  //   .then(response => response.json())
-  //   .then(data => this.setState({
-  //       items: data
-  //     })
-  //   ).catch(err => console.error('Error load: ', err.toString()));
+  	this.setState({responseMovieList: null})
   }
-
-  _handleKeyPress(e) {
-    if (e.key === 'Enter') {
-      this.fetchQuery();
-    }
-  }
-
+  
+  // Handles all errors of the response of a fetch call
   handleErrors(response) {
   	if (!response.ok) {
-  		throw Error(response.statusText);
+  		throw Error(response.status);
   	}
   	return response;
   }
 
   fetchQuery() {
-    var query = 'https://apollo.kevinmidboe.com/api/v1/plex/request?query=' + this.state.searchQuery;
+    let url = this.URLs.request + this.state.searchQuery
 
-      fetch(query)
+      fetch(url)
       	// Check if the response is ok
       	.then(response => this.handleErrors(response))
       	.then(response => response.json()) // Convert to json object and pass to next then
 	      .then(data => {  // Parse the data of the JSON response
+	      	// If it is something here it updates the state variable with the HTML list of all 
+	      	// movie objects that where returned by the search request
 	      	if (data.length > 0) {
-	      		this.setState({
-	          	items: data
+	        	this.setState({
+	        		responseMovieList: data.map(item => this.createMovieObjects(item))
 	        	})
-	      	} else {
-	      		this.setState({
-	      			items: null
-	      		})
 	      	}
 	      })
-	      .catch(error => console.log('Error submit: ', error.toString()));
+	      // If the --------
+	      .catch(error => {
+	      	console.log(error)
+	      	this.setState({
+	      		responseMovieList: <h1>Not Found</h1>
+	      	})
+
+	      	console.log('Error submit: ', error.toString());
+	      });
   }
 
-  printMovies(item) {
-    if (item != undefined) {
-      let a = new MovieObject(item);
-      return a.getElement();
-    }
-  }
-
-
-  handleChange(event){
+  // Updates the internal state of the query search field.
+  updateQueryState(event){
     this.setState({
       searchQuery: event.target.value
     });
   }
 
-  mapResponseToMovies() {
-  	// Here we have some movie response items in our state
-  	if (this.state.items) {
-  		console.log('something')
-  	}
-   // And here we are going to print a 404 message because the response was empty
-  	else {
-  		console.log('nothing')
-  	}
-  	for (var i = this.state.items.length - 1; i >= 0; i--) {
-  		this.printMovies(this.state.items[i])
-  	}
+  // For checking if the enter key was pressed in the search field.
+  _handleQueryKeyPress(e) {
+    if (e.key === 'Enter') {
+      this.fetchQuery();
+    }
   }
+
+  // When called passes the variable to MovieObject and calls it's interal function for 
+  // generating the wanted HTML
+  createMovieObjects(item) {
+    let movie = new MovieObject(item);
+    return movie.getElement();
+  }
+
 
   render(){
     return(
       <div>
         <input
           type="text"
-          onKeyPress={(event) => this._handleKeyPress(event)}
-          onChange={event => this.handleChange(event)}
+          onKeyPress={(event) => this._handleQueryKeyPress(event)}
+          onChange={event => this.updateQueryState(event)}
           value={this.state.searchQuery}
           />
           <button onClick={() => this.fetchQuery()}>Search</button>
           <br></br>
 
-          {this.state.searchQuery}
           <br></br>
-            
-          {this.mapResponseToMovies()}
+          <span id='requestMovieList' ref='requestMovieList'>
+          	{this.state.responseMovieList}
+          </span>
       </div>
     )
   }
