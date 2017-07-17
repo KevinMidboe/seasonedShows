@@ -35,7 +35,7 @@ class MovieObject {
 		if (this.matchedInPlex) {
 			returnList.push(<button onClick={() => this.requestExisting(this)}>Request anyway</button>)
 		} else {
-			returnList.push(<button onClick={() => this.requestMovie(this)}>Request</button>)
+			returnList.push(<button onClick={() => this.requestMovie(this.id)}>Request</button>)
 		}
 
 		returnList.push(<span>{this.overview}</span>);
