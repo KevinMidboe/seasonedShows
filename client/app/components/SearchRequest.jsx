@@ -83,7 +83,7 @@ class SearchRequest extends React.Component {
 
   render(){
     return(
-      <div>
+     <div>
         <input
           type="text"
           onKeyPress={(event) => this._handleQueryKeyPress(event)}
@@ -94,9 +94,9 @@ class SearchRequest extends React.Component {
           <br></br>
 
           <br></br>
-          <span id='requestMovieList' ref='requestMovieList'>
-          	{this.state.responseMovieList}
-          </span>
+          <div id='requestMovieList' ref='requestMovieList'>
+            {this.state.responseMovieList}        
+          </div>
       </div>
     )
   }

@@ -1,19 +1,19 @@
 const fs = require('fs');
 const path = require('path');
-const sqlite = require('sqlite');
+const sqlite3 = require('sqlite3');
 
 class SqliteDatabase {
 
 	constructor(host) {
 		this.host = host;
-		this.connection = sqlite;
+		this.connection = sqlite3;
 
 		// this.schemaDirectory = path.join(__dirname, 'schemas');
 	}
 
 	connect() {
 		return Promise.resolve()
-		.then(() => sqlite.open(this.host))
+		.then(() => new sqlite3.Database(this.host))
 	}
 
 	all(sql, parameters) {
