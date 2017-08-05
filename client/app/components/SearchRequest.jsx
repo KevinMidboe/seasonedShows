@@ -82,8 +82,20 @@ class SearchRequest extends React.Component {
 
 
   render(){
+
+    var body = {
+      fontFamily: "'Roboto', 'Open Sans', sans-serif",
+      display: 'inline-block'
+
+    }
+    var requestMovieList = {
+      display: 'flex',
+      flexWrap: 'wrap',
+      justifyContent: 'center'
+    }
+
     return(
-     <div>
+     <div style={body}>
         <input
           type="text"
           onKeyPress={(event) => this._handleQueryKeyPress(event)}
@@ -94,7 +106,7 @@ class SearchRequest extends React.Component {
           <br></br>
 
           <br></br>
-          <div id='requestMovieList' ref='requestMovieList'>
+          <div id='requestMovieList' ref='requestMovieList' style={requestMovieList}>
             {this.state.responseMovieList}        
           </div>
       </div>
