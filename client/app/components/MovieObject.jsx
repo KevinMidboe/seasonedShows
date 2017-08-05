@@ -1,6 +1,6 @@
 import React from 'react';
 
-import '../app.css';
+require('../app.scss');
 
 class MovieObject {
 	constructor(object) {
@@ -24,6 +24,23 @@ class MovieObject {
 	}
 
 	getElement() {
+		var movie_wrapper = {
+			display: 'flex',
+			alignContent: 'center',
+			width: '30%',
+			backgroundColor: '#ffffff',
+			height: '231px',
+			margin: '20px',
+			boxShadow: '0px 0px 5px 1px rgba(0,0,0,0.15)'
+		}
+		var movie_content = {
+			marginLeft: '15px'
+		}
+		var movie_header = {
+			fontSize: '1.6' + 'em'
+		}
+
+
 		var posterPath = 'https://image.tmdb.org/t/p/w154' + this.poster;
 		var buttonState;
 		if (this.matchedInPlex) {
@@ -33,10 +50,10 @@ class MovieObject {
 		}
 
 		return (
-		<div key={this.id} className='movie_wrapper'>
+		<div key={this.id} style={movie_wrapper}>
 			<img src={posterPath}></img>
-			<div className='movie_content'>
-				<span className='movie_header'>{this.title} ({this.year})</span>
+			<div style={movie_content}>
+				<span style={movie_header}>{this.title} ({this.year})</span>
 				<br></br>
 				{buttonState}
 				<br></br>
