@@ -26,8 +26,16 @@ module.exports = {
 	module: {
 		loaders: [
 				{ test: /\.js$/, loader: 'babel-loader', exclude: /node_modules/ },
-				{ test: /\.jsx$/, loader: 'babel-loader', exclude: /node_modules/ }
+				{ test: /\.jsx$/, loader: 'babel-loader', exclude: /node_modules/ },
+				{ test: /\.scss$/, loader: 'css-loader', exclude: /node_modules/ },
+				{ test: /\.css$/, loader: 'style-loader!css!scss', exclude: /node_modules/ }
+				// { test: /\.css$/, loader: 'style-loader!css-loader!', exclude: /node_modules/ },
+					// query: {
+		   //        		presets: ['es2015']
+		   //      	}
+		        
+				// { test: /\.css-loader$/, loader: 'style-loader!css-loader', exclude: /node_modules/ }
     	]
   	},
   	plugins: [HtmlWebpackPluginConfig]
-}
+};
