@@ -1,5 +1,4 @@
 __pycache__
-nohup.out
 shows.db
 .DS_Store
 env_variables.py
@@ -11,3 +10,4 @@ webpage/js/env_variables.js
 client/dist
 src/webserver/access.log
 conf/development.json
+yarn-error.log
