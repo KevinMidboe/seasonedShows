@@ -1,5 +1,7 @@
 import React from 'react';
 
+require('../app.scss');
+
 class MovieObject {
 	constructor(object) {
 		this.id = object.id;
@@ -12,36 +14,52 @@ class MovieObject {
 	}
 
 	requestExisting(movie) {
-		console.log('Exists', movie)
+		console.log('Exists', movie);
 	}
 
 	requestMovie(id) {
 		fetch('http://localhost:31459/api/v1/plex/request/' + id, {
 		  method: 'POST'
-		})
+		});
 	}
 
 	getElement() {
-		var returnList = []
-
-		returnList.push(<p>{this.title} ({this.year})</p>)
-		
-		var posterPath, buttonState;
-		if (this.poster != undefined) {
-			posterPath = 'https://image.tmdb.org/t/p/w150' + this.poster;
+		var movie_wrapper = {
+			display: 'flex',
+			alignContent: 'center',
+			width: '30%',
+			backgroundColor: '#ffffff',
+			height: '231px',
+			margin: '20px',
+			boxShadow: '0px 0px 5px 1px rgba(0,0,0,0.15)'
 		}
-		returnList.push(<img src={posterPath}></img>);
+		var movie_content = {
+			marginLeft: '15px'
+		}
+		var movie_header = {
+			fontSize: '1.6' + 'em'
+		}
 
+
+		var posterPath = 'https://image.tmdb.org/t/p/w154' + this.poster;
+		var buttonState;
 		if (this.matchedInPlex) {
-			returnList.push(<button onClick={() => this.requestExisting(this)}>Request anyway</button>)
+			buttonState = <button onClick={() => {this.requestExisting(this)}}>Request anyway</button>;
 		} else {
-			returnList.push(<button onClick={() => this.requestMovie(this.id)}>Request</button>)
+			buttonState = <button onClick={() => {this.requestMovie(this.id)}}>Request</button>;
 		}
 
-		returnList.push(<span>{this.overview}</span>);
-
-		returnList.push(<br></br>);
-		return returnList;
+		return (
+		<div key={this.id} style={movie_wrapper}>
+			<img src={posterPath}></img>
+			<div style={movie_content}>
+				<span style={movie_header}>{this.title} ({this.year})</span>
+				<br></br>
+				{buttonState}
+				<br></br>
+				<span>{this.overview}</span>
+			</div>
+		</div>)
 	}
 }
 

@@ -1,0 +1,41 @@
+@font-face {
+    font-family: "din";
+    src: url('/app/DIN-Regular-webfont.woff')
+}
+
+html {
+	font-family: 'din', 'Open Sans', sans-serif;
+	display: inline-block;
+	color:red;
+}
+
+#requestMovieList {
+	display: flex;
+
+	flex-wrap: wrap;
+	justify-content: center;
+}
+
+.movie_wrapper {
+	color:red;
+	display: flex;
+	align-content: center;
+
+	width: 30%;
+	background-color: #ffffff;
+	height: 231px;
+
+	margin: 20px;
+
+	-webkit-box-shadow: 0px 0px 5px 1px rgba(0,0,0,0.15);
+    -moz-box-shadow: 0px 0px 5px 1px rgba(0,0,0,0.15);
+	box-shadow: 0px 0px 5px 1px rgba(0,0,0,0.15);
+}
+
+.movie_content {
+	margin-left: 15px;
+}
+
+.movie_header {
+	font-size: 1.6em;
+}

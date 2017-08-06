@@ -18,7 +18,7 @@ class mailTemplate {
 
 		return `
 			<h1>${info.name} ${info.year}</h1>
-			<img src=${info.poster}>
+			<img src="${info.poster}">
 		`
 	}
 }
