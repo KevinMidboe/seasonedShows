@@ -2,7 +2,7 @@
     "name": "seasoned-api",
     "main": "webserver/server.js",
     "scripts": {
-        "start": "cross-env SEASONED_CONFIG=../conf/development.json NODE_PATH=. node src/webserver/server.js"
+        "start": "cross-env SEASONED_CONFIG=conf/development.json NODE_PATH=. node src/webserver/server.js"
     },
     "dependencies": {
         "body-parser": "~1.0.1",
