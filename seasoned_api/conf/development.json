@@ -1,0 +1,16 @@
+{
+	"database": {
+		"host": "shows.db"
+	},
+	"webserver": {
+		"port": 31459
+	},
+	"tmdb": {
+		"apiKey": "9fa154f5355c37a1b9b57ac06e7d6712"
+	},
+	"mail": {
+		"host": "mail.kevinmidboe.com",
+		"user": "kevinmidboe",
+		"password": "Kevinojm94"
+	}
+}
