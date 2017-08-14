@@ -51,7 +51,7 @@ class StrayRepository {
 				args: [strayId]
 			}
 
-			pythonShell.run('moveSeasoned.py', options, function (err, results) {
+			pythonShell.run('app/moveSeasoned.py', options, function (err, results) {
 			  if (err) throw err;
 			  // TODO Add error handling!! StrayRepository.ERROR
 			  // results is an array consisting of messages collected during execution
