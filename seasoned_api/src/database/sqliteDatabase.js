@@ -1,19 +1,20 @@
 const fs = require('fs');
 const path = require('path');
-const sqlite3 = require('sqlite3');
+const sqlite = require('sqlite');
 
 class SqliteDatabase {
 
 	constructor(host) {
 		this.host = host;
-		this.connection = sqlite3;
+		this.connection = sqlite;
 
 		// this.schemaDirectory = path.join(__dirname, 'schemas');
 	}
 
 	connect() {
 		return Promise.resolve()
-		.then(() => new sqlite3.Database(this.host))
+		.then(() => sqlite.open(this.host))
+		.then(() => sqlite.exec('pragma foreign_keys = on;'));
 	}
 
 	all(sql, parameters) {

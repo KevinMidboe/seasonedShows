@@ -1,6 +1,6 @@
 {
 	"database": {
-		"host": "shows.db"
+		"host": "../shows.db"
 	},
 	"webserver": {
 		"port": 31459
