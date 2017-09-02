@@ -21,6 +21,7 @@ class SearchRequest extends React.Component {
     }
   }
 
+
   componentDidMount(){
   	var that = this;
   	this.setState({responseMovieList: null})
@@ -130,7 +131,7 @@ class SearchRequest extends React.Component {
       backgroundColor: 'white',
       position: 'relative',
       zIndex: '10',
-      boxShadow: '0 2px 10px black'
+      boxShadow: '0 2px 10px grey'
     }
 
     var pageTitle = {
@@ -192,26 +193,72 @@ class SearchRequest extends React.Component {
       cursor: 'pointer'
     }
 
+    var hvrUnderlineFromCenter = {
+      color: 'white',
+      fontSize: '1em',
+      paddingTop: '12px',
+      marginBottom: '12px',
+      marginLeft: '10px',
+      cursor: 'pointer',
+      display: 'inline-block',
+      verticalAlign: 'middle',
+      WebkitTransform: 'perspective(1px) translateZ(0)',
+      transform: 'perspective(1px) translateZ(0)',
+      boxShadow: '0 0 1px transparent',
+      position: 'relative',
+      overflow: 'hidden',
+      ':before': {
+          content: "",
+          position: 'absolute',
+          zIndex: '-1',
+          left: '50%',
+          right: '50%',
+          bottom: '0',
+          background: '#00d17c',
+          height: '2px',
+          WebkitTransitionProperty: 'left, right',
+          transitionProperty: 'left, right',
+          WebkitTransitionDuration: '0.3s',
+          transitionDuration: '0.3s',
+          WebkitTransitionTimingFunction: 'ease-out',
+          transitionTimingFunction: 'ease-out'
+      },
+      ':hover:before': {
+        left: 0,
+        right: 0
+      },
+      'focus:before': {
+        left: 0,
+        right: 0
+      },
+      'active:before': {
+        left: 0,
+        right: 0
+      }
+    }
+
     return(
      <div style={body}>
           <div className='backgroundHeader' style={backgroundHeader}>
             <div className='pageTitle' style={pageTitle}>
-              <span style={pageTitleSpan}>Request new content</span>
+              <span style={pageTitleSpan}>Request new movies or tv shows</span>
             </div>
 
             <div className='box' style={box}>
               <div style={container}>
                 <span style={searchIcon}><i className="fa fa-search"></i></span>
+
                 <input style={searchBar} type="text" id="search" placeholder="Search for new content..." 
                   onKeyPress={(event) => this._handleQueryKeyPress(event)}
                   onChange={event => this.updateQueryState(event)}
                   value={this.state.searchQuery}/>
-                <span style={searchFilter} 
-                  className="search_category hvr-underline-from-center" 
+
+                <span style={searchFilter}
+                  className="search_category hvrUnderlineFromCenter" 
                   onClick={() => {this.toggleFilter('movies')}}
                   id="category_active">Movies</span>
                 <span style={searchFilter} 
-                  className="search_category hvr-underline-from-center" 
+                  className="search_category hvrUnderlineFromCenter" 
                   onClick={() => {this.toggleFilter('tvshows')}}
                   id="category_inactive">TV Shows</span>
               </div>
