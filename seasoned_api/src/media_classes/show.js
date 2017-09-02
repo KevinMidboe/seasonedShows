@@ -10,9 +10,10 @@ class Movie {
 		this.poster = undefined;
 		this.background = undefined;
 		this.genre = undefined;
-		this.date_added = undefined;
+		this.added = undefined;
 		
-		this.mediaInfo = undefined;
+		this.seasons = undefined;
+		this.episodes = undefined;
 		
 		this.matchedInPlex = false;
 	}
