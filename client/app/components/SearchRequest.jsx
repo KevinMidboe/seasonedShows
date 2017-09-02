@@ -10,7 +10,9 @@ class SearchRequest extends React.Component {
     // Constructor with states holding the search query and the element of reponse.
     this.state = {
       searchQuery: '',
-      responseMovieList: null
+      responseMovieList: null,
+      movieFilter: true,
+      tvshowFilter: false
     }
 
     this.URLs = {
@@ -18,6 +20,7 @@ class SearchRequest extends React.Component {
     	sendRequest: 'https://apollo.kevinmidboe.com/api/v1/plex/request?query='
     }
   }
+
 
   componentDidMount(){
   	var that = this;
@@ -34,6 +37,9 @@ class SearchRequest extends React.Component {
 
   fetchQuery() {
     let url = this.URLs.request + this.state.searchQuery
+    if (this.state.tvshowFilter) {
+      url = url + '&type=tv'
+    }
 
       fetch(url)
       	// Check if the response is ok
@@ -80,34 +86,187 @@ class SearchRequest extends React.Component {
     return movie.getElement();
   }
 
+  toggleFilter(filterType) {
+    if (filterType == 'movies') {
+      this.setState({
+        movieFilter: !this.state.movieFilter
+      })
+      console.log(this.state.movieFilter);
+    } 
+    else if (filterType == 'tvshows') {
+      this.setState({
+        tvshowFilter: !this.state.tvshowFilter
+      })
+      console.log(this.state.tvshowFilter);
+    }
+  }
+
 
   render(){
 
     var body = {
-      fontFamily: "'Roboto', 'Open Sans', sans-serif",
-      display: 'inline-block'
-
+      fontFamily: "'Open Sans', sans-serif",
+      backgroundColor: '#f7f7f7',
+      margin: 0,
+      padding: 0,
+      minHeight: '100%',
+      position: 'relative'
     }
-    var requestMovieList = {
+
+    var backgroundHeader = {
+      width: '100%',
+      minHeight: '400px',
+      backgroundColor: '#011c23',
+      zIndex: 1,
+      position: 'absolute'
+    }
+
+
+    var requestWrapper = {
+      top: '300px',
+      width: '90%',
+      maxWidth: '1200px',
+      margin: 'auto',
+      paddingTop: '20px',
+      backgroundColor: 'white',
+      position: 'relative',
+      zIndex: '10',
+      boxShadow: '0 2px 10px grey'
+    }
+
+    var pageTitle = {
       display: 'flex',
-      flexWrap: 'wrap',
+      alignItems: 'center',
       justifyContent: 'center'
+    }
+
+    var pageTitleSpan = {
+      color: 'white',
+      fontSize: '3em',
+      marginTop: '4vh',
+      marginBottom: '6vh'
+    }
+
+    var box = {
+      width: '90%',
+      height: '50px',
+      maxWidth: '1200px',
+      margin: '0 auto'
+    }
+
+    var container = {
+      verticalAlign: 'middle',
+      whiteSpace: 'nowrap',
+      position: 'relative',
+      display: 'flex',
+      justifyContent: 'center'
+    }
+
+    var searchIcon = {
+      position: 'absolute',
+      marginLeft: '17px',
+      marginTop: '17px',
+      zIndex: '1',
+      color: '#4f5b66'
+    }
+
+    var searchBar = {
+      width: '60%',
+      minWidth: '120px',
+      height: '50px',
+      background: '#ffffff',
+      border: 'none',
+      fontSize: '10pt',
+      float: 'left',
+      color: '#63717f',
+      paddingLeft: '45px',
+      borderRadius: '5px',
+      marginRight: '15px'
+    }
+
+    var searchFilter = {
+      color: 'white',
+      fontSize: '1em',
+      paddingTop: '12px',
+      marginBottom: '12px',
+      marginLeft: '10px',
+      cursor: 'pointer'
+    }
+
+    var hvrUnderlineFromCenter = {
+      color: 'white',
+      fontSize: '1em',
+      paddingTop: '12px',
+      marginBottom: '12px',
+      marginLeft: '10px',
+      cursor: 'pointer',
+      display: 'inline-block',
+      verticalAlign: 'middle',
+      WebkitTransform: 'perspective(1px) translateZ(0)',
+      transform: 'perspective(1px) translateZ(0)',
+      boxShadow: '0 0 1px transparent',
+      position: 'relative',
+      overflow: 'hidden',
+      ':before': {
+          content: "",
+          position: 'absolute',
+          zIndex: '-1',
+          left: '50%',
+          right: '50%',
+          bottom: '0',
+          background: '#00d17c',
+          height: '2px',
+          WebkitTransitionProperty: 'left, right',
+          transitionProperty: 'left, right',
+          WebkitTransitionDuration: '0.3s',
+          transitionDuration: '0.3s',
+          WebkitTransitionTimingFunction: 'ease-out',
+          transitionTimingFunction: 'ease-out'
+      },
+      ':hover:before': {
+        left: 0,
+        right: 0
+      },
+      'focus:before': {
+        left: 0,
+        right: 0
+      },
+      'active:before': {
+        left: 0,
+        right: 0
+      }
     }
 
     return(
      <div style={body}>
-        <input
-          type="text"
-          onKeyPress={(event) => this._handleQueryKeyPress(event)}
-          onChange={event => this.updateQueryState(event)}
-          value={this.state.searchQuery}
-          />
-          <button onClick={() => this.fetchQuery()}>Search</button>
-          <br></br>
+          <div className='backgroundHeader' style={backgroundHeader}>
+            <div className='pageTitle' style={pageTitle}>
+              <span style={pageTitleSpan}>Request new movies or tv shows</span>
+            </div>
 
-          <br></br>
-          <div id='requestMovieList' ref='requestMovieList' style={requestMovieList}>
-            {this.state.responseMovieList}        
+            <div className='box' style={box}>
+              <div style={container}>
+                <span style={searchIcon}><i className="fa fa-search"></i></span>
+
+                <input style={searchBar} type="text" id="search" placeholder="Search for new content..." 
+                  onKeyPress={(event) => this._handleQueryKeyPress(event)}
+                  onChange={event => this.updateQueryState(event)}
+                  value={this.state.searchQuery}/>
+
+                <span style={searchFilter}
+                  className="search_category hvrUnderlineFromCenter" 
+                  onClick={() => {this.toggleFilter('movies')}}
+                  id="category_active">Movies</span>
+                <span style={searchFilter} 
+                  className="search_category hvrUnderlineFromCenter" 
+                  onClick={() => {this.toggleFilter('tvshows')}}
+                  id="category_inactive">TV Shows</span>
+              </div>
+            </div>
+          </div>
+
+          <div id='requestMovieList' ref='requestMovieList' style={requestWrapper}>
+            {this.state.responseMovieList}     
           </div>
       </div>
     )

@@ -2,7 +2,7 @@
 * @Author: KevinMidboe
 * @Date:   2017-06-01 19:09:16
 * @Last Modified by:   KevinMidboe
-* @Last Modified time: 2017-06-02 19:38:45
+* @Last Modified time: 2017-09-02 15:51:52
 */
 
 const path = require('path');
@@ -27,14 +27,6 @@ module.exports = {
 		loaders: [
 				{ test: /\.js$/, loader: 'babel-loader', exclude: /node_modules/ },
 				{ test: /\.jsx$/, loader: 'babel-loader', exclude: /node_modules/ },
-				{ test: /\.scss$/, loader: 'css-loader', exclude: /node_modules/ },
-				{ test: /\.css$/, loader: 'style-loader!css!scss', exclude: /node_modules/ }
-				// { test: /\.css$/, loader: 'style-loader!css-loader!', exclude: /node_modules/ },
-					// query: {
-		   //        		presets: ['es2015']
-		   //      	}
-		        
-				// { test: /\.css-loader$/, loader: 'style-loader!css-loader', exclude: /node_modules/ }
     	]
   	},
   	plugins: [HtmlWebpackPluginConfig]
