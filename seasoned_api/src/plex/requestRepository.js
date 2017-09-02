@@ -28,7 +28,7 @@ class RequestRepository {
 					return Promise.each(plexMedia, function(plexMovie) {
 						if (tmdbMovie.title == plexMovie.title && tmdbMovie.year == plexMovie.year) {
 							tmdbMovie.matchedInPlex = true;
-							console.log(tmdbMovie.title + ' : ' + tmdbMovie.year);
+							// console.log('Matched: ' + tmdbMovie.title + ' : ' + tmdbMovie.year);
 						}
 						return tmdbMovie;
 					})
@@ -41,7 +41,6 @@ class RequestRepository {
 			})
 		})
 		.catch((error) => {
-			console.log(error);
 			return error;
 		});
 	}
