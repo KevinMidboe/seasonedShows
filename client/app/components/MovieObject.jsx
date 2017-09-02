@@ -1,6 +1,8 @@
 import React from 'react';
+import glamorous from 'glamorous';
 
-require('../app.scss');
+// StyleComponents
+import mediaResultItem from './styledComponents/mediaResultItem.jsx';
 
 class MovieObject {
 	constructor(object) {
@@ -63,7 +65,7 @@ class MovieObject {
 			borderRadius: '4px',
 			textAlign: 'center',
 			padding: '10px',
-			width: '100px',
+			minWidth: '100px',
 			float: 'left',
 			fontSize: '13px',
 			fontWeight: '800',
@@ -78,7 +80,7 @@ class MovieObject {
 			borderRadius: '4px',
 			textAlign: 'center',
 			padding: '10px',
-			width: '100px',
+			minWidth: '100px',
 			float: 'left',
 			fontSize: '13px',
 			fontWeight: '800',
@@ -110,9 +112,12 @@ class MovieObject {
 			style={requestButton}><span>&#x0002B; Request</span></button>;
 		}
 
+		var themoviedbLink = 'https://www.themoviedb.org/movie/' + this.id
+		
+
 		return (
 		<div>
-			<div key={this.id} style={resultItem}>
+			<div style={resultItem} key={this.id}>
 				<div style={resultPoster}>
 					<img style={resultPosterImg} id='poster' src={posterPath}></img>
 				</div>
@@ -127,7 +132,7 @@ class MovieObject {
 
 					<div style={buttons}>
 						{foundInPlex}
-						<button style={tmdbButton}><span>Info</span></button>
+						<a href={themoviedbLink}><button style={tmdbButton}><span>Info</span></button></a>
 					</div>
 				</div>
 			</div>
