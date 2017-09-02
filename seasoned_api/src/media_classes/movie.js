@@ -10,6 +10,7 @@ class Movie {
 		this.poster = undefined;
 		this.background = undefined;
 		this.genre = undefined;
+		this.date_added = undefined;
 		
 		this.mediaInfo = undefined;
 		
