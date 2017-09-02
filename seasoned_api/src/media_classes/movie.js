@@ -1,17 +1,19 @@
 class Movie {
-	constructor(title, year) {
+	constructor(title, year, type) {
 		this.id = undefined;
 		this.title = title;
 		this.year = year;
+		this.type = type;
 		this.release_date = undefined;
-		this.library = undefined;
-		this.type = undefined;
+		this.summary = undefined;
+		this.rating = undefined;
 		this.poster = undefined;
 		this.background = undefined;
+		this.genre = undefined;
+		
+		this.mediaInfo = undefined;
+		
 		this.matchedInPlex = false;
-		this.childTitle = undefined;
-		this.season = undefined;
-		this.episode = undefined;
 	}
 }
 
