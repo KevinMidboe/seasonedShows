@@ -2,8 +2,6 @@ const Movie = require('src/media_classes/movie');
 const Show = require('src/media_classes/show');
 
 function convertTmdbToSeasoned(tmdbObject) {
-	console.log(tmdbObject)
-
 	const mediaType = tmdbObject.media_type;
 
 	// There are many diff types of content, we only want to look at movies and tv shows
