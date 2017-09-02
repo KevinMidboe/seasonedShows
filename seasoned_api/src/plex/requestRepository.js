@@ -1,7 +1,6 @@
 const assert = require('assert');
 const PlexRepository = require('src/plex/plexRepository');
 const plexRepository = new PlexRepository();
-const convertPlexToMovie = require('src/plex/convertPlexToMovie');
 const configuration = require('src/config/configuration').getInstance();
 const TMDB = require('src/tmdb/tmdb');
 const tmdb = new TMDB(configuration.get('tmdb', 'apiKey'));
@@ -17,6 +16,8 @@ const nodemailer = require('nodemailer');
 class RequestRepository {
 
 	searchRequest(query, page, type) {
+		// STRIP METADATA THAT IS NOT ALLOWED
+
 		return Promise.resolve()
 		.then(() => tmdb.search(query, page, type))
 		.then((tmdbMovies) => {
@@ -33,8 +34,14 @@ class RequestRepository {
 					})
 				})
 			})
+			// This is pretty janky, but if there is a error because plex does not not get any results
+			// the tmdbMovies list is just returned without checking plexStatus.
+			.catch((error) => {
+				return tmdbMovies;
+			})
 		})
 		.catch((error) => {
+			console.log(error);
 			return error;
 		});
 	}
