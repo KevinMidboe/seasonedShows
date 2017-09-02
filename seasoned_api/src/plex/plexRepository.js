@@ -1,5 +1,5 @@
 const assert = require('assert');
-const convertPlexToMovie = require('src/plex/convertPlexToMovie');
+const convertPlexToSeasoned = require('src/plex/convertPlexToSeasoned');
 const convertPlexToStream = require('src/plex/convertPlexToStream');
 const configuration = require('src/config/configuration').getInstance();
 const TMDB = require('src/tmdb/tmdb');
@@ -19,7 +19,13 @@ class PlexRepository {
 
 		return rp(options)
 		  .then((result) => {
-		  	return result.MediaContainer.Metadata.map(convertPlexToMovie);
+		  	var seasonedMediaObjects = result.MediaContainer.Metadata.reduce(function(match, media_item) {
+		  		if (media_item.type === 'movie' || media_item.type === 'show') {
+		  			match.push(convertPlexToSeasoned(media_item));
+		  		}
+		  		return match;
+		  	}, []);
+		  	return seasonedMediaObjects;
 		  })
 		  .catch((err) => {
 		  	throw new Error(err);
