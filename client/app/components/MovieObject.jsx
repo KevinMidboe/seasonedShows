@@ -1,8 +1,6 @@
 import React from 'react';
-import glamorous from 'glamorous';
 
 // StyleComponents
-import mediaResultItem from './styledComponents/mediaResultItem.jsx';
 
 class MovieObject {
 	constructor(object) {
@@ -12,7 +10,7 @@ class MovieObject {
 		// Check if object.poster != undefined
 		this.poster = object.poster;
 		this.matchedInPlex = object.matchedInPlex;
-		this.overview = object.overview;
+		this.summary = object.summary;
 	}
 
 	requestExisting(movie) {
@@ -124,7 +122,7 @@ class MovieObject {
 				<div>
 					<span style={resultTitle}>{this.title} ({this.year})</span>
 					<br></br>
-						<span>{this.overview}</span>
+						<span>{this.summary}</span>
 					<br></br>
 
 					<span className='imdbLogo'>

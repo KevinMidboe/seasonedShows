@@ -5,34 +5,35 @@ import MovieObject from './MovieObject.jsx';
 // TODO add option for searching multi, movies or tv shows
 
 class SearchRequest extends React.Component {
-	constructor(props){
+  constructor(props){
     super(props)
     // Constructor with states holding the search query and the element of reponse.
     this.state = {
       searchQuery: '',
       responseMovieList: null,
       movieFilter: true,
-      tvshowFilter: false
+      tvshowFilter: false,
+      page: 1
     }
 
     this.URLs = {
-    	request: 'https://apollo.kevinmidboe.com/api/v1/plex/request?query=',
-    	sendRequest: 'https://apollo.kevinmidboe.com/api/v1/plex/request?query='
+      request: 'https://apollo.kevinmidboe.com/api/v1/plex/request?page='+this.props.page+'&query=',
+      sendRequest: 'https://apollo.kevinmidboe.com/api/v1/plex/request?query='
     }
   }
 
 
   componentDidMount(){
-  	var that = this;
-  	this.setState({responseMovieList: null})
+    var that = this;
+    this.setState({responseMovieList: null})
   }
   
   // Handles all errors of the response of a fetch call
   handleErrors(response) {
-  	if (!response.ok) {
-  		throw Error(response.status);
-  	}
-  	return response;
+    if (!response.ok) {
+      throw Error(response.status);
+    }
+    return response;
   }
 
   fetchQuery() {
@@ -42,27 +43,27 @@ class SearchRequest extends React.Component {
     }
 
       fetch(url)
-      	// Check if the response is ok
-      	.then(response => this.handleErrors(response))
-      	.then(response => response.json()) // Convert to json object and pass to next then
-	      .then(data => {  // Parse the data of the JSON response
-	      	// If it is something here it updates the state variable with the HTML list of all 
-	      	// movie objects that where returned by the search request
-	      	if (data.length > 0) {
-	        	this.setState({
-	        		responseMovieList: data.map(item => this.createMovieObjects(item))
-	        	})
-	      	}
-	      })
-	      // If the --------
-	      .catch(error => {
-	      	console.log(error)
-	      	this.setState({
-	      		responseMovieList: <h1>Not Found</h1>
-	      	})
+        // Check if the response is ok
+        .then(response => this.handleErrors(response))
+        .then(response => response.json()) // Convert to json object and pass to next then
+        .then(data => {  // Parse the data of the JSON response
+          // If it is something here it updates the state variable with the HTML list of all 
+          // movie objects that where returned by the search request
+          if (data.length > 0) {
+            this.setState({
+              responseMovieList: data.map(item => this.createMovieObjects(item))
+            })
+          }
+        })
+        // If the --------
+        .catch(error => {
+          console.log(error)
+          this.setState({
+            responseMovieList: <h1>Not Found</h1>
+          })
 
-	      	console.log('Error submit: ', error.toString());
-	      });
+          console.log('Error submit: ', error.toString());
+        });
   }
 
   // Updates the internal state of the query search field.
@@ -272,7 +273,7 @@ class SearchRequest extends React.Component {
     )
   }
 
-	
+  
 }
 
 export default SearchRequest;
