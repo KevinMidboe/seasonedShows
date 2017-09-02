@@ -1,5 +1,5 @@
 const moviedb = require('moviedb');
-const convertTmdbToMovie = require('src/tmdb/convertTmdbToMovie');
+const convertTmdbToSeasoned = require('src/tmdb/convertTmdbToSeasoned');
 var methodTypes = { 'movie': 'searchMovie', 'tv': 'searchTv', 'multi': 'searchMulti', 'movieInfo': 'movieInfo', 
 	'tvInfo': 'tvInfo' };
 
@@ -16,8 +16,8 @@ class TMDB {
 		 .then((reponse) => {
 		 	try {
 		 		return reponse.results.filter(function(item) {
-		 			return (item.popularity >= 1.15)
-		 		}).map(convertTmdbToMovie);
+		 			return ((item.vote_count >= 20 || item.popularity > 2) && (item.release_date !== undefined || item.first_air_date !== undefined))
+		 		}).map(convertTmdbToSeasoned);
 		 	} catch (parseError) {
 		 		throw new Error('Could not parse result.');
 		 	}
@@ -39,7 +39,7 @@ class TMDB {
 		.catch(() => { throw new Error('Could not find a movie with that id.'); })
 		.then((response) => {
 		  try {
-		    return convertTmdbToMovie(response);
+		    return convertTmdbToSeasoned(response);
 		  } catch (parseError) {
 		    throw new Error('Could not parse movie.');
 		  }
