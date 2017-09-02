@@ -16,9 +16,10 @@ class TMDB {
 		 .then((reponse) => {
 		 	try {
 		 		return reponse.results.filter(function(item) {
-		 			return ((item.vote_count >= 20 || item.popularity > 2) && (item.release_date !== undefined || item.first_air_date !== undefined))
+		 			return ((item.vote_count >= 80 || item.popularity > 18) && (item.release_date !== undefined || item.first_air_date !== undefined))
 		 		}).map(convertTmdbToSeasoned);
 		 	} catch (parseError) {
+		 		console.log(parseError)
 		 		throw new Error('Could not parse result.');
 		 	}
 		 });
