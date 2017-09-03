@@ -67,13 +67,16 @@ class RequestRepository {
 		});
 	}
 
-	sendRequest(identifier) {
+	/**
+	* Send request for given media id.
+	* @param {identifier, type} the id of the media object and type of media must be defined
+	* @returns {Promise} If nothing has gone wrong.
+	*/ 
+	sendRequest(identifier, type) {
 		// TODO add to DB so can have a admin page
 		// TODO try a cache hit on the movie item
 
-		tmdb.lookup(identifier).then(movie => {
-			console.log(movie.title)
-
+		tmdb.lookup(identifier, type).then(movie => {
 
 			// create reusable transporter object using the default SMTP transport
 			let transporter = nodemailer.createTransport({
@@ -110,6 +113,7 @@ class RequestRepository {
 
 		})
 
+		// TODO add better response when done.
 		return Promise.resolve();
 		
 	}
