@@ -7,6 +7,7 @@ class MovieObject {
 		this.id = object.id;
 		this.title = object.title;
 		this.year = object.year;
+		this.type = object.type;
 		// Check if object.poster != undefined
 		this.poster = object.poster;
 		this.matchedInPlex = object.matchedInPlex;
@@ -17,8 +18,9 @@ class MovieObject {
 		console.log('Exists', movie);
 	}
 
-	requestMovie(id) {
-		fetch('https://apollo.kevinmidboe.com/api/v1/plex/request/' + id, {
+	requestMovie() {
+		// fetch('https://apollo.kevinmidboe.com/api/v1/plex/request/' + id, {
+		fetch('http://localhost:31459/api/v1/plex/request/' + this.id + '?type='+this.type, {
 		  method: 'POST'
 		});
 	}
@@ -106,7 +108,7 @@ class MovieObject {
 			foundInPlex = <button onClick={() => {this.requestExisting(this)}} 
 			style={requestButton}><span>Request Anyway</span></button>;
 		} else {
-			foundInPlex = <button onClick={() => {this.requestMovie(this.id)}} 
+			foundInPlex = <button onClick={() => {this.requestMovie()}} 
 			style={requestButton}><span>&#x0002B; Request</span></button>;
 		}
 
