@@ -14,7 +14,7 @@ function searchMoviesController(req, res) {
   Promise.resolve()
   .then(() => tmdb.search(query, page, type))
   .then((movies) => {
-  	if (movies.length > 0) {
+  	if (movies !== undefined || movies.length > 0) {
   		res.send(movies);
   	} else {
   		res.status(404).send({ success: false, error: 'Search query did not return any results.'})
