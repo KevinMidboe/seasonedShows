@@ -15,7 +15,8 @@ var allowedOrigins = ['https://kevinmidboe.com', 'http://localhost:8080']
 
 
 router.use(function(req, res, next) {
-    console.log('Something is happening.');
+	// TODO add logging of all incoming
+    console.log('Request: ', req.originalUrl);
     var origin = req.headers.origin;
     if (allowedOrigins.indexOf(origin) > -1) {
 		res.setHeader('Access-Control-Allow-Origin', origin);
