@@ -1,5 +1,4 @@
 # 🌶 seasonedShows
-
 Your customly seasoned movie and show requester, downloader and organizer
 
 ## About
