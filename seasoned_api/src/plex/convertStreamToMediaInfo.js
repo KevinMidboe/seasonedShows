@@ -15,6 +15,8 @@ function convertStreamToMediaInfo(plexStream) {
 	mediaInfo.container = plexStream.container;
 	mediaInfo.audioCodec = plexStream.audioCodec;
 
+	console.log(mediaInfo)
+
 	return mediaInfo;
 }
 
