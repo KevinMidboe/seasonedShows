@@ -6,6 +6,7 @@ function convertStreamToMediaInfo(plexStream) {
 	mediaInfo.duration = plexStream.duration;
 	mediaInfo.height = plexStream.height;
 	mediaInfo.width = plexStream.width;
+
 	if (plexStream.bitrate) {
 		mediaInfo.bitrate = plexStream.bitrate;
 	}
@@ -14,8 +15,6 @@ function convertStreamToMediaInfo(plexStream) {
 	mediaInfo.protocol = plexStream.protocol;
 	mediaInfo.container = plexStream.container;
 	mediaInfo.audioCodec = plexStream.audioCodec;
-
-	console.log(mediaInfo)
 
 	return mediaInfo;
 }
