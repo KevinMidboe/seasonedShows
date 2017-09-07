@@ -51,7 +51,7 @@ class PlexRepository {
 			  }
 		  })
 		  .catch((err) => {
-		  	throw new Error(err);
+		  	throw new Error('Error handling plex playing. Error: ' + err);
 		  })
 	}
 }
