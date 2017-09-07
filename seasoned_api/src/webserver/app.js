@@ -15,7 +15,8 @@ var allowedOrigins = ['https://kevinmidboe.com', 'http://localhost:8080']
 
 
 router.use(function(req, res, next) {
-    console.log('Something is happening.');
+	// TODO add logging of all incoming
+    console.log('Request: ', req.originalUrl);
     var origin = req.headers.origin;
     if (allowedOrigins.indexOf(origin) > -1) {
 		res.setHeader('Access-Control-Allow-Origin', origin);
@@ -40,6 +41,12 @@ router.post('/v1/plex/request/:mediaId', require('./controllers/plex/submitReque
 router.get('/v1/plex/hook', require('./controllers/plex/hookDump.js'));
 
 router.get('/v1/tmdb/search', require('./controllers/tmdb/searchMedia.js'));
+router.get('/v1/tmdb/discover', require('./controllers/tmdb/discoverMedia.js'));
+router.get('/v1/tmdb/popular', require('./controllers/tmdb/popularMedia.js'));
+router.get('/v1/tmdb/nowplaying', require('./controllers/tmdb/nowPlayingMedia.js'));
+router.get('/v1/tmdb/upcoming', require('./controllers/tmdb/getUpcoming.js'));
+
+router.get('/v1/tmdb/similar/:mediaId', require('./controllers/tmdb/searchSimilar.js'));
 router.get('/v1/tmdb/:mediaId', require('./controllers/tmdb/readMedia.js'));
 
 router.post('/v1/git/dump', require('./controllers/git/dumpHook.js'));

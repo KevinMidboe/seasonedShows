@@ -1,8 +1,8 @@
 const Movie = require('src/media_classes/movie');
 const Show = require('src/media_classes/show');
 
-function convertTmdbToSeasoned(tmdbObject) {
-	const mediaType = tmdbObject.media_type;
+function convertTmdbToSeasoned(tmdbObject, strictType=undefined) {
+	const mediaType = strictType || tmdbObject.media_type;
 
 	// There are many diff types of content, we only want to look at movies and tv shows
 	if (mediaType === 'movie') {
@@ -16,6 +16,7 @@ function convertTmdbToSeasoned(tmdbObject) {
 
 		const movie = new Movie(title, year, mediaType);
 
+		movie.id = tmdbObject.id;
 		movie.summary = tmdbObject.overview;
 		movie.rating = tmdbObject.vote_average;
 		movie.poster = tmdbObject.poster_path;
@@ -27,11 +28,12 @@ function convertTmdbToSeasoned(tmdbObject) {
 
 		return movie;
 	} 
-	else if (mediaType === 'tv') {
+	else if (mediaType === 'tv' || mediaType === 'show') {
 		const year = new Date(tmdbObject.first_air_date).getFullYear();
 
-		const show = new Show(tmdbObject.title, year, mediaType);
+		const show = new Show(tmdbObject.name, year, 'show');
 
+		show.id = tmdbObject.id;
 		show.summary = tmdbObject.overview;
 		show.rating = tmdbObject.vote_average;
 		show.poster = tmdbObject.poster_path;
