@@ -1,14 +1,12 @@
 class MediaInfo {
-	constructor() {
-		this.duration = undefined;
-		this.height = undefined;
-		this.width = undefined;
-		this.bitrate = undefined;
-		this.resolution = undefined;
-		this.framerate = undefined;
-		this.protocol = undefined;
-		this.container = undefined;
-		this.audioCodec = undefined;
+	constructor(device, platform) {
+		this.device = undefined;
+		this.platform = undefined;
+		this.ip = undefined;
+		this.product = undefined;
+		this.title = undefined;
+		this.state = undefined;
+
 	}
 }
 
