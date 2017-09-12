@@ -5,6 +5,8 @@ import MovieObject from './MovieObject.jsx';
 // StyleComponents
 import searchStyle from './styles/searchRequestStyle.jsx';
 
+import URI from 'urijs';
+
 // TODO add option for searching multi, movies or tv shows
 class SearchRequest extends React.Component {
   constructor(props){
@@ -14,9 +16,17 @@ class SearchRequest extends React.Component {
       searchQuery: '',
       responseMovieList: null,
       movieFilter: true,
-      tvshowFilter: false,
+      showFilter: false,
+      discoverType: '',
       page: 1
     }
+
+    this.allowedDiscoverTypes = [
+        'discover', 'popular', 'nowplaying', 'upcoming'
+    ]
+
+    // this.baseUrl = 'https://apollo.kevinmidboe.com/api/v1/';
+    this.baseUrl = 'http://localhost:31459/api/v1/tmdb/';
 
     this.URLs = {
       // request: 'https://apollo.kevinmidboe.com/api/v1/plex/request?page='+this.state.page+'&query=',
@@ -32,7 +42,7 @@ class SearchRequest extends React.Component {
   componentDidMount(){
     var that = this;
     // this.setState({responseMovieList: null})
-    this.getUpcoming();
+    this.fetchDiscover('upcoming');
   }
   
   // Handles all errors of the response of a fetch call
@@ -43,56 +53,77 @@ class SearchRequest extends React.Component {
     return response;
   }
 
-  getUpcoming() {
-    let url = this.URLs.upcoming + '?page=' + this.state.page;
 
-    fetch(url)
-      .then(response => this.handleErrors(response))
-      .then(response => response.json())
-      .then(data => {
-        console.log(data.total_pages)
-        if (data.results.length > 0) {
-          this.setState({
-            responseMovieList: data.results.map(item => this.createMovieObjects(item))
-          })
-        }
-      })
-      .catch(error => {
-        console.log(error);
+  fetchDiscover(queryDiscoverType) {
+    if (this.allowedDiscoverTypes.indexOf(queryDiscoverType) === -1)
+        throw Error('Invalid discover type: ' + queryDiscoverType);
+
+    var uri = new URI(this.baseUrl);
+    uri.segment(queryDiscoverType)
+    uri = uri.setSearch('page', this.state.page);
+    if (this.state.showFilter)
+        uri = uri.addSearch('type', 'show');
+
+    console.log(uri)
+
+    this.setState({
+        responseMovieList: 'Loading...'
+    });
+
+    fetch(uri)
+    // Check if the response is ok
+    .then(response => this.handleErrors(response))
+    .then(response => response.json()) // Convert to json object and pass to next then
+    .then(data => {  // Parse the data of the JSON response
+      // If it is something here it updates the state variable with the HTML list of all 
+      // movie objects that where returned by the search request
+      if (data.results.length > 0) {
         this.setState({
-          reposemovieList: <h1>Not found (upcoming)</h1>
+          responseMovieList: data.results.map(item => this.createMovieObjects(item))
         })
+      }
+    })
+    // If the --------
+    .catch(error => {
+      console.log(error)
+      this.setState({
+        responseMovieList: <h1>Not Found</h1>
       })
+
+      console.log('Error submit: ', error.toString());
+    });
   }
+
 
   fetchQuery() {
     let url = this.URLs.request + this.state.searchQuery
-    if (this.state.tvshowFilter) {
+    if (this.state.showFilter) {
       url = url + '&type=tv'
     }
 
-      fetch(url)
-        // Check if the response is ok
-        .then(response => this.handleErrors(response))
-        .then(response => response.json()) // Convert to json object and pass to next then
-        .then(data => {  // Parse the data of the JSON response
-          // If it is something here it updates the state variable with the HTML list of all 
-          // movie objects that where returned by the search request
-          if (data.length > 0) {
-            this.setState({
-              responseMovieList: data.map(item => this.createMovieObjects(item))
-            })
-          }
+  fetch(url)
+    // Check if the response is ok
+    .then(response => this.handleErrors(response))
+    .then(response => response.json()) // Convert to json object and pass to next then
+    .then(data => {  // Parse the data of the JSON response
+      // If it is something here it updates the state variable with the HTML list of all 
+      // movie objects that where returned by the search request
+      console.log(data)
+      if (data.length > 0) {
+        this.setState({
+          responseMovieList: data.map(item => this.createMovieObjects(item))
         })
-        // If the --------
-        .catch(error => {
-          console.log(error)
-          this.setState({
-            responseMovieList: <h1>Not Found</h1>
-          })
+      }
+    })
+    // If the --------
+    .catch(error => {
+      console.log(error)
+      this.setState({
+        responseMovieList: <h1>Not Found</h1>
+      })
 
-          console.log('Error submit: ', error.toString());
-        });
+      console.log('Error submit: ', error.toString());
+    });
   }
 
   // Updates the internal state of the query search field.
@@ -123,11 +154,11 @@ class SearchRequest extends React.Component {
       })
       console.log(this.state.movieFilter);
     } 
-    else if (filterType == 'tvshows') {
+    else if (filterType == 'shows') {
       this.setState({
-        tvshowFilter: !this.state.tvshowFilter
+        showFilter: !this.state.showFilter
       })
-      console.log(this.state.tvshowFilter);
+      console.log(this.state.showFilter);
     }
   }
 
@@ -151,6 +182,11 @@ class SearchRequest extends React.Component {
   render(){
     return(
      <div style={searchStyle.body}>
+        <button onClick={() => {this.fetchDiscover('discover')}}>Discover</button>
+        <button onClick={() => {this.fetchDiscover('popular')}}>Popular</button>
+        <button onClick={() => {this.fetchDiscover('nowplaying')}}>Nowplaying</button>
+        <button onClick={() => {this.fetchDiscover('upcoming')}}>Upcoming</button>
+
           <div className='backgroundHeader' style={searchStyle.backgroundHeader}>
             <div className='pageTitle' style={searchStyle.pageTitle}>
               <span style={searchStyle.pageTitleSpan}>Request new movies or tv shows</span>
@@ -171,7 +207,7 @@ class SearchRequest extends React.Component {
                   id="category_active">Movies</span>
                 <span style={searchStyle.searchFilter} 
                   className="search_category hvrUnderlineFromCenter" 
-                  onClick={() => {this.toggleFilter('tvshows')}}
+                  onClick={() => {this.toggleFilter('shows')}}
                   id="category_inactive">TV Shows</span>
               </div>
             </div>
