@@ -11,8 +11,9 @@ const requestRepository = new RequestRepository();
 function submitRequestController(req, res) {
 	// This is the id that is the param of the url
 	const id = req.params.mediaId;
+	const type = req.query.type;
 
-	requestRepository.sendRequest(id)
+	requestRepository.sendRequest(id, type)
 	.then(() => {
 		res.send({ success: true, message: 'Media item sucessfully requested!' });
 	})

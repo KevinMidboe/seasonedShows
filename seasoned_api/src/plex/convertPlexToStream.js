@@ -5,11 +5,13 @@ const convertStreamToUser = require('src/plex/stream/convertStreamToUser');
 const ConvertStreamToPlayback = require('src/plex/stream/convertStreamToPlayback');
 
 function convertPlexToStream(plexStream) {
-	const stream = convertPlexToSeasoned(plexStream);
-	stream.mediaInfo = convertStreamToMediaInfo(plexStream.Media);
+	const stream = convertPlexToSeasoned(plexStream)
+	const plexStreamMedia = plexStream.Media[0]
+	stream.mediaInfo = convertStreamToMediaInfo(plexStreamMedia);
 	stream.player = convertStreamToPlayer(plexStream.Player);
+
 	stream.user = convertStreamToUser(plexStream.User);
-	stream.playback = new ConvertStreamToPlayback(plexStream.Media.Part);
+	stream.playback = new ConvertStreamToPlayback(plexStreamMedia.Part[0]);
 
 	return stream;
 }
