@@ -108,10 +108,9 @@ class SearchRequest extends React.Component {
     .then(data => {  // Parse the data of the JSON response
       // If it is something here it updates the state variable with the HTML list of all 
       // movie objects that where returned by the search request
-      console.log(data)
-      if (data.length > 0) {
+      if (data.results.length > 0) {
         this.setState({
-          responseMovieList: data.map(item => this.createMovieObjects(item))
+          responseMovieList: data.results.map(item => this.createMovieObjects(item))
         })
       }
     })
