@@ -16,33 +16,60 @@ const nodemailer = require('nodemailer');
 class RequestRepository {
 
 	searchRequest(query, page, type) {
+		// TODO get from cache
 		// STRIP METADATA THAT IS NOT ALLOWED
 
+		// Do a search in the tmdb api and return the results of the object
+		let getTmdbResults = function() {
+			return tmdb.search(query, page, type)
+				.then((tmdbSearch) => {
+					return tmdbSearch.results;
+				})
+		}
+
+		// Take inputs and verify them with a list. Now we are for every item in tmdb result
+		// runnning through the entire plex loop. Many loops, but safe. 
+		let checkIfMatchesPlexObjects = function(title, year, plexarray) {
+			// Iterate all elements in plexarray
+			for (let plexItem of plexarray) {
+				// If matches with our title and year return true
+				if (plexItem.title === title && plexItem.year === year)
+					return true;
+			}
+			// If no matches were found, return false
+			return false;
+		}
+
 		return Promise.resolve()
-		.then(() => tmdb.search(query, page, type))
-		.then((tmdbMovies) => {
-			return Promise.resolve()
-			.then(() => plexRepository.searchMedia(query))
-			.then((plexMedia) => {
-				return Promise.each(tmdbMovies, function(tmdbMovie) {
-					return Promise.each(plexMedia, function(plexMovie) {
-						if (tmdbMovie.title == plexMovie.title && tmdbMovie.year == plexMovie.year) {
-							tmdbMovie.matchedInPlex = true;
-							// console.log('Matched: ' + tmdbMovie.title + ' : ' + tmdbMovie.year);
-						}
-						return tmdbMovie;
-					})
+			.then(() => plexRepository.searchMedia(query)
+			// Get the list of plexItems matching the query passed.
+			.then((plexItem) => {
+				let tmdbSearchResult = getTmdbResults();
+
+				// When we get the result from tmdbSearchResult we pass it along and iterate over each 
+				// element, and updates the matchedInPlex status of a item. 
+				return tmdbSearchResult.then((tmdbResult) => {
+					for (var i = 0; i < tmdbResult.length; i++) {
+						let foundMatchInPlex = checkIfMatchesPlexObjects(tmdbResult[i].title, tmdbResult[i].year, plexItem);
+						tmdbResult[i].matchedInPlex = foundMatchInPlex;
+					}
+					return { 'results': tmdbResult, 'page': 1 };
+				})
+				// TODO log error
+				.catch((error) => {
+					console.log(error);
+					throw new Error('Search query did not give any results.');
 				})
 			})
-			// This is pretty janky, but if there is a error because plex does not not get any results
-			// the tmdbMovies list is just returned without checking plexStatus.
-			.catch((error) => {
-				return tmdbMovies;
+			.catch(() => {
+				let tmdbSearchResult = getTmdbResults();
+
+				// Catch if empty, then 404
+				return tmdbSearchResult.then((tmdbResult) => {
+					return {'results': tmdbResult, 'page': 1 };
+				})
 			})
-		})
-		.catch((error) => {
-			return error;
-		});
+		)
 	}
 
 	lookup(identifier, type = 'movie') {
