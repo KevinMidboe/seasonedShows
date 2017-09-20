@@ -25,7 +25,7 @@ class SearchRequest extends React.Component {
         'discover', 'popular', 'nowplaying', 'upcoming'
     ]
 
-    this.baseUrl = 'https://apollo.kevinmidboe.com/api/v1/';
+    this.baseUrl = 'https://apollo.kevinmidboe.com/api/v1/tmdb';
     // this.baseUrl = 'http://localhost:31459/api/v1/tmdb/';
 
     this.URLs = {
