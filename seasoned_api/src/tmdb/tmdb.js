@@ -11,16 +11,33 @@ class TMDB {
 		this.tmdbLibrary = tmdbLibrary || moviedb(apiKey);
 	}
 
-	search(text, page = 1, type = 'multi') {
-		const query = { 'query': text, 'page': page };
+	/**
+	* Retrive list of of items from TMDB matching the query and/or type given.
+	* @param {queryText, page, type} the page number to specify in the request for discover,
+	* @returns {Promise} dict with query results, current page and total_pages
+	*/ 
+	search(queryText, page = 1, type = 'multi') {
+		// Setup query object for tmdb api search
+		const query = { 'query': queryText, 'page': page };
 		return Promise.resolve()
-		 .then(() => this.tmdb(type, query))
-		 .catch(() => { throw new Error('Could not search for movies.'); })
+		 .then(() => this.tmdb(type, query))  // Search the tmdb api
+		 .catch(() => { throw new Error('Could not search for movies.'); })  // If any error at all when fetching
 		 .then((reponse) => {
 		 	try {
-		 		return reponse.results.filter(function(item) {
-		 			return ((item.vote_count >= 80 || item.popularity > 18) && (item.release_date !== undefined || item.first_air_date !== undefined))
-		 		}).map(convertTmdbToSeasoned);
+		 		// We want to filter because there are movies really low rated that are not interesting to us. 
+		 		let filteredTmdbItems = reponse.results.filter(function(tmdbResultItem) {
+		 			return ((tmdbResultItem.vote_count >= 80 || tmdbResultItem.popularity > 18) && (tmdbResultItem.release_date !== undefined || tmdbResultItem.first_air_date !== undefined))
+		 		})
+
+		 		// Here we convert the filtered result from the tmdb api to seaonsed objects
+		 		let seasonedItems = filteredTmdbItems.map((tmdbItem) => {
+		 			return convertTmdbToSeasoned(tmdbItem);
+		 		});
+		 		
+		 		// TODO add page number if results are larger than 20
+		 		return { 'results': seasonedItems, 'number_of_items_on_page': seasonedItems,
+						'page': 1, 'total_pages': 1 };
+
 		 	} catch (parseError) {
 		 		console.log(parseError)
 		 		throw new Error('Could not parse result.');
@@ -33,7 +50,7 @@ class TMDB {
 	* Retrive list of discover section of movies from TMDB.
 	* @param {Page, type} the page number to specify in the request for discover, 
 	* and type for movie or show
-	* @returns {Promise} dict with query results, current page and total_pages
+	* @returns {Promise} dict with discover results, current page and total_pages
 	*/ 
 	discover(page, type='movie') {
 		// Sets the tmdb function type to the corresponding type from query
@@ -76,7 +93,7 @@ class TMDB {
 	* Retrive list of popular section of movies or shows from TMDB.
 	* @param {Page, type} the page number to specify in the request for popular, 
 	* and type for movie or show
-	* @returns {Promise} dict with query results, current page and total_pages
+	* @returns {Promise} dict with popular results, current page and total_pages
 	*/ 
 	// TODO add filter for language
 	popular(page, type='movie') {
@@ -121,7 +138,7 @@ class TMDB {
 	* Retrive list of now playing/airing section of movies or shows from TMDB.
 	* @param {Page, type} the page number to specify in the request for now playing/airing, 
 	* and type for movie or show
-	* @returns {Promise} dict with query results, current page and total_pages
+	* @returns {Promise} dict with nowplaying results, current page and total_pages
 	*/ 
 	// TODO add filter for language
 	nowplaying(page, type='movie') {
@@ -161,9 +178,9 @@ class TMDB {
 	}
 
 	/**
-	* Retrive list of upcmoing movies from TMDB.
+	* Retrive list of upcoming movies from TMDB.
 	* @param {Page} the page number to specify in the request for upcoming movies
-	* @returns {Promise} dict with query results, current page and total_pages
+	* @returns {Promise} dict with upcoming results, current page and total_pages
 	*/ 
 	// TODO add filter for language
 	upcoming(page) {
@@ -190,7 +207,7 @@ class TMDB {
 	/**
 	* Retrive list of upcmoing movies from TMDB.
 	* @param {Page} the page number to specify in the request for upcoming movies
-	* @returns {Promise} dict with query results, current page and total_pages
+	* @returns {Promise} dict with similar results, current page and total_pages
 	*/ 
 	// TODO add filter for language
 	similar(identifier, type) {

@@ -25,16 +25,16 @@ class SearchRequest extends React.Component {
         'discover', 'popular', 'nowplaying', 'upcoming'
     ]
 
-    // this.baseUrl = 'https://apollo.kevinmidboe.com/api/v1/';
-    this.baseUrl = 'http://localhost:31459/api/v1/tmdb/';
+    this.baseUrl = 'https://apollo.kevinmidboe.com/api/v1/tmdb';
+    // this.baseUrl = 'http://localhost:31459/api/v1/tmdb/';
 
     this.URLs = {
-      // request: 'https://apollo.kevinmidboe.com/api/v1/plex/request?page='+this.state.page+'&query=',
-      request: 'http://localhost:31459/api/v1/plex/request?page='+this.state.page+'&query=',
-      // upcoming: 'https://apollo.kevinmidboe.com/api/v1/tmdb/upcoming',
-      upcoming: 'http://localhost:31459/api/v1/tmdb/upcoming',
-      // sendRequest: 'https://apollo.kevinmidboe.com/api/v1/plex/request?query='
-      sendRequest: 'http://localhost:31459/api/v1/plex/request?query='
+      request: 'https://apollo.kevinmidboe.com/api/v1/plex/request?page='+this.state.page+'&query=',
+      // request: 'http://localhost:31459/api/v1/plex/request?page='+this.state.page+'&query=',
+      upcoming: 'https://apollo.kevinmidboe.com/api/v1/tmdb/upcoming',
+      // upcoming: 'http://localhost:31459/api/v1/tmdb/upcoming',
+      sendRequest: 'https://apollo.kevinmidboe.com/api/v1/plex/request?query='
+      // sendRequest: 'http://localhost:31459/api/v1/plex/request?query='
     }
   }
 
@@ -108,10 +108,9 @@ class SearchRequest extends React.Component {
     .then(data => {  // Parse the data of the JSON response
       // If it is something here it updates the state variable with the HTML list of all 
       // movie objects that where returned by the search request
-      console.log(data)
-      if (data.length > 0) {
+      if (data.results.length > 0) {
         this.setState({
-          responseMovieList: data.map(item => this.createMovieObjects(item))
+          responseMovieList: data.results.map(item => this.createMovieObjects(item))
         })
       }
     })

@@ -6,10 +6,10 @@ function searchRequestController(req, res) {
 	console.log('searchReq: ' + query, page, type);
 
 	requestRepository.searchRequest(query, page, type)
-	.then((movies) => {
+	.then((searchResult) => {
 		// Verify that respond has content, if so send the content back
-		if (movies.length > 0 && movies != null) {
-			res.send(movies);
+		if (searchResult.results.length > 0) {
+			res.send(searchResult);
 		}
 		// If no content was found, send 404 status and error message
 		else {
