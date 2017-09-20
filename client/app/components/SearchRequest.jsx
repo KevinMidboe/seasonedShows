@@ -25,16 +25,16 @@ class SearchRequest extends React.Component {
         'discover', 'popular', 'nowplaying', 'upcoming'
     ]
 
-    // this.baseUrl = 'https://apollo.kevinmidboe.com/api/v1/';
-    this.baseUrl = 'http://localhost:31459/api/v1/tmdb/';
+    this.baseUrl = 'https://apollo.kevinmidboe.com/api/v1/';
+    // this.baseUrl = 'http://localhost:31459/api/v1/tmdb/';
 
     this.URLs = {
-      // request: 'https://apollo.kevinmidboe.com/api/v1/plex/request?page='+this.state.page+'&query=',
-      request: 'http://localhost:31459/api/v1/plex/request?page='+this.state.page+'&query=',
-      // upcoming: 'https://apollo.kevinmidboe.com/api/v1/tmdb/upcoming',
-      upcoming: 'http://localhost:31459/api/v1/tmdb/upcoming',
-      // sendRequest: 'https://apollo.kevinmidboe.com/api/v1/plex/request?query='
-      sendRequest: 'http://localhost:31459/api/v1/plex/request?query='
+      request: 'https://apollo.kevinmidboe.com/api/v1/plex/request?page='+this.state.page+'&query=',
+      // request: 'http://localhost:31459/api/v1/plex/request?page='+this.state.page+'&query=',
+      upcoming: 'https://apollo.kevinmidboe.com/api/v1/tmdb/upcoming',
+      // upcoming: 'http://localhost:31459/api/v1/tmdb/upcoming',
+      sendRequest: 'https://apollo.kevinmidboe.com/api/v1/plex/request?query='
+      // sendRequest: 'http://localhost:31459/api/v1/plex/request?query='
     }
   }
 
