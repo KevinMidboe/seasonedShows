@@ -31,7 +31,12 @@ class TMDB {
 
 		 		// Here we convert the filtered result from the tmdb api to seaonsed objects
 		 		let seasonedItems = filteredTmdbItems.map((tmdbItem) => {
-		 			return convertTmdbToSeasoned(tmdbItem);
+					if (type === 'movie')
+						return convertTmdbToSeasoned(tmdbItem, 'movie');
+					else if (type === 'show')
+						return convertTmdbToSeaosned(tmdbItem, 'show');
+					else
+		 				return convertTmdbToSeasoned(tmdbItem);
 		 		});
 		 		
 		 		// TODO add page number if results are larger than 20
