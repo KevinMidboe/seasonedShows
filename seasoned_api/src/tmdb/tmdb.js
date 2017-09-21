@@ -34,7 +34,7 @@ class TMDB {
 					if (type === 'movie')
 						return convertTmdbToSeasoned(tmdbItem, 'movie');
 					else if (type === 'show')
-						return convertTmdbToSeaosned(tmdbItem, 'show');
+						return convertTmdbToSeasoned(tmdbItem, 'show');
 					else
 		 				return convertTmdbToSeasoned(tmdbItem);
 		 		});
