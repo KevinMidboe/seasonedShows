@@ -136,8 +136,6 @@ class SearchRequest extends React.Component {
                     })
                 } else {
                     let responseMovieObjects = responseData.results.map(searchResultItem => this.createMovieObjects(searchResultItem));
-                    console.log(responseMovieObjects)
-                    console.log(this.state.responseMovieList)
                     let growingReponseMovieObjectList = this.state.responseMovieList.concat(responseMovieObjects);
                     this.setState({
                         responseMovieList: growingReponseMovieObjectList,
@@ -177,10 +175,19 @@ class SearchRequest extends React.Component {
             // mapped as a movieObject.
             response.json()
             .then(responseData => {
-                this.setState({
-                    responseMovieList: responseData.results.map(searchResultItem => this.createMovieObjects(searchResultItem)),
-                    lastApiCallURI: uri  // Save the value of the last sucessfull api call
-                })
+                if (this.state.page === 1) {
+                    this.setState({
+                        responseMovieList: responseData.results.map(searchResultItem => this.createMovieObjects(searchResultItem)),
+                        lastApiCallURI: uri  // Save the value of the last sucessfull api call
+                    })
+                } else {
+                    let responseMovieObjects = responseData.results.map(searchResultItem => this.createMovieObjects(searchResultItem));
+                    let growingReponseMovieObjectList = this.state.responseMovieList.concat(responseMovieObjects);
+                    this.setState({
+                        responseMovieList: growingReponseMovieObjectList,
+                        lastApiCallURI: uri  // Save the value of the last sucessfull api call
+                    })
+                }
             })
         })
         .catch(() => {
