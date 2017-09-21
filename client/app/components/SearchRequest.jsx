@@ -45,7 +45,7 @@ class SearchRequest extends React.Component {
   componentDidMount(){
     var that = this;
     // this.setState({responseMovieList: null})
-    this.fetchDiscover('upcoming');
+    this.fetchTmdbList('upcoming');
   }
   
     // Handles all errors of the response of a fetch call
@@ -79,6 +79,12 @@ class SearchRequest extends React.Component {
         this.state.page = 1;
     }
 
+    writeLoading() {
+        this.setState({
+            responseMovieList: 'Loading...'
+        });
+    }
+
     // Test this by calling missing endpoint or 404 query and see what code
     // and filter the error message based on the code.
     // Calls a uri and returns the response as json
@@ -97,9 +103,13 @@ class SearchRequest extends React.Component {
         })
     }
 
+
     // Here we first call api for a search with the input uri, handle any errors
     // and fill the reponseData from api into the state of reponseMovieList as movieObjects
     callSearchFillMovieList(uri) {
+        // Write loading animation
+        // this.writeLoading();
+        
         Promise.resolve()
         .then(() => this.callURI(uri))
         .then(response => {
@@ -130,6 +140,40 @@ class SearchRequest extends React.Component {
         })
     }
 
+    callListFillMovieList(uri) {
+        // Write loading animation
+        // this.writeLoading();
+        
+        Promise.resolve()
+        .then(() => this.callURI(uri))
+        .then(response => {
+            // If we get a error code for the request
+            if (!response.ok) {
+                if (response.status === 404) {
+                    let errorMsg = 'List not found';
+                    this.fillResponseMovieListWithError(errorMsg)
+                }
+                else {
+                    let errorMsg = 'Error fetching list from server ' + this.response.status;
+                    this.fillResponseMovieListWithError(errorMsg) 
+                }
+            }
+
+            // Convert to json and update the state of responseMovieList with the results of the api call
+            // mapped as a movieObject.
+            response.json()
+            .then(responseData => {
+                this.setState({
+                    responseMovieList: responseData.results.map(searchResultItem => this.createMovieObjects(searchResultItem)),
+                    lastApiCallURI: uri  // Save the value of the last sucessfull api call
+                })
+            })
+        })
+        .catch(() => {
+            throw Error('Something went wrong when fetching query.')
+        })
+    }
+
     searchSeasonedRequest() {
         // Build uri with the url for searching requests
         var uri = new URI(this.URLs.searchRequest);
@@ -138,98 +182,41 @@ class SearchRequest extends React.Component {
         
         if (this.state.showFilter)
             uri = uri.addSearch('type', 'show');
-        
 
         // Send uri to call and fill the response list with movie/show objects
         this.callSearchFillMovieList(uri);
     }
 
+    fetchTmdbList(tmdbListType) {
+        // Check if it is a whitelisted list, this should be replaced with checking if the return call is 500
+        if (this.allowedListTypes.indexOf(tmdbListType) === -1)
+            throw Error('Invalid discover type: ' + tmdbListType);
 
+        // Captialize the first letter of and save the discoverQueryType to resultHeader state. 
+        this.state.resultHeader = tmdbListType.toLowerCase().replace(/\b[a-z]/g, function(letter) {
+            return letter.toUpperCase();
+        });
 
+        // Build uri with the url for searching requests
+        var uri = new URI(this.baseUrl);
+        uri.segment(tmdbListType);
+        // Add input of search query and page count to the uri payload
+        uri = uri.search({ 'page': this.state.page });
+        
+        if (this.state.showFilter)
+            uri = uri.addSearch('type', 'show');
 
-
-
-
-  fetchDiscover(queryDiscoverType) {
-    if (this.allowedListTypes.indexOf(queryDiscoverType) === -1)
-        throw Error('Invalid discover type: ' + queryDiscoverType);
-
-    // Captialize the first letter of and save the discoverQueryType to resultHeader state. 
-    this.state.resultHeader = queryDiscoverType.toLowerCase().replace(/\b[a-z]/g, function(letter) {
-        return letter.toUpperCase();
-    });
-
-    var uri = new URI(this.baseUrl);
-    uri.segment(queryDiscoverType)
-    uri = uri.setSearch('page', this.state.page);
-    if (this.state.showFilter)
-        uri = uri.addSearch('type', 'show');
-
-
-    this.state.lastApiCallURI = uri;
-
-    this.setState({
-        responseMovieList: 'Loading...'
-    });
-
-    fetch(uri)
-    // Check if the response is ok
-    .then(response => this.handleErrors(response))
-    .then(response => response.json()) // Convert to json object and pass to next then
-    .then(data => {  // Parse the data of the JSON response
-      // If it is something here it updates the state variable with the HTML list of all 
-      // movie objects that where returned by the search request
-      if (data.results.length > 0) {
-        this.setState({
-          responseMovieList: data.results.map(item => this.createMovieObjects(item))
-        })
-      }
-    })
-    // If the --------
-    .catch(error => {
-      console.log(error)
-      this.setState({
-        responseMovieList: <h1>Not Found</h1>
-      })
-
-      console.log('Error submit: ', error.toString());
-    });
-  }
-
-
-  fetchQuery() {
-    let url = this.URLs.request + this.state.searchQuery;
-    if (this.state.showFilter) {
-      url = url + '&type=tv'
+        // Send uri to call and fill the response list with movie/show objects
+        this.callListFillMovieList(uri);
     }
 
-    this.state.apiQuery = url;
-    console.log(this.state.apiQuery.toString());
-    this.state.resultHeader = "Results for: " + this.state.searchQuery + "";
 
-  fetch(url)
-    // Check if the response is ok
-    .then(response => this.handleErrors(response))
-    .then(response => response.json()) // Convert to json object and pass to next then
-    .then(data => {  // Parse the data of the JSON response
-      // If it is something here it updates the state variable with the HTML list of all 
-      // movie objects that where returned by the search request
-      if (data.results.length > 0) {
-        this.setState({
-          responseMovieList: data.results.map(item => this.createMovieObjects(item))
-        })
-      }
-    })
-    // If the --------
-    .catch(error => {
-      console.log(error)
-      this.setState({
-        responseMovieList: <h1>Not Found</h1>
-      })
 
-      console.log('Error submit: ', error.toString());
-    });
-  }
+
+
+
+
+
 
   // Updates the internal state of the query search field.
   updateQueryState(event){
@@ -308,10 +295,10 @@ class SearchRequest extends React.Component {
   render(){
     return(
      <div style={searchStyle.body}>
-        <button onClick={() => {this.fetchDiscover('discover')}}>Discover</button>
-        <button onClick={() => {this.fetchDiscover('popular')}}>Popular</button>
-        <button onClick={() => {this.fetchDiscover('nowplaying')}}>Nowplaying</button>
-        <button onClick={() => {this.fetchDiscover('upcoming')}}>Upcoming</button>
+        <button onClick={() => {this.fetchTmdbList('discover')}}>Discover</button>
+        <button onClick={() => {this.fetchTmdbList('popular')}}>Popular</button>
+        <button onClick={() => {this.fetchTmdbList('nowplaying')}}>Nowplaying</button>
+        <button onClick={() => {this.fetchTmdbList('upcoming')}}>Upcoming</button>
 
         <div className='backgroundHeader' style={searchStyle.backgroundHeader}>
           <div className='pageTitle' style={searchStyle.pageTitle}>
