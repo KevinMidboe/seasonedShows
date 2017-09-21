@@ -129,10 +129,24 @@ class SearchRequest extends React.Component {
             // mapped as a movieObject.
             response.json()
             .then(responseData => {
-                this.setState({
-                    responseMovieList: responseData.results.map(searchResultItem => this.createMovieObjects(searchResultItem)),
-                    lastApiCallURI: uri  // Save the value of the last sucessfull api call
-                })
+                if (this.state.page === 1) {
+                    this.setState({
+                        responseMovieList: responseData.results.map(searchResultItem => this.createMovieObjects(searchResultItem)),
+                        lastApiCallURI: uri  // Save the value of the last sucessfull api call
+                    })
+                } else {
+                    let responseMovieObjects = responseData.results.map(searchResultItem => this.createMovieObjects(searchResultItem));
+                    console.log(responseMovieObjects)
+                    console.log(this.state.responseMovieList)
+                    let growingReponseMovieObjectList = this.state.responseMovieList.concat(responseMovieObjects);
+                    this.setState({
+                        responseMovieList: growingReponseMovieObjectList,
+                        lastApiCallURI: uri  // Save the value of the last sucessfull api call
+                    })
+                }
+            })
+            .catch((error) => {
+                console.log(error)
             })
         })
         .catch(() => {
@@ -209,8 +223,6 @@ class SearchRequest extends React.Component {
         // Send uri to call and fill the response list with movie/show objects
         this.callListFillMovieList(uri);
     }
-
-
 
 
 
