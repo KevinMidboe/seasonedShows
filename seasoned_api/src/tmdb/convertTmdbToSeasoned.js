@@ -54,3 +54,4 @@ function convertTmdbToSeasoned(tmdbObject, strictType=undefined) {
 }
 
 module.exports = convertTmdbToSeasoned;
+
