@@ -8,9 +8,17 @@ export default {
       minHeight: '100%',
     },
 
-    backgroundHeader: {
+    backgroundLargeHeader: {
       width: '100%',
       minHeight: '400px',
+      backgroundColor: '#011c23',
+      zIndex: 1,
+      marginBottom: '-100px'
+    },
+
+  backgroundSmallHeader: {
+      width: '100%',
+      minHeight: '300px',
       backgroundColor: '#011c23',
       zIndex: 1,
       marginBottom: '-100px'
@@ -34,19 +42,30 @@ export default {
       textAlign: 'center'
     },
 
-    pageTitleSpan: {
+    pageTitleLargeSpan: {
       color: 'white',
       fontSize: '3em',
       marginTop: '4vh',
       marginBottom: '6vh'
     },
 
+    pageTitleSmallSpan: {
+      color: 'white',
+      fontSize: '2em',
+      marginTop: '3vh',
+      marginBottom: '3vh'
+    },    
+
     box: {
       height: '50px',
     },
 
-    container: {
-      margin: '0 25%'
+    searchLargeContainer: {
+      margin: '0 25%',
+    },
+
+    searchSmallContainer: {
+      margin: '0 10%',
     },
 
     searchIcon: {
@@ -57,12 +76,25 @@ export default {
       color: '#4f5b66'
     },
 
-    searchBar: {
+    searchLargeBar: {
       width: '100%',
       height: '50px',
       background: '#ffffff',
       border: 'none',
       fontSize: '10pt',
+      float: 'left',
+      color: '#63717f',
+      paddingLeft: '45px',
+      marginLeft: '-25px',
+      borderRadius: '5px',
+    },
+
+    searchSmallBar: {
+      width: '100%',
+      height: '50px',
+      background: '#ffffff',
+      border: 'none',
+      fontSize: '13pt',
       float: 'left',
       color: '#63717f',
       paddingLeft: '45px',
@@ -91,12 +123,16 @@ export default {
       width: '60%',
     },
 
-    resultHeader: {
+    resultLargeHeader: {
       paddingLeft: '30px',
-      paddingTop: '15px',
-      marginBottom: '40px',
       color: 'black',
-      // color: '#00d17c'
+      fontSize: '2em',
+    },
+
+    resultSmallHeader: {
+      paddingLeft: '30px',
+      color: 'black',
+      fontSize: '1.7em',
     },
 
     row: {
