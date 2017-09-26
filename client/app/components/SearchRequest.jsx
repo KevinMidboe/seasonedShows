@@ -20,7 +20,7 @@ class SearchRequest extends React.Component {
       lastApiCallURI: '',
       searchQuery: '',
       responseMovieList: null,
-      movieFilter: true,
+      movieFilter: false,
       showFilter: false,
       discoverType: '',
       page: 1,
