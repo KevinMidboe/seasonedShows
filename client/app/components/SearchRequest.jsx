@@ -4,9 +4,10 @@ import MovieObject from './MovieObject.jsx';
 
 // StyleComponents
 import searchStyle from './styles/searchRequestStyle.jsx';
-import movieStyle from './styles/movieObjectStyle.jsx'
+import movieStyle from './styles/movieObjectStyle.jsx';
 
 import URI from 'urijs';
+import InfiniteScroll from 'react-infinite-scroller';
 
 // TODO add option for searching multi, movies or tv shows
 class SearchRequest extends React.Component {
@@ -21,7 +22,9 @@ class SearchRequest extends React.Component {
       showFilter: false,
       discoverType: '',
       page: 1,
-      resultHeader: ''
+      resultHeader: '',
+      loadResults: false,
+      scrollHasMore: true
     }
 
     this.allowedListTypes = [
@@ -45,6 +48,8 @@ class SearchRequest extends React.Component {
   componentDidMount(){
     var that = this;
     // this.setState({responseMovieList: null})
+    this.resetPageNumber();
+    this.state.loadResults = true;
     this.fetchTmdbList('upcoming');
   }
   
@@ -62,7 +67,7 @@ class SearchRequest extends React.Component {
                     responseMovieList: <h1>Nothing found for search query: { this.findQueryInURI(uri) }</h1>
                 })
             }
-            console.log(error);
+            console.log('handleQueryError: ', error);
         }
         return response;
     }
@@ -71,6 +76,14 @@ class SearchRequest extends React.Component {
     findQueryValueInURI(uri) {
         let uriSearchValues = uri.query(true);
         let queryValue = uriSearchValues['query']
+
+        return queryValue;
+    }
+
+    // Unpacks the page value of a uri
+    findPageValueInURI(uri) {
+        let uriSearchValues = uri.query(true);
+        let queryValue = uriSearchValues['page']
 
         return queryValue;
     }
@@ -116,8 +129,18 @@ class SearchRequest extends React.Component {
             // If we get a error code for the request
             if (!response.ok) {
                 if (response.status === 404) {
-                    let errorMsg = 'Nothing found for the search query: ' + this.findQueryValueInURI(uri);
-                    this.fillResponseMovieListWithError(errorMsg)
+                    if (this.findPageValueInURI(new URI(response.url)) > 1) {
+                        this.state.scrollHasMore = false;
+                        console.log(this.state.scrollHasMore)
+                        return null
+                        let returnMessage = 'this is the return mesasge than will never be delivered'
+                        let theSecondReturnMsg = 'this is the second return messag ethat will NEVE be delivered'
+                    }
+                    else {                    
+
+                        let errorMsg = 'Nothing found for the search query: ' + this.findQueryValueInURI(uri);
+                        this.fillResponseMovieListWithError(errorMsg)
+                    }
                 }
                 else {
                     let errorMsg = 'Error fetching query from server ' + this.response.status;
@@ -144,7 +167,7 @@ class SearchRequest extends React.Component {
                 }
             })
             .catch((error) => {
-                console.log(error)
+                console.log('CallSearchFillMovieList: ', error)
             })
         })
         .catch(() => {
@@ -196,6 +219,8 @@ class SearchRequest extends React.Component {
     }
 
     searchSeasonedRequest() {
+        this.state.resultHeader = 'Search result for: ' + this.state.searchQuery;
+
         // Build uri with the url for searching requests
         var uri = new URI(this.URLs.searchRequest);
         // Add input of search query and page count to the uri payload
@@ -203,16 +228,21 @@ class SearchRequest extends React.Component {
         
         if (this.state.showFilter)
             uri = uri.addSearch('type', 'show');
+        else 
+            if (this.state.movieFilter)
+                uri = uri.addSearch('type', 'movie')
 
         // Send uri to call and fill the response list with movie/show objects
         this.callSearchFillMovieList(uri);
     }
 
     fetchTmdbList(tmdbListType) {
+        console.log(tmdbListType)
         // Check if it is a whitelisted list, this should be replaced with checking if the return call is 500
         if (this.allowedListTypes.indexOf(tmdbListType) === -1)
             throw Error('Invalid discover type: ' + tmdbListType);
 
+        this.state.responseMovieList = []
         // Captialize the first letter of and save the discoverQueryType to resultHeader state. 
         this.state.resultHeader = tmdbListType.toLowerCase().replace(/\b[a-z]/g, function(letter) {
             return letter.toUpperCase();
@@ -310,53 +340,75 @@ class SearchRequest extends React.Component {
         this.state.page = pageNumber;
     }
 
-
-  render(){
-    return(
-     <div style={searchStyle.body}>
-        <button onClick={() => {this.fetchTmdbList('discover')}}>Discover</button>
-        <button onClick={() => {this.fetchTmdbList('popular')}}>Popular</button>
-        <button onClick={() => {this.fetchTmdbList('nowplaying')}}>Nowplaying</button>
-        <button onClick={() => {this.fetchTmdbList('upcoming')}}>Upcoming</button>
-
-        <div className='backgroundHeader' style={searchStyle.backgroundHeader}>
-          <div className='pageTitle' style={searchStyle.pageTitle}>
-            <span style={searchStyle.pageTitleSpan}>Request new movies or tv shows</span>
-          </div>
-
-          <div className='box' style={searchStyle.box}>
-            <div style={searchStyle.container}>
-              <span style={searchStyle.searchIcon}><i className="fa fa-search"></i></span>
-
-              <input style={searchStyle.searchBar} type="text" id="search" placeholder="Search for new content..." 
-                onKeyPress={(event) => this._handleQueryKeyPress(event)}
-                onChange={event => this.updateQueryState(event)}
-                value={this.state.searchQuery}/>
-
-              <span style={searchStyle.searchFilter}
+    movieToggle() {
+        if (this.state.movieFilter) 
+            return <span style={searchStyle.searchFilterActive}
                 className="search_category hvrUnderlineFromCenter" 
                 onClick={() => {this.toggleFilter('movies')}}
                 id="category_active">Movies</span>
-              <span style={searchStyle.searchFilter} 
+        else
+            return <span style={searchStyle.searchFilterNotActive}
+                className="search_category hvrUnderlineFromCenter" 
+                onClick={() => {this.toggleFilter('movies')}}
+                id="category_active">Movies</span>
+    }
+
+    showToggle() {
+        if (this.state.showFilter) 
+            return <span style={searchStyle.searchFilterActive}
                 className="search_category hvrUnderlineFromCenter" 
                 onClick={() => {this.toggleFilter('shows')}}
-                id="category_inactive">TV Shows</span>
-            </div>
-          </div>
-        </div>
+                id="category_active">TV Shows</span>
+        else
+            return <span style={searchStyle.searchFilterNotActive}
+                className="search_category hvrUnderlineFromCenter" 
+                onClick={() => {this.toggleFilter('shows')}}
+                id="category_active">TV Shows</span>
+    }
 
-        <div id='requestMovieList' ref='requestMovieList' style={searchStyle.requestWrapper}>
-          
-          <h1 style={searchStyle.resultHeader}>{this.state.resultHeader}</h1>
-          
-          {this.state.responseMovieList}     
-        </div>
-        
-        <div style={searchStyle.pageNavigationBar}>
-          <button onClick={() => {this.pageBackwards()}} style={searchStyle.pageNavigationButton}>Back</button>
-          <button onClick={() => {this.pageForwards()}} style={searchStyle.pageNavigationButton}>Forward</button>
-        </div>
-    </div>
+
+  render(){
+    const loader = <div className="loader">Loading ...<br></br></div>;
+
+
+    return(
+         <InfiniteScroll
+                pageStart={0}
+                loadMore={this.pageForwards.bind(this)}
+                hasMore={this.state.scrollHasMore}
+                loader={loader}
+                initialLoad={this.state.loadResults}>
+
+                 <div style={searchStyle.body}>
+                    <div className='backgroundHeader' style={searchStyle.backgroundHeader}>
+                      <div className='pageTitle' style={searchStyle.pageTitle}>
+                        <span style={searchStyle.pageTitleSpan}>Request new content</span>
+                      </div>
+
+                        <div className='box' style={searchStyle.box}>
+                            <div style={searchStyle.container}>
+                                <span style={searchStyle.searchIcon}><i className="fa fa-search"></i></span>
+
+                                <input style={searchStyle.searchBar} type="text" id="search" placeholder="Search for new content..." 
+                                onKeyPress={(event) => this._handleQueryKeyPress(event)}
+                                onChange={event => this.updateQueryState(event)}
+                                value={this.state.searchQuery}/>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id='requestMovieList' ref='requestMovieList' style={searchStyle.requestWrapper}>
+                      
+                      <h1 style={searchStyle.resultHeader}>{this.state.resultHeader}</h1>
+                      
+                        {this.state.responseMovieList}     
+                    </div>
+                    
+                    <div style={searchStyle.pageNavigationBar}>
+                    </div>
+                </div>
+            </InfiniteScroll>
     )
   }
 
