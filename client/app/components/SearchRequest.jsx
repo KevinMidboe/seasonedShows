@@ -9,6 +9,8 @@ import movieStyle from './styles/movieObjectStyle.jsx';
 import URI from 'urijs';
 import InfiniteScroll from 'react-infinite-scroller';
 
+var MediaQuery = require('react-responsive');
+
 // TODO add option for searching multi, movies or tv shows
 class SearchRequest extends React.Component {
   constructor(props){
@@ -36,7 +38,7 @@ class SearchRequest extends React.Component {
 
     this.URLs = {
       searchRequest: 'https://apollo.kevinmidboe.com/api/v1/plex/request',
-      // request: 'http://localhost:31459/api/v1/plex/request?page='+this.state.page+'&query=',
+      // searchRequest: 'http://localhost:31459/api/v1/plex/request',
       upcoming: 'https://apollo.kevinmidboe.com/api/v1/tmdb/upcoming',
       // upcoming: 'http://localhost:31459/api/v1/tmdb/upcoming',
       sendRequest: 'https://apollo.kevinmidboe.com/api/v1/plex/request?query='
@@ -379,35 +381,63 @@ class SearchRequest extends React.Component {
                 loader={loader}
                 initialLoad={this.state.loadResults}>
 
-                 <div style={searchStyle.body}>
-                    <div className='backgroundHeader' style={searchStyle.backgroundHeader}>
-                      <div className='pageTitle' style={searchStyle.pageTitle}>
-                        <span style={searchStyle.pageTitleSpan}>Request new content</span>
-                      </div>
+                <MediaQuery minWidth={600}>
+                    <div style={searchStyle.body}>
+                        <div className='backgroundHeader' style={searchStyle.backgroundLargeHeader}>
+                            <div className='pageTitle' style={searchStyle.pageTitle}>
+                                <span style={searchStyle.pageTitleLargeSpan}>Request new content</span>
+                            </div>
+                            
+                            <div className='box' style={searchStyle.box}>
+                                <div style={searchStyle.searchLargeContainer}>
+                                    <span style={searchStyle.searchIcon}><i className="fa fa-search"></i></span>
 
-                        <div className='box' style={searchStyle.box}>
-                            <div style={searchStyle.container}>
-                                <span style={searchStyle.searchIcon}><i className="fa fa-search"></i></span>
+                                    <input style={searchStyle.searchLargeBar} type="text" id="search" placeholder="Search for new content..." 
+                                    onKeyPress={(event) => this._handleQueryKeyPress(event)}
+                                    onChange={event => this.updateQueryState(event)}
+                                    value={this.state.searchQuery}/>
 
-                                <input style={searchStyle.searchBar} type="text" id="search" placeholder="Search for new content..." 
-                                onKeyPress={(event) => this._handleQueryKeyPress(event)}
-                                onChange={event => this.updateQueryState(event)}
-                                value={this.state.searchQuery}/>
-
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div id='requestMovieList' ref='requestMovieList' style={searchStyle.requestWrapper}>
-                      
-                      <h1 style={searchStyle.resultHeader}>{this.state.resultHeader}</h1>
-                      
-                        {this.state.responseMovieList}     
+                        <div id='requestMovieList' ref='requestMovieList' style={searchStyle.requestWrapper}>
+                            <span style={searchStyle.resultLargeHeader}>{this.state.resultHeader}</span>
+                            <br></br><br></br>
+                            
+                            {this.state.responseMovieList}     
+                        </div>
                     </div>
-                    
-                    <div style={searchStyle.pageNavigationBar}>
+                </MediaQuery>
+
+                <MediaQuery maxWidth={600}>
+                     <div style={searchStyle.body}>
+                        <div className='backgroundHeader' style={searchStyle.backgroundSmallHeader}>
+                            <div className='pageTitle' style={searchStyle.pageTitle}>
+                                <span style={searchStyle.pageTitleSmallSpan}>Request new content</span>
+                            </div>
+                            
+                            <div className='box' style={searchStyle.box}>
+                                <div style={searchStyle.searchSmallContainer}>
+                                    <span style={searchStyle.searchIcon}><i className="fa fa-search"></i></span>
+
+                                    <input style={searchStyle.searchSmallBar} type="text" id="search" placeholder="Search for new content..." 
+                                    onKeyPress={(event) => this._handleQueryKeyPress(event)}
+                                    onChange={event => this.updateQueryState(event)}
+                                    value={this.state.searchQuery}/>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id='requestMovieList' ref='requestMovieList' style={searchStyle.requestWrapper}>
+                            <span style={searchStyle.resultSmallHeader}>{this.state.resultHeader}</span>
+                            <br></br><br></br>
+
+                            {this.state.responseMovieList}     
+                        </div>
                     </div>
-                </div>
+                </MediaQuery>
             </InfiniteScroll>
     )
   }
