@@ -22,15 +22,16 @@ class TMDB {
 		return Promise.resolve()
 		 .then(() => this.tmdb(type, query))  // Search the tmdb api
 		 .catch(() => { throw new Error('Could not search for movies.'); })  // If any error at all when fetching
-		 .then((reponse) => {
+		 .then((response) => {
 		 	try {
 		 		// We want to filter because there are movies really low rated that are not interesting to us. 
-		 		let filteredTmdbItems = reponse.results.filter(function(tmdbResultItem) {
+		 		let filteredTmdbItems = response.results.filter(function(tmdbResultItem) {
 		 			return ((tmdbResultItem.vote_count >= 80 || tmdbResultItem.popularity > 18) && (tmdbResultItem.release_date !== undefined || tmdbResultItem.first_air_date !== undefined))
 		 		})
 
 		 		// Here we convert the filtered result from the tmdb api to seaonsed objects
 		 		let seasonedItems = filteredTmdbItems.map((tmdbItem) => {
+
 					if (type === 'movie')
 						return convertTmdbToSeasoned(tmdbItem, 'movie');
 					else if (type === 'show')
@@ -40,7 +41,7 @@ class TMDB {
 		 		});
 		 		
 		 		// TODO add page number if results are larger than 20
-		 		return { 'results': seasonedItems, 'number_of_items_on_page': seasonedItems,
+		 		return { 'results': seasonedItems, 'number_of_items_on_page': seasonedItems.length,
 						'page': 1, 'total_pages': 1 };
 
 		 	} catch (parseError) {

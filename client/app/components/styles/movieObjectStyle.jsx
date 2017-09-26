@@ -6,19 +6,22 @@ export default {
 		minHeight: '230px'
 	},
 
-	resultItem: {
-		maxWidth: '95%',
-		margin: '0 auto',
-		minHeight: '230px'
-	},
-
 	movie_content: {
 		marginLeft: '15px'
 	},
 
-	resultTitle: {
+	resultTitleLarge: {
 		color: 'black',
 		fontSize: '2em',
+	},
+
+	resultTitleSmall: {
+		color: 'black',
+		fontSize: '22px',
+	},
+
+	yearRatingLarge: {
+		fontSize: '0.8em'
 	},
 
 	resultPoster: {
@@ -28,10 +31,28 @@ export default {
 		marginRight: '30px'
 	},
 
+	background: {
+		width: '100%'
+	},
+
+	yearRatingSmall: {
+		marginTop: '5px',
+		fontSize: '0.8em'
+	},
+
 	resultPosterImg: {
 		border: '2px none',
 	    borderRadius: '2px',
 	    width: '150px'
+	},
+
+	cornerRibbon: {
+		position: 'absolute',
+		width: '450px',
+	},
+
+	summary: {
+		fontSize: '15px',
 	},
 
 	buttons: {

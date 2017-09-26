@@ -7,6 +7,8 @@ const tmdb = new TMDB(configuration.get('tmdb', 'apiKey'));
 var Promise = require('bluebird');
 var rp = require('request-promise');
 
+const establishedDatabase = require('src/database/database');
+
 const MailTemplate = require('src/plex/mailTemplate')
 
 var pythonShell = require('python-shell');
@@ -14,6 +16,13 @@ const nodemailer = require('nodemailer');
 
 
 class RequestRepository {
+
+	constructor(database) {
+		this.database = database || establishedDatabase;
+		this.queries = {
+			'insertRequest': "INSERT INTO requests VALUES (?, ?, ?, ?, ?, ?, CURRENT_DATE)"
+		}
+	}
 
 	searchRequest(query, page, type) {
 		// TODO get from cache
@@ -99,23 +108,31 @@ class RequestRepository {
 	* @param {identifier, type} the id of the media object and type of media must be defined
 	* @returns {Promise} If nothing has gone wrong.
 	*/ 
-	sendRequest(identifier, type) {
+	sendRequest(identifier, type, ip) {
 		// TODO add to DB so can have a admin page
 		// TODO try a cache hit on the movie item
 
 		tmdb.lookup(identifier, type).then(movie => {
 
+			// Add request to database
+			this.database.run(this.queries.insertRequest, [movie.id, movie.title, movie.year, movie.poster, 'NULL', ip])
+
+
+			// 
+
+
 			// create reusable transporter object using the default SMTP transport
 			let transporter = nodemailer.createTransport({
-			    host: configuration.get('mail', 'host'),
-			    port: 26,
-			    ignoreTLS: true,
-			    tls :{rejectUnauthorized: false},
-			    secure: false, // secure:true for port 465, secure:false for port 587
+				service: 'gmail',
 			    auth: {
-			        user: configuration.get('mail', 'user'),
-			        pass: configuration.get('mail', 'password')
+			        user: configuration.get('mail', 'user_pi'),
+			        pass: configuration.get('mail', 'password_pi')
 			    }
+			    // host: configuration.get('mail', 'host'),
+			    // port: 26,
+			    // ignoreTLS: true,
+			    // tls :{rejectUnauthorized: false},
+			    // secure: false, // secure:true for port 465, secure:false for port 587
 			});
 
 			const mailTemplate = new MailTemplate(movie)
@@ -123,7 +140,7 @@ class RequestRepository {
 			// setup email data with unicode symbols
 			let mailOptions = {
 				// TODO get the mail adr from global location (easy to add)
-			    from: 'MovieRequester <support@kevinmidboe.com>', // sender address
+			    from: 'MovieRequester <pi.midboe@gmail.com>', // sender address
 			    to: 'kevin.midboe@gmail.com', // list of receivers
 			    subject: 'Download request', // Subject line
 			    text: mailTemplate.toText(),
