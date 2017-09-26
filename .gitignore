@@ -11,3 +11,4 @@ client/dist
 src/webserver/access.log
 conf/development.json
 yarn-error.log
+*/yarn.lock
