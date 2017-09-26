@@ -2,7 +2,7 @@ class mailTemplate {
 	
 	constructor(mediaItem) {
 		this.mediaItem = mediaItem;
-		this.posterURL = 'https://image.tmdb.org/t/p/w600/';
+		this.posterURL = 'https://image.tmdb.org/t/p/w600';
 	}
 
 	toText() {
