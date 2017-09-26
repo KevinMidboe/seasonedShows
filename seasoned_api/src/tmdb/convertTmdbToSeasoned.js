@@ -2,7 +2,13 @@ const Movie = require('src/media_classes/movie');
 const Show = require('src/media_classes/show');
 
 function convertTmdbToSeasoned(tmdbObject, strictType=undefined) {
-	const mediaType = strictType || tmdbObject.media_type;
+	// TODO create a default fallback class to set the when falls to else as both are undefined
+	if (tmdbObject.media_type !== undefined)
+		var mediaType = tmdbObject.media_type;
+	else if (strictType !== undefined)
+		var mediaType = strictType;
+	else
+		var mediaType = 'movie';
 
 	// There are many diff types of content, we only want to look at movies and tv shows
 	if (mediaType === 'movie') {
