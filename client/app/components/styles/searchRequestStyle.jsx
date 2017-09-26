@@ -6,7 +6,6 @@ export default {
       margin: 0,
       padding: 0,
       minHeight: '100%',
-      position: 'relative'
     },
 
     backgroundHeader: {
@@ -14,15 +13,14 @@ export default {
       minHeight: '400px',
       backgroundColor: '#011c23',
       zIndex: 1,
-      position: 'absolute'
+      marginBottom: '-100px'
     },
 
     requestWrapper: {
-      top: '300px',
       width: '90%',
       maxWidth: '1200px',
       margin: 'auto',
-      paddingTop: '20px',
+      // paddingTop: '20px',
       backgroundColor: 'white',
       position: 'relative',
       zIndex: '10',
@@ -32,7 +30,8 @@ export default {
     pageTitle: {
       display: 'flex',
       alignItems: 'center',
-      justifyContent: 'center'
+      justifyContent: 'center',
+      textAlign: 'center'
     },
 
     pageTitleSpan: {
@@ -43,31 +42,23 @@ export default {
     },
 
     box: {
-      width: '90%',
       height: '50px',
-      maxWidth: '1200px',
-      margin: '0 auto'
     },
 
     container: {
-      verticalAlign: 'middle',
-      whiteSpace: 'nowrap',
-      position: 'relative',
-      display: 'flex',
-      justifyContent: 'center'
+      margin: '0 25%'
     },
 
     searchIcon: {
       position: 'absolute',
-      marginLeft: '17px',
-      marginTop: '17px',
-      zIndex: '1',
+      fontSize: '1.2em',
+      marginTop: '12px',
+      marginLeft: '-13px',
       color: '#4f5b66'
     },
 
     searchBar: {
-      width: '60%',
-      minWidth: '120px',
+      width: '100%',
       height: '50px',
       background: '#ffffff',
       border: 'none',
@@ -75,17 +66,59 @@ export default {
       float: 'left',
       color: '#63717f',
       paddingLeft: '45px',
+      marginLeft: '-25px',
       borderRadius: '5px',
-      marginRight: '15px'
     },
 
-    searchFilter: {
-      color: 'white',
+    searchFilterActive: {
+      color: '#00d17c',
       fontSize: '1em',
-      paddingTop: '12px',
-      marginBottom: '12px',
       marginLeft: '10px',
       cursor: 'pointer'
+    },
+
+    searchFilterNotActive: {
+      color: 'white',
+      fontSize: '1em',
+      marginLeft: '10px',
+      cursor: 'pointer'
+    },
+
+
+    filter: {
+      color: 'white',
+      paddingLeft: '40px',
+      width: '60%',
+    },
+
+    resultHeader: {
+      paddingLeft: '30px',
+      paddingTop: '15px',
+      marginBottom: '40px',
+      color: 'black',
+      // color: '#00d17c'
+    },
+
+    row: {
+      width: '100%'
+    },
+
+    itemDivider: {
+      width: '90%',
+      borderBottom: '1px solid grey',
+      margin: '1rem auto'
+    },
+
+
+    pageNavigationBar: {
+      width: '100%',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center'
+    },
+
+    pageNavigationButton: {
+      margin: '0 auto',
     },
 
     hvrUnderlineFromCenter: {
