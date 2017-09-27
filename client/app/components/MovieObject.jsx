@@ -52,7 +52,11 @@ class MovieObject {
 			style={movieStyle.requestButton}><span>&#x0002B; Request</span></button>;
 		}
 
-		var themoviedbLink = 'https://www.themoviedb.org/movie/' + this.id
+		if (this.type === 'movie') 
+			var themoviedbLink = 'https://www.themoviedb.org/movie/' + this.id
+		else if (this.type === 'show')	
+			var themoviedbLink = 'https://www.themoviedb.org/tv/' + this.id
+
 		
 
 		return (
