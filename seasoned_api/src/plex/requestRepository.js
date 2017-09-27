@@ -20,7 +20,8 @@ class RequestRepository {
 	constructor(database) {
 		this.database = database || establishedDatabase;
 		this.queries = {
-			'insertRequest': "INSERT INTO requests VALUES (?, ?, ?, ?, ?, ?, CURRENT_DATE)"
+			'insertRequest': "INSERT INTO requests VALUES (?, ?, ?, ?, ?, ?, CURRENT_DATE)",
+			'fetchRequstedItems': "SELECT * FROM requests",
 		}
 	}
 
@@ -160,6 +161,10 @@ class RequestRepository {
 		// TODO add better response when done.
 		return Promise.resolve();
 		
+	}
+
+	fetchRequested() {
+		return this.database.all(this.queries.fetchRequstedItems);
 	}
 
 }
