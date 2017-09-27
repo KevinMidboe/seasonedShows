@@ -57,6 +57,8 @@ router.get('/v1/plex/request/:mediaId', require('./controllers/plex/readRequest.
 router.post('/v1/plex/request/:mediaId', require('./controllers/plex/submitRequest.js'));
 router.get('/v1/plex/hook', require('./controllers/plex/hookDump.js'));
 
+router.get('/v1/plex/requests/all', mustBeAuthenticated, require('./controllers/plex/fetchRequested.js'));
+
 /**
  * TMDB
  */
