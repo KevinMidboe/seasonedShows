@@ -26,7 +26,7 @@ class TMDB {
 		 	try {
 		 		// We want to filter because there are movies really low rated that are not interesting to us. 
 		 		let filteredTmdbItems = response.results.filter(function(tmdbResultItem) {
-		 			return ((tmdbResultItem.vote_count >= 80 || tmdbResultItem.popularity > 18) && (tmdbResultItem.release_date !== undefined || tmdbResultItem.first_air_date !== undefined))
+		 			return ((tmdbResultItem.vote_count >= 40 || tmdbResultItem.popularity > 8) && (tmdbResultItem.release_date !== undefined || tmdbResultItem.first_air_date !== undefined))
 		 		})
 
 		 		// Here we convert the filtered result from the tmdb api to seaonsed objects
