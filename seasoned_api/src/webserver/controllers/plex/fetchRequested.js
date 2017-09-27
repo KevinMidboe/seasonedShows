@@ -9,7 +9,6 @@ const requestRepository = new RequestRepository();
  */
 function historyController(req, res) {
   const user = req.loggedInUser;
-  console.log('here')
 
   requestRepository.fetchRequested()
   .then((requestedItems) => {
