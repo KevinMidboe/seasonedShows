@@ -11,6 +11,9 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 
+/* Decode the Authorization header if provided */
+app.use(tokenToUser);
+
 var port = 31459;        // set our port
 var router = express.Router();
 var allowedOrigins = ['https://kevinmidboe.com', 'http://localhost:8080']
