@@ -20,7 +20,7 @@ class RequestRepository {
 	constructor(database) {
 		this.database = database || establishedDatabase;
 		this.queries = {
-			'insertRequest': "INSERT INTO requests VALUES (?, ?, ?, ?, ?, ?, CURRENT_DATE, 'requested')",
+			'insertRequest': "INSERT INTO requests VALUES (?, ?, ?, ?, ?, ?, ?, CURRENT_DATE, 'requested')",
 			'fetchRequstedItems': "SELECT * FROM requests",
 		}
 	}
@@ -109,14 +109,14 @@ class RequestRepository {
 	* @param {identifier, type} the id of the media object and type of media must be defined
 	* @returns {Promise} If nothing has gone wrong.
 	*/ 
-	sendRequest(identifier, type, ip) {
+	sendRequest(identifier, type, ip, user_agent) {
 		// TODO add to DB so can have a admin page
 		// TODO try a cache hit on the movie item
 
 		tmdb.lookup(identifier, type).then(movie => {
 
 			// Add request to database
-			this.database.run(this.queries.insertRequest, [movie.id, movie.title, movie.year, movie.poster, 'NULL', ip])
+			this.database.run(this.queries.insertRequest, [movie.id, movie.title, movie.year, movie.poster, 'NULL', ip, user_agent])
 
 
 			// 
