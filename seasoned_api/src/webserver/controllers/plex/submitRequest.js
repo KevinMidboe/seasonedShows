@@ -13,7 +13,7 @@ function submitRequestController(req, res) {
 	const id = req.params.mediaId;
 	const type = req.query.type;
 	var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-	var user_agent = req.headers['User-Agent']
+	var user_agent = req.headers['user-agent']
 
 	requestRepository.sendRequest(id, type, ip, user_agent)
 	.then(() => {
