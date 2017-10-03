@@ -13,8 +13,9 @@ function submitRequestController(req, res) {
 	const id = req.params.mediaId;
 	const type = req.query.type;
 	var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+	var user_agent = req.headers['user-agent']
 
-	requestRepository.sendRequest(id, type, ip)
+	requestRepository.sendRequest(id, type, ip, user_agent)
 	.then(() => {
 		res.send({ success: true, message: 'Media item sucessfully requested!' });
 	})
