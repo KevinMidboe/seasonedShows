@@ -20,7 +20,7 @@ class RequestRepository {
 	constructor(database) {
 		this.database = database || establishedDatabase;
 		this.queries = {
-			'insertRequest': "INSERT INTO requests VALUES (?, ?, ?, ?, ?, ?, CURRENT_DATE)",
+			'insertRequest': "INSERT INTO requests VALUES (?, ?, ?, ?, ?, ?, CURRENT_DATE, 'requested')",
 			'fetchRequstedItems': "SELECT * FROM requests",
 		}
 	}
