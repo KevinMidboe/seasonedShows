@@ -2,13 +2,13 @@ __pycache__
 shows.db
 .DS_Store
 env_variables.py
-conf/classedOutput.log
+app/conf/classedOutput.log
 node_modules
 *.pyc
 npm-debug.log
 webpage/js/env_variables.js
 client/dist
 src/webserver/access.log
-conf/development.json
+seasoned_api/conf/development.json
 yarn-error.log
 */yarn.lock
