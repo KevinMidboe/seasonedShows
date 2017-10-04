@@ -8,6 +8,7 @@
 import sys, sqlite3, json, os.path
 import logging
 import env_variables as env
+import shutil
 
 class episode(object):
 	def __init__(self, id):
@@ -28,7 +29,7 @@ class episode(object):
 		c.close()
 
 		self.queries = {
-			'parent': [env.show_dir, self.parent],
+			'parent_input': [env.input_dir, self.parent],
 			'season': [env.show_dir, self.name, self.name + ' Season ' + "%02d" % self.season],
 			'episode': [env.show_dir, self.name, self.name + ' Season ' + "%02d" % self.season, \
 				self.name + ' S' + "%02d" % self.season + 'E' + "%02d" % self.episode],
@@ -36,6 +37,7 @@ class episode(object):
 
 	def typeDir(self, dType, create=False, mergeItem=None):
 		url = '/'.join(self.queries[dType])
+		print(url)
 		if create and not os.path.isdir(url):
 			os.makedirs(url)
 			fix_ownership(url)
@@ -45,35 +47,36 @@ class episode(object):
 
 
 def fix_ownership(path):
+	pass
 	# TODO find this from username from config
-	uid = 1000
-	gid = 113
-	os.chown(path, uid, gid)
+	# uid = 1000
+	# gid = 112
+	# os.chown(path, uid, gid)
 
 def moveStray(strayId):
 	ep = episode(strayId)
 
 	for item in ep.video_files:
 		try: 
-			old_dir = ep.typeDir('parent', mergeItem=item[0])
+			old_dir = ep.typeDir('parent_input', mergeItem=item[0])
 			new_dir = ep.typeDir('episode', mergeItem=item[1], create=True)
-			os.rename(old_dir, new_dir)
+			shutil.move(old_dir, new_dir)
 		except FileNotFoundError:
 			logging.warning(old_dir + ' does not exits, cannot be moved.')
 
 	for item in ep.subtitles:
 		try:
-			old_dir = ep.typeDir('parent', mergeItem=item[0])
+			old_dir = ep.typeDir('parent_input', mergeItem=item[0])
 			new_dir = ep.typeDir('episode', mergeItem=item[1], create=True)
-			os.rename(old_dir, new_dir)
+			shutil.move(old_dir, new_dir)
 		except FileNotFoundError:
 			logging.warning(old_dir + ' does not exits, cannot be moved.')
 
 	for item in ep.trash:
 		try:
-			os.remove(ep.typeDir('parent', mergeItem=item))
+			os.remove(ep.typeDir('parent_input', mergeItem=item))
 		except FileNotFoundError:
-			logging.warning(ep.typeDir('parent', mergeItem=item) + 'does not exist, cannot be removed.')
+			logging.warning(ep.typeDir('parent_input', mergeItem=item) + 'does not exist, cannot be removed.')
 	
 	fix_ownership(ep.typeDir('episode'))
 	for root, dirs, files in os.walk(ep.typeDir('episode')):  
@@ -84,9 +87,9 @@ def moveStray(strayId):
 	# TODO because we might jump over same files, the dir might no longer 
 	# be empty and cannot remove dir like this.
 	try: 
-		os.rmdir(ep.typeDir('parent'))
+		os.rmdir(ep.typeDir('parent_input'))
 	except FileNotFoundError:
-		logging.warning('Cannot remove ' + ep.typeDir('parent') + ', file no longer exists.')
+		logging.warning('Cannot remove ' + ep.typeDir('parent_input') + ', file no longer exists.')
 
 if __name__ == '__main__':
 	if (os.path.exists(env.logfile)):
