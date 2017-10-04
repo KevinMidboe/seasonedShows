@@ -48,6 +48,7 @@ class StrayRepository {
 			assert.notEqual(row, undefined, `Stray '${strayId}' already verified.`);
 
 			var options = {
+				pythonPath: '/usr/bin/python3', 
 				args: [strayId]
 			}
 
