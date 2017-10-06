@@ -156,11 +156,11 @@ class SearchRequest extends React.Component {
             .then(responseData => {
                 if (this.state.page === 1) {
                     this.setState({
-                        responseMovieList: responseData.results.map(searchResultItem => this.createMovieObjects(searchResultItem)),
+                        responseMovieList: responseData.results.map((searchResultItem, index) => this.createMovieObjects(searchResultItem, index)),
                         lastApiCallURI: uri  // Save the value of the last sucessfull api call
                     })
                 } else {
-                    let responseMovieObjects = responseData.results.map(searchResultItem => this.createMovieObjects(searchResultItem));
+                    let responseMovieObjects = responseData.results.map((searchResultItem, index) => this.createMovieObjects(searchResultItem, index));
                     let growingReponseMovieObjectList = this.state.responseMovieList.concat(responseMovieObjects);
                     this.setState({
                         responseMovieList: growingReponseMovieObjectList,
@@ -202,11 +202,11 @@ class SearchRequest extends React.Component {
             .then(responseData => {
                 if (this.state.page === 1) {
                     this.setState({
-                        responseMovieList: responseData.results.map(searchResultItem => this.createMovieObjects(searchResultItem)),
+                        responseMovieList: responseData.results.map((searchResultItem, index) => this.createMovieObjects(searchResultItem, index)),
                         lastApiCallURI: uri  // Save the value of the last sucessfull api call
                     })
                 } else {
-                    let responseMovieObjects = responseData.results.map(searchResultItem => this.createMovieObjects(searchResultItem));
+                    let responseMovieObjects = responseData.results.map((searchResultItem, index) => this.createMovieObjects(searchResultItem, index));
                     let growingReponseMovieObjectList = this.state.responseMovieList.concat(responseMovieObjects);
                     this.setState({
                         responseMovieList: growingReponseMovieObjectList,
@@ -288,9 +288,9 @@ class SearchRequest extends React.Component {
 
   // When called passes the variable to MovieObject and calls it's interal function for 
   // generating the wanted HTML
-  createMovieObjects(item) {
+  createMovieObjects(item, index) {
     let movie = new MovieObject(item);
-    return movie.getElement();
+    return movie.getElement(index);
   }
 
   toggleFilter(filterType) {
