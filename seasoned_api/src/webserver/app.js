@@ -16,7 +16,7 @@ app.use(bodyParser.json());
 
 var port = 31459;        // set our port
 var router = express.Router();
-var allowedOrigins = ['129.241.229.146', 'https://kevinmidboe.com', 'http://localhost:8080']
+var allowedOrigins = ['https://kevinmidboe.com', 'http://localhost:8080']
 
 // router.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
