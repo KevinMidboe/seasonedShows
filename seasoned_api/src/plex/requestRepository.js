@@ -22,7 +22,7 @@ class RequestRepository {
 		this.queries = {
 			'insertRequest': "INSERT INTO requests VALUES (?, ?, ?, ?, ?, ?, CURRENT_DATE, 'requested', ?)",
 			'fetchRequstedItems': "SELECT * FROM requests",
-			'updateRequested': "UPDATE stray_eps SET status = '?' WHERE id is '?'",
+			'updateRequested': "UPDATE requests SET status = '?' WHERE id is '?'",
 		}
 	}
 
