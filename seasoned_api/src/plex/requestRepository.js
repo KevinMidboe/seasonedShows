@@ -22,6 +22,7 @@ class RequestRepository {
 		this.queries = {
 			'insertRequest': "INSERT INTO requests VALUES (?, ?, ?, ?, ?, ?, CURRENT_DATE, 'requested', ?)",
 			'fetchRequstedItems': "SELECT * FROM requests",
+			'updateRequested': "UPDATE stray_eps SET status = '?' WHERE id is '?'",
 		}
 	}
 
@@ -165,6 +166,10 @@ class RequestRepository {
 
 	fetchRequested() {
 		return this.database.all(this.queries.fetchRequstedItems);
+	}
+
+	updateRequested(id, status) {
+		this.database.run(this.queries.updateRequested, [status, id]);
 	}
 
 }
