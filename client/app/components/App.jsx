@@ -1,27 +1,12 @@
-/*
-	./app/components/App.jsx
-	
-	<FetchData url={"https://apollo.kevinmidboe.com/api/v1/plex/playing"} />
-*/
-import React from 'react';
-import FetchData from './FetchData.js';
-import ListStrays from './ListStrays.jsx'
-import SearchRequest from './SearchRequest.jsx';
+import React, { Component } from "react";
+import Header from './Header.jsx';
+import Main from './Main.jsx';
 
-export default class App extends React.Component {
+const App = () => (
+	<div>
+		<Header />
+		<Main />
+	</div>
+)
 
-				// <div>
-				// 	<h1>Welcome to Seasoned</h1>
-				// </div>
-					// <ListStrays />
-
-					// <FetchData />
-	render() {
-		return (
-			<div>
-
-					<SearchRequest />
-			</div>
-		);
-	}
-}
+export default App
