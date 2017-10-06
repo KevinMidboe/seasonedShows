@@ -11,7 +11,7 @@ function updateRequested(req, res) {
   const id = req.params.requestId;
   const status = req.body.status;
 
-  requestRepository.updateRequested(id, status)
+  requestRepository.updateRequestedById(id, status)
   .then(() => {
     res.send({ success: true });
   })
