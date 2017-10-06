@@ -8,25 +8,35 @@ const mustBeAuthenticated = require('./middleware/mustBeAuthenticated');
 // this will let us get the data from a POST
 // configure app to use bodyParser()
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+// router.use(bodyParser.urlencoded({ extended: true }));
 
 
 /* Decode the Authorization header if provided */
-app.use(tokenToUser);
+// router.use(tokenToUser);
 
 var port = 31459;        // set our port
 var router = express.Router();
 var allowedOrigins = ['https://kevinmidboe.com', 'http://localhost:8080']
 
+// router.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+
+/* Decode the Authorization header if provided */
+router.use(tokenToUser);
 
 router.use(function(req, res, next) {
 	// TODO add logging of all incoming
     console.log('Request: ', req.originalUrl);
     var origin = req.headers.origin;
     if (allowedOrigins.indexOf(origin) > -1) {
-		res.setHeader('Access-Control-Allow-Origin', origin);
+			console.log('allowed');
+			res.setHeader('Access-Control-Allow-Origin', origin);
 	}
-    next();
+	res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization'); 
+	res.header('Access-Control-Allow-Methods', 'POST, GET', 'PUT');
+	
+	next();
 });
 
 router.get('/', function(req, res) {
@@ -36,9 +46,9 @@ router.get('/', function(req, res) {
 /**
  * User
  */
-app.post('/api/v1/user', require('./controllers/user/register.js'));
-app.post('/api/v1/user/login', require('./controllers/user/login.js'));
-app.get('/api/v1/user/history', mustBeAuthenticated, require('./controllers/user/history.js'));
+router.post('/v1/user', require('./controllers/user/register.js'));
+router.post('/v1/user/login', require('./controllers/user/login.js'));
+router.get('/v1/user/history', mustBeAuthenticated, require('./controllers/user/history.js'));
 
 /**
  * Seasoned 
