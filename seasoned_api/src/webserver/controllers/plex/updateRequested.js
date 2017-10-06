@@ -1,4 +1,4 @@
-const RequestRepository = require('src/searchHistory/searchHistory');
+const RequestRepository = require('src/plex/requestRepository');
 const requestRepository = new RequestRepository();
 
 /**
