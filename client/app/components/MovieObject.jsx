@@ -35,6 +35,8 @@ class MovieObject {
 	}
 
 	getElement(index) {
+		const element_key = index + this.id;
+
 		// TODO set the poster image async by updating the dom after this is returned
 		if (this.poster == null || this.poster == undefined) {
 			var posterPath = 'https://openclipart.org/image/2400px/svg_to_png/211479/Simple-Image-Not-Found-Icon.png'
@@ -60,7 +62,7 @@ class MovieObject {
 		
 
 		return (
-		<div key={index}>
+		<div key={element_key}>
 		 	<Notifications />
 			<div style={movieStyle.resultItem} key={this.id}>
 				<MediaQuery minWidth={600}>

@@ -31,9 +31,14 @@ class RequestElement extends React.Component {
 	createHTMLElement(data, index) {
 		var posterPath = 'https://image.tmdb.org/t/p/w300' + data.image_path;
 		
-		if (data.user_agent !== null) {
+		if (data.user_agent) {
 			var user_agent = data.user_agent.split(" ");
-			var agent_shortened = user_agent[1].replace(/[\(\;]/g, '')
+			
+			console.log(data.user_agent.substring('Mozilla'))
+			if (data.user_agent.includes('Mozilla'))
+				var agent_shortened = user_agent[1].replace(/[\(\;]/g, '');
+			else
+				var agent_shortened = user_agent[0];
 		}
 
 		return (
@@ -42,6 +47,7 @@ class RequestElement extends React.Component {
 				<div style={requestElement.infoDiv}>
 					<span><b>Name</b>: {data.name} </span>
 					<span><b>Year</b>: {data.year}</span><br></br>
+					<span><b>Type</b>: {data.type}</span><br></br>
 					<span><b>Status</b>: {data.status}</span><br></br>
 					<span><b>Address</b>: {data.ip}</span><br></br>
 					<span><b>Requested Data:</b> {data.requested_date}</span><br></br>
