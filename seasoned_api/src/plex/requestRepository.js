@@ -20,8 +20,9 @@ class RequestRepository {
 	constructor(database) {
 		this.database = database || establishedDatabase;
 		this.queries = {
-			'insertRequest': "INSERT INTO requests VALUES (?, ?, ?, ?, ?, ?, CURRENT_DATE, 'requested', ?)",
+			'insertRequest': "INSERT INTO requests VALUES (?, ?, ?, ?, ?, ?, CURRENT_DATE, 'requested', ?, ?)",
 			'fetchRequstedItems': "SELECT * FROM requests",
+			'updateRequestedById': "UPDATE requests SET status = ? WHERE id is ? AND type is ?",
 		}
 	}
 
@@ -116,7 +117,7 @@ class RequestRepository {
 		tmdb.lookup(identifier, type).then(movie => {
 
 			// Add request to database
-			this.database.run(this.queries.insertRequest, [movie.id, movie.title, movie.year, movie.poster, 'NULL', ip, user_agent])
+			this.database.run(this.queries.insertRequest, [movie.id, movie.title, movie.year, movie.poster, 'NULL', ip, user_agent, movie.type])
 
 
 			// 
@@ -165,6 +166,10 @@ class RequestRepository {
 
 	fetchRequested() {
 		return this.database.all(this.queries.fetchRequstedItems);
+	}
+
+	updateRequestedById(id, type, status) {
+		return this.database.run(this.queries.updateRequestedById, [status, id, type]);
 	}
 
 }

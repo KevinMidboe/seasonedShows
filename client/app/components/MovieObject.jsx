@@ -7,6 +7,10 @@ import movieStyle from './styles/movieObjectStyle.jsx';
 
 var MediaQuery = require('react-responsive');
 
+import RequestButton from './buttons/request_button.jsx';
+
+import { fetchJSON } from './http.jsx';
+
 class MovieObject {
 	constructor(object) {
 		this.id = object.id;
@@ -27,14 +31,20 @@ class MovieObject {
 
 	requestMovie() {
 		// fetch('http://localhost:31459/api/v1/plex/request/' + this.id + '?type='+this.type, {
-		fetch('https://apollo.kevinmidboe.com/api/v1/plex/request/' + this.id + '?type='+this.type, {
-		  method: 'POST'
-		});
+		// fetch('https://apollo.kevinmidboe.com/api/v1/plex/request/' + this.id + '?type='+this.type, {
+		//   method: 'POST'
+		// });
+		fetchJSON('https://apollo.kevinmidboe.com/api/v1/plex/request/' + this.id + '?type='+this.type, 'POST')
+		.then((response) => {
+			console.log(response);
+		})
 
 		notify.show(this.title + ' requested!', 'success', 3000);
 	}
 
 	getElement(index) {
+		const element_key = index + this.id;
+
 		// TODO set the poster image async by updating the dom after this is returned
 		if (this.poster == null || this.poster == undefined) {
 			var posterPath = 'https://openclipart.org/image/2400px/svg_to_png/211479/Simple-Image-Not-Found-Icon.png'
@@ -59,8 +69,9 @@ class MovieObject {
 
 		
 
+		// TODO add request button class
 		return (
-		<div key={index}>
+		<div key={element_key}>
 		 	<Notifications />
 			<div style={movieStyle.resultItem} key={this.id}>
 				<MediaQuery minWidth={600}>
@@ -87,7 +98,8 @@ class MovieObject {
 					</MediaQuery>
 
 
-					<span className='imdbLogo'>
+					<span className='imdbLogo'>				
+
 					</span>
 
 					<div style={movieStyle.buttons}>
