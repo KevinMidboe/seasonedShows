@@ -9,6 +9,8 @@ import movieStyle from './styles/movieObjectStyle.jsx';
 import URI from 'urijs';
 import InfiniteScroll from 'react-infinite-scroller';
 
+import { fetchJSON } from './http.jsx';
+
 var MediaQuery = require('react-responsive');
 
 // TODO add option for searching multi, movies or tv shows
