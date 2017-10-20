@@ -15,7 +15,7 @@ import { getCookie } from './Cookie.jsx';
 	  return response;
 	}
 
-	function parseJSON(response) { response.json(); }
+	function parseJSON(response) { return response.json(); }
 
 	
 
@@ -41,12 +41,12 @@ import { getCookie } from './Cookie.jsx';
 // export default http;
 
 export function fetchJSON(url, method, data) {
-	  return fetch(url, {
-	    method: method,
-	    headers: new Headers({
-	      'Content-Type': 'application/json',
-	      'authorization': getCookie('token'),
-	    }),
-	    body: JSON.stringify(data)
-	  }).then(checkStatus).then(parseJSON);
-	}
+	return fetch(url, {
+		method: method,
+		headers: new Headers({
+		  'Content-Type': 'application/json',
+		  'authorization': getCookie('token'),
+		}),
+		body: JSON.stringify(data)
+	}).then(checkStatus).then(parseJSON);
+}

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { login } from '../redux/reducer.jsx';
+import { login } from '../../redux/reducer.jsx';
 
 class LoginForm extends Component {
 

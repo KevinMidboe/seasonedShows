@@ -49,7 +49,7 @@ class SearchRequest extends React.Component {
   }
 
 
-  componentDidMount(){
+  componentWillMount(){
     var that = this;
     // this.setState({responseMovieList: null})
     this.resetPageNumber();
