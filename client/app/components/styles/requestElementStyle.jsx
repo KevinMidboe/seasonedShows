@@ -5,6 +5,7 @@ export default {
 		flexDirection: 'row',
 		flexWrap: 'wrap',
 		flexFlow: 'row wrap',
+		justifyContent: 'space-around',
 	},
 
 	wrappingDiv: {
