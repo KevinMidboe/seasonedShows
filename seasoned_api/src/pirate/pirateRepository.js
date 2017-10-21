@@ -1,34 +1,26 @@
 const assert = require('assert');
+var PythonShell = require('python-shell');
+var async = require('async');
 
-class PirateRepository {
+async function find(searchterm, callback) {
+  var PythonShell = require('python-shell');
 
-	search(query) {
-		console.log(query)
+  var options = {
+		// pythonPath: '/usr/bin/python3', 
+		pythonPath: '/Library/Frameworks/Python.framework/Versions/3.6/bin/python3',
+		args: [searchterm]
 	}
 
-	searchMedia(query) {
-		var options = {
-			uri: 'http://10.0.0.41:32400/search?query=' + query,
-			headers: {
-				'Accept': 'application/json'
-			},
-			json: true
-		}
+	PythonShell.run('../app/pirateSearch.py', options, callback);
+  // PythonShell does not support return
+};
 
-		return rp(options)
-		  .then((result) => {
-		  	var seasonedMediaObjects = result.MediaContainer.Metadata.reduce(function(match, media_item) {
-		  		if (media_item.type === 'movie' || media_item.type === 'show') {
-		  			match.push(convertPlexToSeasoned(media_item));
-		  		}
-		  		return match;
-		  	}, []);
-		  	return seasonedMediaObjects;
-		  })
-		  .catch((err) => {
-		  	throw new Error(err);
-		  })
-	}
+async function SearchPiratebay(query) {
+	return await new Promise((resolve) => {
+		return find(query, function(err, results) {
+			resolve(JSON.parse(results, null, '\t'));
+		})
+	})
 }
 
-module.exports = PirateRepository;
+module.exports = { SearchPiratebay }
