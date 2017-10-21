@@ -75,7 +75,7 @@ router.put('/v1/plex/request/:requestId', mustBeAuthenticated, require('./contro
 
 // TODO ADD AUTHENTICATION
 router.get('/v1/pirate/search', mustBeAuthenticated, require('./controllers/pirate/searchTheBay.js'));
-router.get('/v1/pirate/add', mustBeAuthenticated, require('./controllers/pirate/addMagnet.js'));
+router.post('/v1/pirate/add', mustBeAuthenticated, require('./controllers/pirate/addMagnet.js'));
 
 /**
  * TMDB
