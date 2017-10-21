@@ -67,7 +67,10 @@ class AdminComponent extends React.Component {
 						style={adminComponentStyle.sidebar} />
 				</div>
 				<div style={adminComponentStyle.selectedObjectPanel}>
-					<AdminRequestInfo selectedRequest={selectedRequest} />
+					<AdminRequestInfo 
+						selectedRequest={selectedRequest}
+						listItemSelected={listItemSelected}
+					 />
 				</div>
 			</div>
 		)
