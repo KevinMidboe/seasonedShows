@@ -3,12 +3,23 @@ import { Link } from 'react-router-dom';
 
 class SidebarComponent extends Component {  
 
+	generateListElements(index, item) {
+		if (index == this.props.listItemSelected)
+			return (
+				<td>{item.name}</td>
+			)
+		else
+			return (
+				<td><Link to={{ pathname: '/admin/'+String(index)}}>{item.name}</Link></td>
+			)
+	}
+
 	displayRequestedElementsInfo() {
 		if (this.props.requested_objects) {
-			let element = this.props.requested_objects.map((item, index) => {
+			let requestedElement = this.props.requested_objects.map((item, index) => {
 				return (
 					<tr key={index}>
-						<td><Link to={{ pathname: '/admin/'+String(index)}}>{item.name}</Link></td>
+						{ this.generateListElements(index, item) }
 						<td>{item.status}</td>
 						<td>{item.requested_date}</td>
 					</tr>
@@ -25,7 +36,7 @@ class SidebarComponent extends Component {
 						</tr>
 					</thead>
 					<tbody>
-						{element}
+						{requestedElement}
 					</tbody>
 				</table>
 				)
