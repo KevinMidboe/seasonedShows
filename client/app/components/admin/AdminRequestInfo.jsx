@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PirateSearch from './PirateSearch.jsx'
 
 class AdminRequestInfo extends Component {
 
@@ -54,6 +55,10 @@ class AdminRequestInfo extends Component {
   					<span>user_agent: {this.userAgent(request.user_agent)}</span><br />
   					<span>request_date: {request.requested_date}</span><br />
   				</div>
+  				
+  				<PirateSearch
+  					name={request.name} />
+  			
   			</div>
   		)
   	}
