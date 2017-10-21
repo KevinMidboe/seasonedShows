@@ -17,7 +17,7 @@ from video import VIDEO_EXTENSIONS, Episode, Movie, Video
 from subtitle import SUBTITLE_EXTENSIONS, Subtitle, get_subtitle_path
 from utils import sanitize
 
-logging.basicConfig(filename=env.logfile, level=logging.INFO)
+logging.basicConfig(filename=os.path.dirname(__file__) + '/' + env.logfile, level=logging.INFO)
 
 from datetime import datetime
 

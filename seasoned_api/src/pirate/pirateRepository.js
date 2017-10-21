@@ -18,9 +18,9 @@ async function find(searchterm, callback) {
 
 async function callPythonAddMagnet(magnet, callback) {
 	var options = {
-		pythonPath: '/usr/bin/python3', 
+		pythonPath: '/usr/bin/python', 
 		// pythonPath: '/Library/Frameworks/Python.framework/Versions/3.6/bin/python3',
-		args: ['"'+magnet+'"']
+		args: [magnet]
 	}
 
 	PythonShell.run('../app/magnet.py', options, callback);
@@ -37,6 +37,9 @@ async function SearchPiratebay(query) {
 async function AddMagnet(magnet) {
 	return await new Promise((resolve) => {
 		return callPythonAddMagnet(magnet, function(err, results) {
+			if (err) {
+				console.log(err)
+			}
 			resolve({ success: true })
 		})
 	})
