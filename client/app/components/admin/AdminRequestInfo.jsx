@@ -35,7 +35,7 @@ class AdminRequestInfo extends Component {
 	  		minHeight: '450px',
 	  	}
   	}
-  	const request = this.props.display;
+  	const request = this.props.selectedRequest;
 
   	if (request) {
   		return (
