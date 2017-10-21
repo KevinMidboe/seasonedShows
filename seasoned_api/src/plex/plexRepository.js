@@ -1,9 +1,6 @@
 const assert = require('assert');
 const convertPlexToSeasoned = require('src/plex/convertPlexToSeasoned');
 const convertPlexToStream = require('src/plex/convertPlexToStream');
-const configuration = require('src/config/configuration').getInstance();
-const TMDB = require('src/tmdb/tmdb');
-const tmdb = new TMDB(configuration.get('tmdb', 'apiKey'));
 var rp = require('request-promise');
 
 class PlexRepository {
