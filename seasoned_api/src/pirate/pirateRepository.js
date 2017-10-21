@@ -38,7 +38,7 @@ async function AddMagnet(magnet) {
 	return await new Promise((resolve) => {
 		return callPythonAddMagnet(magnet, function(err, results) {
 			resolve(
-				return { success: true }
+				return ({ success: true })
 			)
 		})
 	})
