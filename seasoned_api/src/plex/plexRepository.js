@@ -7,7 +7,7 @@ class PlexRepository {
 
 	searchMedia(query) {
 		var options = {
-			uri: 'http://10.0.0.41:32400/search?query=' + query,
+			uri: 'http://10.0.0.42:32400/search?query=' + query,
 			headers: {
 				'Accept': 'application/json'
 			},

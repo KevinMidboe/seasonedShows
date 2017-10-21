@@ -92,7 +92,7 @@ class strayEpisode(object):
 	def analyseSubtitles(self, subFile):
 		# TODO verify that it is a file
 		try:
-			subtitlePath = os.path.join([env.show_dir, self.parent, subFile])
+			subtitlePath = os.path.join([env.input_dir, self.parent, subFile])
 		except TypeError:
 			# TODO don't get a list in subtitlePath
 			return self.removeUploadSign(subFile)
@@ -131,7 +131,7 @@ class strayEpisode(object):
 		conn = sqlite3.connect(env.db_path)
 		c = conn.cursor()
 
-		path = '/'.join([env.show_dir, self.parent])
+		path = '/'.join([env.input_dir, self.parent])
 		video_files = json.dumps(self.videoFiles)
 		subtitles = json.dumps(self.subtitles)
 		trash = json.dumps(self.trash)
@@ -149,7 +149,7 @@ class strayEpisode(object):
 
 
 
-def getDirContent(dir=env.show_dir):
+def getDirContent(dir=env.input_dir):
 	# TODO What if item in db is not in this list?
 	try:
 		return [d for d in os.listdir(dir) if d[0] != '.']
@@ -189,12 +189,12 @@ def XOR(list1, list2):
 
 def filterChildItems(parent):
 	try:
-		children = getDirContent('/'.join([env.show_dir, parent]))
+		children = getDirContent('/'.join([env.input_dir, parent]))
 		if children:
 			strayEpisode(parent, children)
 	except FileNotFoundError:
 		# TODO Log to error file
-		logging.info('Error: "' + '/'.join([env.show_dir, parent]) + '" is not a valid directory.')
+		logging.info('Error: "' + '/'.join([env.input_dir, parent]) + '" is not a valid directory.')
 
 def getNewItems():
 	newItems = XOR(getDirContent(), getShowNames())
@@ -221,3 +221,4 @@ if __name__ == '__main__':
 	while True:
 		main()
 		sleep(30)
+
