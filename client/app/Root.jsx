@@ -14,7 +14,7 @@ class Root extends Component {
       <Router>
         <Switch>
           <Route exact path='/' component={SearchRequest} />
-          <Route path='/admin/:search' component={AdminComponent} />
+          <Route path='/admin/:request' component={AdminComponent} />
           <Route path='/admin' component={AdminComponent} />
         </Switch>
     </Router>
