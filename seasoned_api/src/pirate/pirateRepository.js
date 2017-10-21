@@ -1,19 +1,30 @@
 const assert = require('assert');
 var PythonShell = require('python-shell');
 var async = require('async');
+var PythonShell = require('python-shell');
 
 async function find(searchterm, callback) {
-  var PythonShell = require('python-shell');
 
   var options = {
-		// pythonPath: '/usr/bin/python3', 
-		pythonPath: '/Library/Frameworks/Python.framework/Versions/3.6/bin/python3',
+		pythonPath: '/usr/bin/python3', 
+		// pythonPath: '/Library/Frameworks/Python.framework/Versions/3.6/bin/python3',
 		args: [searchterm]
 	}
 
 	PythonShell.run('../app/pirateSearch.py', options, callback);
   // PythonShell does not support return
 };
+
+
+async function callPythonAddMagnet(magnet, callback) {
+	var options = {
+		pythonPath: '/usr/bin/python3', 
+		// pythonPath: '/Library/Frameworks/Python.framework/Versions/3.6/bin/python3',
+		args: ['"'+magnet+'"']
+	}
+
+	PythonShell.run('../app/magnet.py', options, callback);
+}
 
 async function SearchPiratebay(query) {
 	return await new Promise((resolve) => {
@@ -23,4 +34,12 @@ async function SearchPiratebay(query) {
 	})
 }
 
-module.exports = { SearchPiratebay }
+async function AddMagnet(magnet) {
+	return await new Promise((resolve) => {
+		return callPythonAddMagnet(magnet, function(err, results) {
+			resolve({ success: true })
+		})
+	})
+}
+
+module.exports = { SearchPiratebay, AddMagnet }
