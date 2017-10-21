@@ -74,7 +74,8 @@ router.get('/v1/plex/requests/all', mustBeAuthenticated, require('./controllers/
 router.put('/v1/plex/request/:requestId', mustBeAuthenticated, require('./controllers/plex/updateRequested.js'));
 
 // TODO ADD AUTHENTICATION
-router.get('/v1/pirate/search', require('./controllers/pirate/searchTheBay.js'));
+router.get('/v1/pirate/search', mustBeAuthenticated, require('./controllers/pirate/searchTheBay.js'));
+router.get('/v1/pirate/add', mustBeAuthenticated, require('./controllers/pirate/addMagnet.js'));
 
 /**
  * TMDB
