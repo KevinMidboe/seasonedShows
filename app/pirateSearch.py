@@ -9,13 +9,14 @@ import sys, logging, re, json
 from urllib import parse, request
 from urllib.error import URLError
 from bs4 import BeautifulSoup
+from os import path
 
 import datetime
 from pprint import pprint
 
 from core import stringTime
 import env_variables as env
-logging.basicConfig(filename=env.logfile, level=logging.INFO)
+logging.basicConfig(filename=path.dirname(__file__) + '/' +  env.logfile, level=logging.INFO)
 
 RELEASE_TYPES = ('bdremux', 'brremux', 'remux',
 	'bdrip', 'brrip', 'blu-ray', 'bluray', 'bdmv', 'bdr', 'bd5',
