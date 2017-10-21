@@ -29,7 +29,7 @@ class AdminComponent extends React.Component {
 		fetchJSON('https://apollo.kevinmidboe.com/api/v1/plex/requests/all', 'GET')
 		.then(result => {
 			this.setState({
-				requested_objects: result.requestedItems
+				requested_objects: result.requestedItems.reverse()
 			})
 		})
 	}
@@ -49,18 +49,25 @@ class AdminComponent extends React.Component {
 			return <LoginForm />
 		}
 
-		let display = undefined
-		if (this.props.match.params.search && this.state.requested_objects !== '') {
-			display = this.state.requested_objects[this.props.match.params.search]
+		let selectedRequest = undefined;
+		let listItemSelected = undefined;
+		
+		const requestParam = this.props.match.params.request;
+		if (requestParam && this.state.requested_objects !== '') {
+			selectedRequest = this.state.requested_objects[requestParam]
+			listItemSelected = requestParam
 		}
 
 		return (
 			<div>
 				<div style={adminComponentStyle.sidebar}>
-					<Sidebar requested_objects={this.state.requested_objects} style={adminComponentStyle.sidebar}/>
+					<Sidebar 
+						requested_objects={this.state.requested_objects} 
+						listItemSelected={listItemSelected}
+						style={adminComponentStyle.sidebar} />
 				</div>
 				<div style={adminComponentStyle.selectedObjectPanel}>
-					<AdminRequestInfo display={display} />
+					<AdminRequestInfo selectedRequest={selectedRequest} />
 				</div>
 			</div>
 		)
