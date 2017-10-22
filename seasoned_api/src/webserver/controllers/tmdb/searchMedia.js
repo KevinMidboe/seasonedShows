@@ -1,6 +1,10 @@
+const SearchHistory = require('src/searchHistory/searchHistory');
 const configuration = require('src/config/configuration').getInstance();
+const Cache = require('src/tmdb/cache');
 const TMDB = require('src/tmdb/tmdb');
-const tmdb = new TMDB(configuration.get('tmdb', 'apiKey'));
+const cache = new Cache();
+const tmdb = new TMDB(cache, configuration.get('tmdb', 'apiKey'));
+const searchHistory = new SearchHistory();
 
 /**
  * Controller: Search for movies by query, page and optionally adult
@@ -8,10 +12,17 @@ const tmdb = new TMDB(configuration.get('tmdb', 'apiKey'));
  * @param {Response} res
  * @returns {Callback}
  */
-function searchMoviesController(req, res) {
+function searchMediaController(req, res) {
+  const user = req.loggedInUser;
   const { query, page, type } = req.query;
 
   Promise.resolve()
+  .then(() => {
+    if (user) {
+      return searchHistory.create(user, query);
+    }
+    return null;
+  }
   .then(() => tmdb.search(query, page, type))
   .then((movies) => {
   	if (movies !== undefined || movies.length > 0) {
@@ -19,11 +30,10 @@ function searchMoviesController(req, res) {
   	} else {
   		res.status(404).send({ success: false, error: 'Search query did not return any results.'})
   	}
-    res.send(movies);
   })
   .catch((error) => {
     res.status(500).send({ success: false, error: error.message });
   });
 }
 
-module.exports = searchMoviesController;
+module.exports = searchMediaController;
