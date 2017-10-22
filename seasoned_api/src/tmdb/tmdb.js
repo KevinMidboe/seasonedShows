@@ -18,7 +18,6 @@ class TMDB {
 			'upcoming': 'u',
 			'similar': 'si',
 			'lookup': 'l'
-
 		}
 	}
 
@@ -29,7 +28,7 @@ class TMDB {
 	*/ 
 	search(text, page = 1, type = 'multi') {
 		const query = { 'query': text, 'page': page };
-		const cacheKey = `${this.cacheTags.search}${page}:${type}:${text}`;
+		const cacheKey = `${this.cacheTags.search}:${page}:${type}:${text}`;
 		return Promise.resolve()
 		 .then(() => this.cache.get(cacheKey))
 		 .catch(() => this.tmdb(type, query))
@@ -84,9 +83,12 @@ class TMDB {
 
 		// Build a query for tmdb with pagenumber
 		const query = { 'page': page }
+		const cacheKey = `${this.cacheTags.discover}:${page}:${type}`;
 		return Promise.resolve()
-			.then(() => this.tmdb(tmdbType, query))
+		 	.then(() => this.cache.get(cacheKey))
+			.catch(() => this.tmdb(tmdbType, query))
 			.catch(() => { throw new Error('Could not fetch discover.'); })
+			.then((response) => this.cache.set(cacheKey, response))
 			.then((response) => {
 				try {
 					// Return a object that has the results and a variable for page, total_pages 
@@ -128,9 +130,12 @@ class TMDB {
 
 		// Build a query for tmdb with pagenumber
 		const query = { 'page': page }
+		const cacheKey = `${this.cacheTags.popular}:${page}:${type}`;
 		return Promise.resolve()
-			.then(() => this.tmdb(tmdbType, query))
+		 	.then(() => this.cache.get(cacheKey))
+			.catch(() => this.tmdb(tmdbType, query))
 			.catch(() => { throw new Error('Could not fetch popular.'); })
+			.then((response) => this.cache.set(cacheKey, response))
 			.then((response) => {
 				try {
 					var seasonedResponse = response.results.map((result) => { 
@@ -173,9 +178,12 @@ class TMDB {
 
 		// Build a query for tmdb with pagenumber
 		const query = { 'page': page }
+		const cacheKey = `${this.cacheTags.nowplaying}:${page}:${type}`;
 		return Promise.resolve()
-			.then(() => this.tmdb(tmdbType, query))
+		 	.then(() => this.cache.get(cacheKey))
+			.catch(() => this.tmdb(tmdbType, query))
 			.catch(() => { throw new Error('Could not fetch popular.'); })
+			.then((response) => this.cache.set(cacheKey, response))
 			.then((response) => {
 				try {
 					var seasonedResponse = response.results.map((result) => { 
@@ -200,9 +208,12 @@ class TMDB {
 	// TODO add filter for language
 	upcoming(page) {
 		const query = { 'page': page }
+		const cacheKey = `${this.cacheTags.upcoming}:${page}`;
 		return Promise.resolve()
-			.then(() => this.tmdb('upcomingMovies', query))
+		 	.then(() => this.cache.get(cacheKey))
+			.catch(() => this.tmdb('upcomingMovies', query))
 			.catch(() => { throw new Error('Could not fetch upcoming movies.'); })
+			.then((response) => this.cache.set(cacheKey, response))
 			.then((response) => {
 				try {
 					var seasonedResponse = response.results.map((result) => { 
@@ -240,9 +251,12 @@ class TMDB {
 		}
 
 		const query = { id: identifier }
+		const cacheKey = `${this.cacheTags.similar}:${type}:${identifier}`;
 		return Promise.resolve()
-			.then(() => this.tmdb(tmdbType, query))
+		 	.then(() => this.cache.get(cacheKey))
+			.catch(() => this.tmdb(tmdbType, query))
 			.catch(() => { throw new Error('Could not fetch upcoming movies.'); })
+			.then((response) => this.cache.set(cacheKey, response))
 			.then((response) => {
 				try {
 					var seasonedResponse = response.results.map((result) => { 
@@ -275,9 +289,12 @@ class TMDB {
 			})
 		}
 		const query = { id: identifier };
+		const cacheKey = `${this.cacheTags.lookup}:${type}:${identifier}`;
 		return Promise.resolve()
-			.then(() => this.tmdb(type, query))
+		 	.then(() => this.cache.get(cacheKey))
+			.catch(() => this.tmdb(type, query))
 			.catch(() => { throw new Error('Could not find a movie with that id.'); })
+			.then((response) => this.cache.set(cacheKey, response))
 			.then((response) => {
 			  try {
 			    var car = convertTmdbToSeasoned(response, queryType);
