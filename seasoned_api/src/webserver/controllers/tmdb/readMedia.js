@@ -1,6 +1,8 @@
 const configuration = require('src/config/configuration').getInstance();
+const Cache = require('src/tmdb/cache');
 const TMDB = require('src/tmdb/tmdb');
-const tmdb = new TMDB(configuration.get('tmdb', 'apiKey'));
+const cache = new Cache();
+const tmdb = new TMDB(cache, configuration.get('tmdb', 'apiKey'));
 
 /**
  * Controller: Retrieve information for a movie
