@@ -13,10 +13,9 @@ function searchRequestController(req, res) {
 
 	Promise.resolve()
 	.then(() => {
-		if (user) {
-			return searchHistory.create(user, query);
+		if (user !== 'false') {
+			searchHistory.create(user, query);
 		}
-		return null;
 	})
 	.then(() => requestRepository.searchRequest(query, page, type))
 	.then((searchResult) => {
