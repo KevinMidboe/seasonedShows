@@ -1,28 +1,19 @@
-const SearchHistory = require('src/searchHistory/searchHistory');
 const configuration = require('src/config/configuration').getInstance();
 const Cache = require('src/tmdb/cache');
 const TMDB = require('src/tmdb/tmdb');
 const cache = new Cache();
 const tmdb = new TMDB(cache, configuration.get('tmdb', 'apiKey'));
-const searchHistory = new SearchHistory();
 
 /**
- * Controller: Search for movies by query, page and optionally adult
+ * Controller: Search for movies by query, page and optional type
  * @param {Request} req http request variable
  * @param {Response} res
  * @returns {Callback}
  */
 function searchMediaController(req, res) {
-  const user = req.loggedInUser;
   const { query, page, type } = req.query;
 
   Promise.resolve()
-  .then(() => {
-    if (user) {
-      return searchHistory.create(user, query);
-    }
-    return null;
-  })
   .then(() => tmdb.search(query, page, type))
   .then((movies) => {
   	if (movies !== undefined || movies.length > 0) {
