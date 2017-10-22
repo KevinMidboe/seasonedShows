@@ -22,7 +22,7 @@ function searchMediaController(req, res) {
       return searchHistory.create(user, query);
     }
     return null;
-  }
+  })
   .then(() => tmdb.search(query, page, type))
   .then((movies) => {
   	if (movies !== undefined || movies.length > 0) {
