@@ -7,8 +7,19 @@ var methodTypes = { 'movie': 'searchMovie', 'show': 'searchTv', 'multi': 'search
 	'showSimilar': 'tvSimilar' };
 
 class TMDB {
-	constructor(apiKey, tmdbLibrary) {
+	constructor(cache, apiKey, tmdbLibrary) {
+		this.cache = cache
 		this.tmdbLibrary = tmdbLibrary || moviedb(apiKey);
+		this.cacheTags = {
+			'search': 'se',
+			'discover': 'd',
+			'popular': 'p',
+			'nowplaying': 'n',
+			'upcoming': 'u',
+			'similar': 'si',
+			'lookup': 'l'
+
+		}
 	}
 
 	/**
@@ -16,22 +27,21 @@ class TMDB {
 	* @param {queryText, page, type} the page number to specify in the request for discover,
 	* @returns {Promise} dict with query results, current page and total_pages
 	*/ 
-	search(queryText, page = 1, type = 'multi') {
-		// Setup query object for tmdb api search
-		const query = { 'query': queryText, 'page': page };
+	search(text, page = 1, type = 'multi') {
+		const query = { 'query': text, 'page': page };
+		const cacheKey = `${this.cacheTags.search}${page}:${type}:${text}`;
 		return Promise.resolve()
-		 .then(() => this.tmdb(type, query))  // Search the tmdb api
-		 .catch(() => { throw new Error('Could not search for movies.'); })  // If any error at all when fetching
+		 .then(() => this.cache.get(cacheKey))
+		 .catch(() => this.tmdb(type, query))
+		 .catch(() => { throw new Error('Could not search for movies/shows at tmdb.'); })
+		 .then((response) => this.cache.set(cacheKey, response))
 		 .then((response) => {
 		 	try {
-		 		// We want to filter because there are movies really low rated that are not interesting to us. 
 		 		let filteredTmdbItems = response.results.filter(function(tmdbResultItem) {
 		 			return ((tmdbResultItem.vote_count >= 40 || tmdbResultItem.popularity > 8) && (tmdbResultItem.release_date !== undefined || tmdbResultItem.first_air_date !== undefined))
 		 		})
 
-		 		// Here we convert the filtered result from the tmdb api to seaonsed objects
 		 		let seasonedItems = filteredTmdbItems.map((tmdbItem) => {
-
 					if (type === 'movie')
 						return convertTmdbToSeasoned(tmdbItem, 'movie');
 					else if (type === 'show')
@@ -45,7 +55,6 @@ class TMDB {
 						'page': 1, 'total_pages': 1 };
 
 		 	} catch (parseError) {
-		 		console.log(parseError)
 		 		throw new Error('Could not parse result.');
 		 	}
 		 });
