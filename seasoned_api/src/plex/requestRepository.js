@@ -53,7 +53,7 @@ class RequestRepository {
 		}
 
 		return Promise.resolve()
-		.catch(() => plexRepository.searchMedia(text))
+		.then(() => plexRepository.searchMedia(text))
 		// Get the list of plexItems matching the query passed.
 		.then((plexItem) => {
 			let tmdbSearchResult = getTmdbResults();
