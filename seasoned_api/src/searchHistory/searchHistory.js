@@ -16,7 +16,7 @@ class SearchHistory {
    * @returns {Promise}
    */
   read(user) {
-    return this.database.all(this.queries.read, user.username)
+    return this.database.all(this.queries.read, user)
       .then(rows => rows.map(row => row.search_query));
   }
 
@@ -27,7 +27,7 @@ class SearchHistory {
    * @returns {Promise}
    */
   create(user, searchQuery) {
-    return this.database.run(this.queries.create, [searchQuery, user.username]).catch((error) => {
+    return this.database.run(this.queries.create, [searchQuery, user]).catch((error) => {
       if (error.message.includes('FOREIGN')) {
         throw new Error('Could not create search history.');
       }

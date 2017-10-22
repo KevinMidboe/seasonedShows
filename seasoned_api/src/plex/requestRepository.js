@@ -2,8 +2,10 @@ const assert = require('assert');
 const PlexRepository = require('src/plex/plexRepository');
 const plexRepository = new PlexRepository();
 const configuration = require('src/config/configuration').getInstance();
+const Cache = require('src/tmdb/cache');
 const TMDB = require('src/tmdb/tmdb');
-const tmdb = new TMDB(configuration.get('tmdb', 'apiKey'));
+const cache = new Cache();
+const tmdb = new TMDB(cache, configuration.get('tmdb', 'apiKey'));
 var Promise = require('bluebird');
 var rp = require('request-promise');
 
@@ -17,7 +19,7 @@ const nodemailer = require('nodemailer');
 
 class RequestRepository {
 
-	constructor(database) {
+	constructor(cache, database) {
 		this.database = database || establishedDatabase;
 		this.queries = {
 			'insertRequest': "INSERT INTO requests VALUES (?, ?, ?, ?, ?, ?, CURRENT_DATE, 'requested', ?, ?)",
@@ -26,13 +28,12 @@ class RequestRepository {
 		}
 	}
 
-	searchRequest(query, page, type) {
-		// TODO get from cache
+	searchRequest(text, page, type) {
 		// STRIP METADATA THAT IS NOT ALLOWED
 
 		// Do a search in the tmdb api and return the results of the object
 		let getTmdbResults = function() {
-			return tmdb.search(query, page, type)
+			return tmdb.search(text, page, type)
 				.then((tmdbSearch) => {
 					return tmdbSearch.results;
 				})
@@ -52,35 +53,34 @@ class RequestRepository {
 		}
 
 		return Promise.resolve()
-			.then(() => plexRepository.searchMedia(query)
-			// Get the list of plexItems matching the query passed.
-			.then((plexItem) => {
-				let tmdbSearchResult = getTmdbResults();
+		.then(() => plexRepository.searchMedia(text))
+		// Get the list of plexItems matching the query passed.
+		.then((plexItem) => {
+			let tmdbSearchResult = getTmdbResults();
 
-				// When we get the result from tmdbSearchResult we pass it along and iterate over each 
-				// element, and updates the matchedInPlex status of a item. 
-				return tmdbSearchResult.then((tmdbResult) => {
-					for (var i = 0; i < tmdbResult.length; i++) {
-						let foundMatchInPlex = checkIfMatchesPlexObjects(tmdbResult[i].title, tmdbResult[i].year, plexItem);
-						tmdbResult[i].matchedInPlex = foundMatchInPlex;
-					}
-					return { 'results': tmdbResult, 'page': 1 };
-				})
-				// TODO log error
-				.catch((error) => {
-					console.log(error);
-					throw new Error('Search query did not give any results.');
-				})
+			// When we get the result from tmdbSearchResult we pass it along and iterate over each 
+			// element, and updates the matchedInPlex status of a item. 
+			return tmdbSearchResult.then((tmdbResult) => {
+				for (var i = 0; i < tmdbResult.length; i++) {
+					let foundMatchInPlex = checkIfMatchesPlexObjects(tmdbResult[i].title, tmdbResult[i].year, plexItem);
+					tmdbResult[i].matchedInPlex = foundMatchInPlex;
+				}
+				return { 'results': tmdbResult, 'page': 1 };
 			})
-			.catch(() => {
-				let tmdbSearchResult = getTmdbResults();
+			// TODO log error
+			.catch((error) => {
+				console.log(error);
+				throw new Error('Search query did not give any results.');
+			})
+		})
+		.catch(() => {
+			let tmdbSearchResult = getTmdbResults();
 
-				// Catch if empty, then 404
-				return tmdbSearchResult.then((tmdbResult) => {
-					return {'results': tmdbResult, 'page': 1 };
-				})
+			// Catch if empty, then 404
+			return tmdbSearchResult.then((tmdbResult) => {
+				return {'results': tmdbResult, 'page': 1 };
 			})
-		)
+		})
 	}
 
 	lookup(identifier, type = 'movie') {

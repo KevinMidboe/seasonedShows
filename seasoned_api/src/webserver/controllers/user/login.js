@@ -14,7 +14,6 @@ const userSecurity = new UserSecurity();
 function loginController(req, res) {
   const user = new User(req.body.username);
   const password = req.body.password;
-  // console.log('login: ', req.body)
 
   userSecurity.login(user, password)
   .then(() => {

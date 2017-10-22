@@ -10,6 +10,7 @@ import URI from 'urijs';
 import InfiniteScroll from 'react-infinite-scroller';
 
 import { fetchJSON } from './http.jsx';
+import { getCookie } from './Cookie.jsx';
 
 var MediaQuery = require('react-responsive');
 
@@ -105,11 +106,18 @@ class SearchRequest extends React.Component {
     // Test this by calling missing endpoint or 404 query and see what code
     // and filter the error message based on the code.
     // Calls a uri and returns the response as json
-    callURI(uri) {
-        return fetch(uri)
+    callURI(uri, method, data={}) {
+        return fetch(uri, {
+            method: method,
+            headers: new Headers({
+              'Content-Type': 'application/json',
+              'authorization': getCookie('token'),
+              'loggedinuser': getCookie('loggedInUser'),
+            })
+        })
         .then(response => { return response })
-        .catch(error => {
-            throw Error('Something went wrong while fetching URI.');
+        .catch((error) => {
+            throw Error(error);
         });
     }
 
@@ -128,7 +136,7 @@ class SearchRequest extends React.Component {
         // this.writeLoading();
         
         Promise.resolve()
-        .then(() => this.callURI(uri))
+        .then(() => this.callURI(uri, 'GET'))
         .then(response => {
             // If we get a error code for the request
             if (!response.ok) {
@@ -174,8 +182,8 @@ class SearchRequest extends React.Component {
                 console.log('CallSearchFillMovieList: ', error)
             })
         })
-        .catch(() => {
-            throw Error('Something went wrong when fetching query.')
+        .catch((error) => {
+            console.log('Something went wrong when fetching query.', error)
         })
     }
 
@@ -184,7 +192,7 @@ class SearchRequest extends React.Component {
         // this.writeLoading();
         
         Promise.resolve()
-        .then(() => this.callURI(uri))
+        .then(() => this.callURI(uri, 'GET', undefined))
         .then(response => {
             // If we get a error code for the request
             if (!response.ok) {
@@ -217,8 +225,8 @@ class SearchRequest extends React.Component {
                 }
             })
         })
-        .catch(() => {
-            throw Error('Something went wrong when fetching query.')
+        .catch((error) => {
+            console.log('Something went wrong when fetching query.', error)
         })
     }
 
