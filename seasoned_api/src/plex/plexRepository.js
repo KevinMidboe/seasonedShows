@@ -31,7 +31,7 @@ class PlexRepository {
 
 	nowPlaying() {
 		var options = {
-			uri: 'http://10.0.0.41:32400/status/sessions',
+			uri: 'http://10.0.0.42:32400/status/sessions',
 			headers: {
 				'Accept': 'application/json'
 			},
