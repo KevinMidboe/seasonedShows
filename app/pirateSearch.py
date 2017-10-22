@@ -3,7 +3,7 @@
 # @Author: KevinMidboe
 # @Date:   2017-10-12 11:55:03
 # @Last Modified by:   KevinMidboe
-# @Last Modified time: 2017-10-22 18:49:06
+# @Last Modified time: 2017-10-22 18:54:18
 
 import sys, logging, re, json
 from urllib import parse, request
@@ -213,7 +213,7 @@ class piratebay(object):
 
 				info_text = torrentElement.find('font', class_='detDesc').get_text()
 				
-				date = return_re_match(info_text, r"(\d+\-\d+)|(Y\-day|Today)")
+				date = return_re_match(info_text, r"(\d+\-\d+(\s\d{4})?)|(Y\-day|Today)")
 				size = return_re_match(info_text, r"(\d+(\.\d+)?\s[a-zA-Z]+)")
 
 				# COULD NOT FIND HREF!
