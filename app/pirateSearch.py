@@ -3,7 +3,7 @@
 # @Author: KevinMidboe
 # @Date:   2017-10-12 11:55:03
 # @Last Modified by:   KevinMidboe
-# @Last Modified time: 2017-10-21 12:25:09
+# @Last Modified time: 2017-10-22 18:49:06
 
 import sys, logging, re, json
 from urllib import parse, request
@@ -58,6 +58,9 @@ def return_re_match(string, re_statement):
 
 	m = re.search(re_statement, string)
 	if 'Y-day' in m.group():
+		return datetime.timedelta(days=1).strftime('%m-%d %Y')
+
+	if 'Today' in m.group():
 		return datetime.datetime.now().strftime('%m-%d %Y')
 	return sanitize(m.group(), '\xa0', ' ')
 
@@ -210,7 +213,7 @@ class piratebay(object):
 
 				info_text = torrentElement.find('font', class_='detDesc').get_text()
 				
-				date = return_re_match(info_text, r"(\d+\-\d+\s\d+)|(Y\-day\s\d{2}\:\d{2})")
+				date = return_re_match(info_text, r"(\d+\-\d+)|(Y\-day|Today)")
 				size = return_re_match(info_text, r"(\d+(\.\d+)?\s[a-zA-Z]+)")
 
 				# COULD NOT FIND HREF!
@@ -294,7 +297,9 @@ def chooseCandidate(torrent_list):
 def searchTorrentSite(query, site='piratebay'):
 	pirate = piratebay()
 	torrents_found = pirate.search(query, page=0, multiple_pages=3, sort='size')
-	candidates = chooseCandidate(torrents_found)
+	candidates = {}
+	if (torrents_found):
+		candidates = chooseCandidate(torrents_found)
 	print(json.dumps(candidates))
 
 	# torrents_found = pirate.next_page()
