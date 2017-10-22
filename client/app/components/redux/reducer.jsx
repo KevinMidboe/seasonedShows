@@ -44,7 +44,7 @@ function setLoginError(loginError) {
 }
 
 
-function callLoginApi(email, password, callback) {
+function callLoginApi(username, password, callback) {
  
   Promise.resolve()
   fetch('https://apollo.kevinmidboe.com/api/v1/user/login', {
@@ -53,7 +53,7 @@ function callLoginApi(email, password, callback) {
       'Content-type': 'application/json'
     },
     body: JSON.stringify({
-      username: email,
+      username: username,
       password: password,
     })
   })
@@ -66,6 +66,7 @@ function callLoginApi(email, password, callback) {
             let token = data.token;
             setCookie('token', token, 10);
             setCookie('logged_in', true, 10);
+            setCookie('loggedInUser', username, 10);
 
             window.location.reload();
           }
@@ -77,7 +78,7 @@ function callLoginApi(email, password, callback) {
     }
   })
   .catch(error => {
-      return callback(new Error('Invalid email and password'));
+      return callback(new Error('Invalid username and password'));
   });
 }
 
