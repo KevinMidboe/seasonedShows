@@ -46,7 +46,7 @@ class TMDB {
 		 .then((response) => {
 		 	try {
 		 		let filteredTmdbItems = response.results.filter(function(tmdbResultItem) {
-		 			return ((tmdbResultItem.vote_count >= 40 || tmdbResultItem.popularity > 8) && (tmdbResultItem.release_date !== undefined || tmdbResultItem.first_air_date !== undefined))
+		 			return ((tmdbResultItem.vote_count >= 10 || tmdbResultItem.popularity > 2) && (tmdbResultItem.release_date !== undefined || tmdbResultItem.first_air_date !== undefined))
 		 		})
 
 		 		let seasonedItems = filteredTmdbItems.map((tmdbItem) => {
