@@ -25,10 +25,8 @@ export default {
     },
 
     requestWrapper: {
-      width: '90%',
       maxWidth: '1200px',
-      margin: 'auto',
-      // paddingTop: '20px',
+      paddingTop: '10px',
       backgroundColor: 'white',
       position: 'relative',
       zIndex: '10',
@@ -39,7 +37,7 @@ export default {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      textAlign: 'center'
+      textAlign: 'center',
     },
 
     pageTitleLargeSpan: {
@@ -126,13 +124,13 @@ export default {
     resultLargeHeader: {
       paddingLeft: '30px',
       color: 'black',
-      fontSize: '2em',
+      fontSize: '1.6em',
     },
 
     resultSmallHeader: {
-      paddingLeft: '30px',
+      paddingLeft: '12px',
       color: 'black',
-      fontSize: '1.7em',
+      fontSize: '1.4em',
     },
 
     row: {
