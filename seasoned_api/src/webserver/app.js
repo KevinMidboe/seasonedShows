@@ -73,7 +73,9 @@ router.get('/v1/plex/hook', require('./controllers/plex/hookDump.js'));
 router.get('/v1/plex/requests/all', mustBeAuthenticated, require('./controllers/plex/fetchRequested.js'));
 router.put('/v1/plex/request/:requestId', mustBeAuthenticated, require('./controllers/plex/updateRequested.js'));
 
-// TODO ADD AUTHENTICATION
+/**
+ * Pirate
+ */
 router.get('/v1/pirate/search', mustBeAuthenticated, require('./controllers/pirate/searchTheBay.js'));
 router.post('/v1/pirate/add', mustBeAuthenticated, require('./controllers/pirate/addMagnet.js'));
 
