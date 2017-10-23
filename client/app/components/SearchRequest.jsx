@@ -32,21 +32,12 @@ class SearchRequest extends React.Component {
       scrollHasMore: true
     }
 
-    this.allowedListTypes = [
-        'discover', 'popular', 'nowplaying', 'upcoming'
-    ]
+    this.allowedListTypes = ['discover', 'popular', 'nowplaying', 'upcoming']
 
-    this.baseUrl = 'https://apollo.kevinmidboe.com/api/v1/tmdb/';
-    // this.baseUrl = 'http://localhost:31459/api/v1/tmdb/';
-
-    this.URLs = {
-      searchRequest: 'https://apollo.kevinmidboe.com/api/v1/plex/request',
-      // searchRequest: 'http://localhost:31459/api/v1/plex/request',
-      upcoming: 'https://apollo.kevinmidboe.com/api/v1/tmdb/upcoming',
-      // upcoming: 'http://localhost:31459/api/v1/tmdb/upcoming',
-      sendRequest: 'https://apollo.kevinmidboe.com/api/v1/plex/request?query='
-      // sendRequest: 'http://localhost:31459/api/v1/plex/request?query='
-    }
+    this.baseUrl = 'https://apollo.kevinmidboe.com/api/v1/tmdb/list';
+    // this.baseUrl = 'http://localhost:31459/api/v1/tmdb/list';
+    this.searchUrl = 'https://apollo.kevinmidboe.com/api/v1/plex/request';
+    // this.searchUrl = 'http://localhost:31459/api/v1/plex/request';
   }
 
 
@@ -234,7 +225,7 @@ class SearchRequest extends React.Component {
         this.state.resultHeader = 'Search result for: ' + this.state.searchQuery;
 
         // Build uri with the url for searching requests
-        var uri = new URI(this.URLs.searchRequest);
+        var uri = new URI(this.searchUrl);
         // Add input of search query and page count to the uri payload
         uri = uri.search({ 'query': this.state.searchQuery, 'page': this.state.page });
         

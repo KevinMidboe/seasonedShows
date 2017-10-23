@@ -73,7 +73,9 @@ router.get('/v1/plex/hook', require('./controllers/plex/hookDump.js'));
 router.get('/v1/plex/requests/all', mustBeAuthenticated, require('./controllers/plex/fetchRequested.js'));
 router.put('/v1/plex/request/:requestId', mustBeAuthenticated, require('./controllers/plex/updateRequested.js'));
 
-// TODO ADD AUTHENTICATION
+/**
+ * Pirate
+ */
 router.get('/v1/pirate/search', mustBeAuthenticated, require('./controllers/pirate/searchTheBay.js'));
 router.post('/v1/pirate/add', mustBeAuthenticated, require('./controllers/pirate/addMagnet.js'));
 
@@ -81,12 +83,7 @@ router.post('/v1/pirate/add', mustBeAuthenticated, require('./controllers/pirate
  * TMDB
  */
 router.get('/v1/tmdb/search', require('./controllers/tmdb/searchMedia.js'));
-router.get('/v1/tmdb/discover', require('./controllers/tmdb/discoverMedia.js'));
-router.get('/v1/tmdb/popular', require('./controllers/tmdb/popularMedia.js'));
-router.get('/v1/tmdb/nowplaying', require('./controllers/tmdb/nowPlayingMedia.js'));
-router.get('/v1/tmdb/upcoming', require('./controllers/tmdb/getUpcoming.js'));
-
-router.get('/v1/tmdb/similar/:mediaId', require('./controllers/tmdb/searchSimilar.js'));
+router.get('/v1/tmdb/list/:listname', require('./controllers/tmdb/listSearch.js'));
 router.get('/v1/tmdb/:mediaId', require('./controllers/tmdb/readMedia.js'));
 
 /**

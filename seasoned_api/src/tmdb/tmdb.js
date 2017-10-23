@@ -6,18 +6,27 @@ var methodTypes = { 'movie': 'searchMovie', 'show': 'searchTv', 'multi': 'search
 	'nowPlayingMovies': 'miscNowPlayingMovies', 'nowAiringShows': 'tvOnTheAir', 'movieSimilar': 'movieSimilar',
 	'showSimilar': 'tvSimilar' };
 
+
+const TYPE_LIST = ['upcoming', 'discover', 'popular', 'nowplaying', 'similar']
+const TMDB_TYPE_LIST = {
+	'upcomingmovie': 'miscUpcomingMovies', 'discovermovie': 'discoverMovie', 
+	'discovershow': 'discoverTv', 'popularmovie': 'miscPopularMovies',
+	'popularshow': 'miscPopularTvs', 'nowplayingmovie': 'miscNowPlayingMovies', 
+	'nowplayingshow': 'tvOnTheAir', 'similarmovie': 'movieSimilar', 'similarshow': 'tvSimilar',
+};
+
 class TMDB {
 	constructor(cache, apiKey, tmdbLibrary) {
 		this.cache = cache
 		this.tmdbLibrary = tmdbLibrary || moviedb(apiKey);
 		this.cacheTags = {
 			'search': 'se',
+			'info': 'i',
+			'upcoming': 'u',
 			'discover': 'd',
 			'popular': 'p',
 			'nowplaying': 'n',
-			'upcoming': 'u',
 			'similar': 'si',
-			'lookup': 'l'
 		}
 	}
 
@@ -31,7 +40,7 @@ class TMDB {
 		const cacheKey = `${this.cacheTags.search}:${page}:${type}:${text}`;
 		return Promise.resolve()
 		 .then(() => this.cache.get(cacheKey))
-		 .catch(() => this.tmdb(type, query))
+		 .catch(() => this.tmdb(methodTypes[type], query))
 		 .catch(() => { throw new Error('Could not search for movies/shows at tmdb.'); })
 		 .then((response) => this.cache.set(cacheKey, response))
 		 .then((response) => {
@@ -59,218 +68,6 @@ class TMDB {
 		 });
 	}
 
-
-	/**
-	* Retrive list of discover section of movies from TMDB.
-	* @param {Page, type} the page number to specify in the request for discover, 
-	* and type for movie or show
-	* @returns {Promise} dict with discover results, current page and total_pages
-	*/ 
-	discover(page, type='movie') {
-		// Sets the tmdb function type to the corresponding type from query
-		var tmdbType;
-		if (type === 'movie') {
-			tmdbType = 'discoverMovie';
-		} else if (type === 'show') {
-			tmdbType = 'discoverShow';
-		} else {
-			// Throw error if invalid type from query
-			return Promise.resolve()
-			.then(() => {
-				throw new Error('Invalid type declaration.')
-			})
-		}
-
-		// Build a query for tmdb with pagenumber
-		const query = { 'page': page }
-		const cacheKey = `${this.cacheTags.discover}:${page}:${type}`;
-		return Promise.resolve()
-		 	.then(() => this.cache.get(cacheKey))
-			.catch(() => this.tmdb(tmdbType, query))
-			.catch(() => { throw new Error('Could not fetch discover.'); })
-			.then((response) => this.cache.set(cacheKey, response))
-			.then((response) => {
-				try {
-					// Return a object that has the results and a variable for page, total_pages 
-					// and seasonedResponse
-					var seasonedResponse = response.results.map((result) => { 
-						return convertTmdbToSeasoned(result, type); }
-					);
-					return { 'results': seasonedResponse,
-						'page': response.page, 'total_pages': response.total_pages };
-				} catch (error) {
-					console.log(error)
-					throw new Error('Error while parsing discover list.')
-				}
-			});
-	}
-
-
-	/**
-	* Retrive list of popular section of movies or shows from TMDB.
-	* @param {Page, type} the page number to specify in the request for popular, 
-	* and type for movie or show
-	* @returns {Promise} dict with popular results, current page and total_pages
-	*/ 
-	// TODO add filter for language
-	popular(page, type='movie') {
-		// Sets the tmdb function type to the corresponding type from query
-		var tmdbType;
-		if (type === 'movie') {
-			tmdbType = 'popularMovies';
-		} else if (type === 'show') {
-			tmdbType = 'popularShows';
-		} else {
-			// Throw error if invalid type from query
-			return Promise.resolve()
-			.then(() => {
-				throw new Error('Invalid type declaration.')
-			})
-		}
-
-		// Build a query for tmdb with pagenumber
-		const query = { 'page': page }
-		const cacheKey = `${this.cacheTags.popular}:${page}:${type}`;
-		return Promise.resolve()
-		 	.then(() => this.cache.get(cacheKey))
-			.catch(() => this.tmdb(tmdbType, query))
-			.catch(() => { throw new Error('Could not fetch popular.'); })
-			.then((response) => this.cache.set(cacheKey, response))
-			.then((response) => {
-				try {
-					var seasonedResponse = response.results.map((result) => { 
-						return convertTmdbToSeasoned(result, type); }
-					);
-					// Return a object that has the results and a variable for page, total_pages 
-					// and seasonedResponse
-					return { 'results': seasonedResponse,
-						'page': response.page, 'total_pages': response.total_pages };
-				} catch (error) {
-					console.log(error)
-					throw new Error('Error while parsing discover list.')
-				}
-			});
-	}
-
-
-
-	/**
-	* Retrive list of now playing/airing section of movies or shows from TMDB.
-	* @param {Page, type} the page number to specify in the request for now playing/airing, 
-	* and type for movie or show
-	* @returns {Promise} dict with nowplaying results, current page and total_pages
-	*/ 
-	// TODO add filter for language
-	nowplaying(page, type='movie') {
-		// Sets the tmdb function type to the corresponding type from query
-		var tmdbType;
-		if (type === 'movie') {
-			tmdbType = 'nowPlayingMovies';
-		} else if (type === 'show') {
-			tmdbType = 'nowAiringShows';
-		} else {
-			// Throw error if invalid type from query
-			return Promise.resolve()
-			.then(() => {
-				throw new Error('Invalid type declaration.')
-			})
-		}
-
-		// Build a query for tmdb with pagenumber
-		const query = { 'page': page }
-		const cacheKey = `${this.cacheTags.nowplaying}:${page}:${type}`;
-		return Promise.resolve()
-		 	.then(() => this.cache.get(cacheKey))
-			.catch(() => this.tmdb(tmdbType, query))
-			.catch(() => { throw new Error('Could not fetch popular.'); })
-			.then((response) => this.cache.set(cacheKey, response))
-			.then((response) => {
-				try {
-					var seasonedResponse = response.results.map((result) => { 
-						return convertTmdbToSeasoned(result, type); }
-					);
-					// Return a object that has the results and a variable for page, total_pages 
-					// and seasonedResponse
-					return { 'results': seasonedResponse,
-						'page': response.page, 'total_pages': response.total_pages };
-				} catch (error) {
-					console.log(error)
-					throw new Error('Error while parsing discover list.')
-				}
-			});
-	}
-
-	/**
-	* Retrive list of upcoming movies from TMDB.
-	* @param {Page} the page number to specify in the request for upcoming movies
-	* @returns {Promise} dict with upcoming results, current page and total_pages
-	*/ 
-	// TODO add filter for language
-	upcoming(page) {
-		const query = { 'page': page }
-		const cacheKey = `${this.cacheTags.upcoming}:${page}`;
-		return Promise.resolve()
-		 	.then(() => this.cache.get(cacheKey))
-			.catch(() => this.tmdb('upcomingMovies', query))
-			.catch(() => { throw new Error('Could not fetch upcoming movies.'); })
-			.then((response) => this.cache.set(cacheKey, response))
-			.then((response) => {
-				try {
-					var seasonedResponse = response.results.map((result) => { 
-						return convertTmdbToSeasoned(result, 'movie'); }
-					);
-					// Return a object that has the results and a variable for page, total_pages 
-					// and seasonedResponse
-					return { 'results': seasonedResponse,
-						'page': response.page, 'total_pages': response.total_pages };
-				} catch (parseError) {
-					throw new Error('Error while parsing upcoming movies list.')
-				}
-			});
-	}
-
-
-	/**
-	* Retrive list of upcmoing movies from TMDB.
-	* @param {Page} the page number to specify in the request for upcoming movies
-	* @returns {Promise} dict with similar results, current page and total_pages
-	*/ 
-	// TODO add filter for language
-	similar(identifier, type) {
-		var tmdbType;
-		if (type === 'movie') {
-			tmdbType = 'movieSimilar';
-		} else if (type === 'show') {
-			tmdbType = 'showSimilar';
-		} else {
-			// Throw error if invalid type from query
-			return Promise.resolve()
-			.then(() => {
-				throw new Error('Invalid type declaration.')
-			})
-		}
-
-		const query = { id: identifier }
-		const cacheKey = `${this.cacheTags.similar}:${type}:${identifier}`;
-		return Promise.resolve()
-		 	.then(() => this.cache.get(cacheKey))
-			.catch(() => this.tmdb(tmdbType, query))
-			.catch(() => { throw new Error('Could not fetch upcoming movies.'); })
-			.then((response) => this.cache.set(cacheKey, response))
-			.then((response) => {
-				try {
-					var seasonedResponse = response.results.map((result) => { 
-						return convertTmdbToSeasoned(result, type); }
-					);
-					// Return a object that has the results and a variable for page, total_pages 
-					// and seasonedResponse
-					return { 'results': seasonedResponse,
-						'page': response.page, 'total_pages': response.total_pages };
-				} catch (parseError) {
-					throw new Error('Error while parsing silimar media list.')
-				}
-			});
-	}
 
 
 	/**
@@ -306,7 +103,75 @@ class TMDB {
 			});
 	}
 
-	// TODO ADD CACHE LOOKUP
+	/**
+	* Verifies that a list_name corresponds to a tmdb list and calls the tmdb
+	* api with list name and paramters. 
+	* @param {list_name} The name of a list we want to search for.
+	* @param {media_type} The type declared in listSearch.
+	* @param {params} Params is page and id given as parameters in listSearch.
+	* @returns {Promise} dict with raw tmdb results.
+	*/ 
+	searchTmdbList(list_name, media_type, params) {
+		return new Promise((resolve, reject) => {
+			if (TYPE_LIST.includes(list_name) && ['movie', 'show'].includes(media_type)) {
+				const searchQuery = list_name.toLowerCase() + media_type.toLowerCase();
+				const tmdbList = TMDB_TYPE_LIST[searchQuery]
+				
+				return Promise.resolve()
+				.then(() => this.tmdb(tmdbList, params))
+				.then((response) => {
+					resolve(response)
+				})
+				.catch(() => {
+					return reject('Error while fetching from tmdb list.')
+				})
+			}
+			return reject('Did not find tmdb list matching query.')
+		})
+	}
+
+	/**
+	* Maps our response from tmdb api to a movie/show object.
+	* @param {response} JSON response from tmdb.
+	* @param {type} The type declared in listSearch.
+	* @returns {Promise} dict with tmdb results, mapped as movie/show objects.
+	*/ 
+	mapResults(response, type) {
+		return Promise.resolve()
+		.then(() => {
+			const mappedResults = response.results.map((result) => {
+				return convertTmdbToSeasoned(result, type)
+			})
+
+			return [mappedResults, response.page, response.total_pages]
+		})
+		.catch((error) => { throw new Error(error)})
+
+		
+	}
+
+	/**
+	* Fetches a given list from tmdb.
+	* @param {list_name} List we want to fetch.
+	* @param {media_type} The  to specify in the request for discover (default 'movie').
+	* @param {id} When finding similar a id can be added to query
+	* @param {page} Page number we want to fetch.
+	* @returns {Promise} dict with query results, current page and total_pages
+	*/ 
+	listSearch(list_name, media_type='movie', id, page='1') {
+		const params = {'id': id, 'page': page}
+		const cacheKey = `${this.cacheTags[list_name]}:${media_type}:${id}:${page}`;
+		return Promise.resolve()
+		 	.then(() => this.cache.get(cacheKey))
+		 	.catch(() => this.searchTmdbList(list_name, media_type, params))
+			.then((response) => this.cache.set(cacheKey, response))
+			.then((response) => this.mapResults(response, media_type))
+			.catch((error) => { throw new Error(error); })
+			.then(([mappedResults, pagenumber, totalpages]) => {
+				return {'results': mappedResults, 'page': pagenumber, 'total_pages': totalpages}
+			})
+	}
+
 	tmdb(method, argument) {
 		return new Promise((resolve, reject) => {
 			const callback = (error, reponse) => {
@@ -317,10 +182,9 @@ class TMDB {
 			};
 
 			if (!argument) {
-				this.tmdbLibrary[methodTypes[method]](callback);
-				// this.tmdbLibrary['miscUpcomingMovies']
+				this.tmdbLibrary[method](callback);
 			} else {
-				this.tmdbLibrary[methodTypes[method]](argument, callback);
+				this.tmdbLibrary[method](argument, callback);
 			}
 		})
 	}
