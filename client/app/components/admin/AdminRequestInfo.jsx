@@ -19,6 +19,15 @@ class AdminRequestInfo extends Component {
 		return '';
 	}
 
+	requested_by_user(request_user) {
+		if (request_user === 'NULL')
+			return undefined
+
+		return (
+			<span>Requested by: {request_user}</span>
+		)
+	}
+
   displayInfo() {
   	let adminIndexStyle = {
 	  	wrapper: {
@@ -54,6 +63,7 @@ class AdminRequestInfo extends Component {
   					<span>ip: {request.ip}</span><br />
   					<span>user_agent: {this.userAgent(request.user_agent)}</span><br />
   					<span>request_date: {request.requested_date}</span><br />
+  					{ this.requested_by_user(request.requested_by) }
   				</div>
   				
   				<PirateSearch
