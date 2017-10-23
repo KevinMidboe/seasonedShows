@@ -110,17 +110,14 @@ class RequestRepository {
 	* @param {identifier, type} the id of the media object and type of media must be defined
 	* @returns {Promise} If nothing has gone wrong.
 	*/ 
-	sendRequest(identifier, type, ip, user_agent) {
-		// TODO add to DB so can have a admin page
-		// TODO try a cache hit on the movie item
-
+	sendRequest(identifier, type, ip, user_agent, user) {
 		tmdb.lookup(identifier, type).then(movie => {
 
+			if (user === 'false')
+				user = 'NULL';
+			console.log(user)
 			// Add request to database
-			this.database.run(this.queries.insertRequest, [movie.id, movie.title, movie.year, movie.poster, 'NULL', ip, user_agent, movie.type])
-
-
-			// 
+			this.database.run(this.queries.insertRequest, [movie.id, movie.title, movie.year, movie.poster, user, ip, user_agent, movie.type])
 
 
 			// create reusable transporter object using the default SMTP transport
