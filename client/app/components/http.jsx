@@ -46,6 +46,7 @@ export function fetchJSON(url, method, data) {
 		headers: new Headers({
 		  'Content-Type': 'application/json',
 		  'authorization': getCookie('token'),
+		  'loggedinuser': getCookie('loggedInUser'),
 		}),
 		body: JSON.stringify(data)
 	}).then(checkStatus).then(parseJSON);
