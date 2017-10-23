@@ -26,11 +26,12 @@ export default {
 
     requestWrapper: {
       maxWidth: '1200px',
+      margin: 'auto',
       paddingTop: '10px',
       backgroundColor: 'white',
       position: 'relative',
       zIndex: '10',
-      boxShadow: '0 2px 10px grey'
+      boxShadow: '0 4px 2px black'
     },
 
     pageTitle: {
