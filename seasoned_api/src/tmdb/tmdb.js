@@ -103,7 +103,14 @@ class TMDB {
 			});
 	}
 
-
+	/**
+	* Verifies that a list_name corresponds to a tmdb list and calls the tmdb
+	* api with list name and paramters. 
+	* @param {list_name} The name of a list we want to search for.
+	* @param {media_type} The type declared in listSearch.
+	* @param {params} Params is page and id given as parameters in listSearch.
+	* @returns {Promise} dict with raw tmdb results.
+	*/ 
 	searchTmdbList(list_name, media_type, params) {
 		return new Promise((resolve, reject) => {
 			if (TYPE_LIST.includes(list_name) && ['movie', 'show'].includes(media_type)) {
@@ -123,6 +130,12 @@ class TMDB {
 		})
 	}
 
+	/**
+	* Maps our response from tmdb api to a movie/show object.
+	* @param {response} JSON response from tmdb.
+	* @param {type} The type declared in listSearch.
+	* @returns {Promise} dict with tmdb results, mapped as movie/show objects.
+	*/ 
 	mapResults(response, type) {
 		return Promise.resolve()
 		.then(() => {
@@ -137,6 +150,14 @@ class TMDB {
 		
 	}
 
+	/**
+	* Fetches a given list from tmdb.
+	* @param {list_name} List we want to fetch.
+	* @param {media_type} The  to specify in the request for discover (default 'movie').
+	* @param {id} When finding similar a id can be added to query
+	* @param {page} Page number we want to fetch.
+	* @returns {Promise} dict with query results, current page and total_pages
+	*/ 
 	listSearch(list_name, media_type='movie', id, page='1') {
 		const params = {'id': id, 'page': page}
 		const cacheKey = `${this.cacheTags[list_name]}:${media_type}:${id}:${page}`;
