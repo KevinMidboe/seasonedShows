@@ -1,4 +1,5 @@
 const RequestRepository = require('src/plex/requestRepository.js');
+
 const requestRepository = new RequestRepository();
 
 /**
@@ -11,12 +12,12 @@ function historyController(req, res) {
   const user = req.loggedInUser;
 
   requestRepository.fetchRequested()
-  .then((requestedItems) => {
-    res.send({ success: true, requestedItems });
-  })
-  .catch((error) => {
-    res.status(401).send({ success: false, error: error.message });
-  });
+    .then((requestedItems) => {
+      res.send({ success: true, requestedItems });
+    })
+    .catch((error) => {
+      res.status(401).send({ success: false, error: error.message });
+    });
 }
 
 module.exports = historyController;
