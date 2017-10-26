@@ -1,9 +1,12 @@
 const express = require('express');
+const Raven = require('raven');
 const bodyParser = require('body-parser');
 const tokenToUser = require('./middleware/tokenToUser');
 const mustBeAuthenticated = require('./middleware/mustBeAuthenticated');
 
+Raven.config('__DSN__').install();
 const app = express(); // define our app using express
+app.use(Raven.requestHandler());
 // this will let us get the data from a POST
 // configure app to use bodyParser()
 app.use(bodyParser.json());
@@ -38,9 +41,15 @@ router.use((req, res, next) => {
   next();
 });
 
-router.get('/', ((req, res) => {
-  res.json({ message: 'hooray! welcome to this api!' });
-}));
+router.get('/', function mainHandler(req, res) {
+  throw new Error('Broke!');
+});
+
+app.use(Raven.errorHandler());
+app.use(function onError(err, req, res, next) {
+  res.statusCode = 500;
+  res.end(res.sentry + '\n');
+});
 
 /**
  * User
