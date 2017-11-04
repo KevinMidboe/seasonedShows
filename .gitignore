@@ -9,7 +9,6 @@ npm-debug.log
 webpage/js/env_variables.js
 client/dist
 src/webserver/access.log
-seasoned_api/conf/development.json
-seasoned_api/conf/output.log
+./seasoned_api/conf/
 yarn-error.log
 */yarn.lock
