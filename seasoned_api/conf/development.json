@@ -1,0 +1,24 @@
+{
+	"database": {
+		"host": "../shows.db"
+	},
+	"webserver": {
+		"port": 31459
+	},
+	"tmdb": {
+		"apiKey": ""
+	},
+	"raven": {
+		"DSN": ""
+	},
+	"mail": {
+		"host": "",
+		"user": "",
+		"password": "",
+		"user_pi": "",
+		"password_pi": ""
+	},
+	"authentication": {
+    		"secret": ""
+    	}
+}
