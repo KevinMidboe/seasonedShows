@@ -3,8 +3,10 @@ const Raven = require('raven');
 const bodyParser = require('body-parser');
 const tokenToUser = require('./middleware/tokenToUser');
 const mustBeAuthenticated = require('./middleware/mustBeAuthenticated');
+const configuration = require('src/config/configuration').getInstance();
 
-Raven.config('__DSN__').install();
+// TODO: Have our raven router check if there is a value, if not don't enable raven. 
+Raven.config(configuration.get('raven', 'DSN')).install();
 const app = express(); // define our app using express
 app.use(Raven.requestHandler());
 // this will let us get the data from a POST
@@ -20,13 +22,16 @@ const port = 31459; // set our port
 const router = express.Router();
 const allowedOrigins = ['https://kevinmidboe.com', 'http://localhost:8080'];
 
+// TODO: All JSON handling in a single router
 // router.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 
+// This is probably a correct middleware/router setup
 /* Decode the Authorization header if provided */
 router.use(tokenToUser);
 
+// TODO: Should have a separate middleware/router for handling headers.
 router.use((req, res, next) => {
   // TODO add logging of all incoming
   console.log('Request: ', req.originalUrl);
