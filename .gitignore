@@ -1,17 +1,20 @@
-__pycache__
-shows.db
+# __pycache__
+# shows.db
 .DS_Store
-env_variables.py
-app/conf/classedOutput.log
-node_modules
-*.pyc
-npm-debug.log
-webpage/js/env_variables.js
-client/dist
-src/webserver/access.log
+# env_variables.py
+# app/conf/classedOutput.log
+# node_modules
+# *.pyc
+# npm-debug.log
+# webpage/js/env_variables.js
+# client/dist
+# src/webserver/access.log
 ./seasoned_api/conf/
-yarn-error.log
-*/yarn.lock
-
+# yarn-error.log
+# */yarn.lock
 
 env
+
+yarn.lock
+*/yarn.lock
+*/package-lock.json
