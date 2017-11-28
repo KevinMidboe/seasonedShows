@@ -12,3 +12,6 @@ src/webserver/access.log
 ./seasoned_api/conf/
 yarn-error.log
 */yarn.lock
+
+
+env
