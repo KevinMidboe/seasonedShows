@@ -11,6 +11,9 @@ import RequestButton from './buttons/request_button.jsx';
 
 import { fetchJSON } from './http.jsx';
 
+import Interactive from 'react-interactive';
+
+
 class MovieObject {
 	constructor(object) {
 		this.id = object.id;
@@ -42,6 +45,13 @@ class MovieObject {
 		notify.show(this.title + ' requested!', 'success', 3000);
 	}
 
+	invertButtonColors(event) {
+		const event_type = event.type;
+		if (event_type)
+			console.log('test')
+		console.log(event.type)
+	}
+
 	getElement(index) {
 		const element_key = index + this.id;
 
@@ -55,11 +65,26 @@ class MovieObject {
 
 		var foundInPlex;
 		if (this.matchedInPlex) {
-			foundInPlex = <button onClick={() => {this.requestExisting(this)}} 
-			style={movieStyle.requestButton}><span>Request Anyway</span></button>;
+			foundInPlex = <Interactive 
+				as='button'
+				hover={movieStyle.requestButton_hover}
+				focus={movieStyle.requestButton_hover}
+				onClick={() => {this.requestExisting(this)}} 
+				style={movieStyle.requestButton}>
+					
+				<span>Request Anyway</span>
+			</Interactive>;
 		} else {
-			foundInPlex = <button onClick={() => {this.requestMovie()}} 
-			style={movieStyle.requestButton}><span>&#x0002B; Request</span></button>;
+			foundInPlex = <Interactive 
+				as='button'
+				hover={movieStyle.requestButton_hover}
+				focus={movieStyle.requestButton_hover}
+				onClick={() => {this.requestMovie()}} 
+				onMouseOver={() => {this.invertButtonColors(event)}}
+				style={movieStyle.requestButton}>
+
+				<span>&#x0002B; Request</span>
+			</Interactive>;
 		}
 
 		if (this.type === 'movie') 
@@ -105,7 +130,14 @@ class MovieObject {
 					<div style={movieStyle.buttons}>
 						{foundInPlex}
 						<a href={themoviedbLink}>
-							<button style={movieStyle.tmdbButton}><span>Info</span></button>
+							<Interactive 
+								as='button'
+								hover={movieStyle.tmdbButton_hover}
+								focus={movieStyle.tmdbButton_hover}
+								style={movieStyle.tmdbButton}>
+
+								<span>Info</span>
+							</Interactive>
 						</a>
 					</div>
 				</div>

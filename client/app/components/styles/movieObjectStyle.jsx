@@ -62,8 +62,9 @@ export default {
 	requestButton: {
 		color: '#e9a131',
 		marginRight: '10px',
-		background: 'white',
+		backgroundColor: 'white',
 		border: '#e9a131 2px solid',
+		borderColor: '#e9a131',
 		borderRadius: '4px',
 		textAlign: 'center',
 		padding: '10px',
@@ -74,10 +75,15 @@ export default {
 		cursor: 'pointer'
 	},
 
+	requestButton_hover: {
+		backgroundColor: '#e9a131', 
+		color: 'white',
+	},
+
 	tmdbButton: {
 		color: '#00d17c',
 		marginRight: '10px',
-		background: 'white',
+		backgroundColor: 'white',
 		border: '#00d17c 2px solid',
 		borderRadius: '4px',
 		textAlign: 'center',
@@ -87,6 +93,11 @@ export default {
 		fontSize: '13px',
 		fontWeight: '800',
 		cursor: 'pointer'
+	},
+
+	tmdbButton_hover: {
+		backgroundColor: '#00d17c', 
+		color: 'white',
 	},
 
 	row: {
