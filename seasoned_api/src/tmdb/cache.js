@@ -33,7 +33,7 @@ class Cache {
 	 * @param {Number} timeToLive the number of seconds before entry expires
 	 * @returns {Object}
 	 */
-	 set(key, value, timeToLive = 86400) {
+	 set(key, value, timeToLive = 172800) {
 	 	const json = JSON.stringify(value);
 	 	return Promise.resolve()
 	 	.then(() => this.database.run(this.queries.create, [key, json, timeToLive]))
