@@ -1,10 +1,5 @@
-/*
-	./app/components/App.jsx
-	
-	<FetchData url={"https://apollo.kevinmidboe.com/api/v1/plex/playing"} />
-*/
+
 import React from 'react';
-import { HashRouter as Router, Route, Switch, IndexRoute } from 'react-router-dom';
 
 import LoginForm from './LoginForm/LoginForm.jsx';
 import { Provider } from 'react-redux';
@@ -16,6 +11,8 @@ import { fetchJSON } from '../http.jsx';
 import Sidebar from './Sidebar.jsx';
 import AdminRequestInfo from './AdminRequestInfo.jsx';
 
+import adminCSS from '../styles/adminComponent.jsx'
+
 
 class AdminComponent extends React.Component {
 	constructor(props) {
@@ -25,6 +22,7 @@ class AdminComponent extends React.Component {
 		}
 	}
 
+	// Fetches all requested elements and updates the state with response
 	componentWillMount() {
 		fetchJSON('https://apollo.kevinmidboe.com/api/v1/plex/requests/all', 'GET')
 		.then(result => {
@@ -34,16 +32,9 @@ class AdminComponent extends React.Component {
 		})
 	}
 
+	// Displays loginform if not logged in and passes response from 
+	// api call to sidebar and infoPanel through props
 	verifyLoggedIn() {
-		let adminComponentStyle = {
-			sidebar: {
-				float: 'left',
-			},
-			selectedObjectPanel: {
-				float: 'left',
-			}
-		}
-
 		const logged_in = getCookie('logged_in');
 		if (!logged_in) {
 			return <LoginForm />
@@ -53,20 +44,21 @@ class AdminComponent extends React.Component {
 		let listItemSelected = undefined;
 		
 		const requestParam = this.props.match.params.request;
+
 		if (requestParam && this.state.requested_objects !== '') {
 			selectedRequest = this.state.requested_objects[requestParam]
-			listItemSelected = requestParam
+			listItemSelected = requestParam;
 		}
 
 		return (
 			<div>
-				<div style={adminComponentStyle.sidebar}>
+				<div style={adminCSS.sidebar}>
 					<Sidebar 
 						requested_objects={this.state.requested_objects} 
 						listItemSelected={listItemSelected}
-						style={adminComponentStyle.sidebar} />
+						/>
 				</div>
-				<div style={adminComponentStyle.selectedObjectPanel}>
+				<div style={adminCSS.selectedObjectPanel}>
 					<AdminRequestInfo 
 						selectedRequest={selectedRequest}
 						listItemSelected={listItemSelected}
