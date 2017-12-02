@@ -11,12 +11,13 @@ export default {
     backgroundLargeHeader: {
       width: '100%',
       minHeight: '400px',
-      backgroundColor: '#011c23',
+      backgroundColor: 'rgb(1, 28, 35)',
+      // backgroundImage: 'radial-gradient(circle, #004c67 0, #005771 120%)',
       zIndex: 1,
       marginBottom: '-100px'
     },
 
-  backgroundSmallHeader: {
+    backgroundSmallHeader: {
       width: '100%',
       minHeight: '300px',
       backgroundColor: '#011c23',
@@ -31,7 +32,7 @@ export default {
       backgroundColor: 'white',
       position: 'relative',
       zIndex: '10',
-      boxShadow: '0 4px 2px black'
+      boxShadow: '0 1px 2px grey',
     },
 
     pageTitle: {
@@ -43,7 +44,7 @@ export default {
 
     pageTitleLargeSpan: {
       color: 'white',
-      fontSize: '3em',
+      fontSize: '4em',
       marginTop: '4vh',
       marginBottom: '6vh'
     },
@@ -133,70 +134,4 @@ export default {
       color: 'black',
       fontSize: '1.4em',
     },
-
-    row: {
-      width: '100%'
-    },
-
-    itemDivider: {
-      width: '90%',
-      borderBottom: '1px solid grey',
-      margin: '1rem auto'
-    },
-
-
-    pageNavigationBar: {
-      width: '100%',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center'
-    },
-
-    pageNavigationButton: {
-      margin: '0 auto',
-    },
-
-    hvrUnderlineFromCenter: {
-      color: 'white',
-      fontSize: '1em',
-      paddingTop: '12px',
-      marginBottom: '12px',
-      marginLeft: '10px',
-      cursor: 'pointer',
-      display: 'inline-block',
-      verticalAlign: 'middle',
-      WebkitTransform: 'perspective(1px) translateZ(0)',
-      transform: 'perspective(1px) translateZ(0)',
-      boxShadow: '0 0 1px transparent',
-      position: 'relative',
-      overflow: 'hidden',
-      ':before': {
-          content: "",
-          position: 'absolute',
-          zIndex: '-1',
-          left: '50%',
-          right: '50%',
-          bottom: '0',
-          background: '#00d17c',
-          height: '2px',
-          WebkitTransitionProperty: 'left, right',
-          transitionProperty: 'left, right',
-          WebkitTransitionDuration: '0.3s',
-          transitionDuration: '0.3s',
-          WebkitTransitionTimingFunction: 'ease-out',
-          transitionTimingFunction: 'ease-out'
-      },
-      ':hover:before': {
-        left: 0,
-        right: 0
-      },
-      'focus:before': {
-        left: 0,
-        right: 0
-      },
-      'active:before': {
-        left: 0,
-        right: 0
-      }
-    }
 }
