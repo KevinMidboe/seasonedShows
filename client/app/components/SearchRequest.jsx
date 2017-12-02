@@ -1,13 +1,13 @@
 import React from 'react';
 
-import MovieObject from './MovieObject.jsx';
+import URI from 'urijs';
+import InfiniteScroll from 'react-infinite-scroller';
 
 // StyleComponents
 import searchStyle from './styles/searchRequestStyle.jsx';
-import movieStyle from './styles/movieObjectStyle.jsx';
 
-import URI from 'urijs';
-import InfiniteScroll from 'react-infinite-scroller';
+import SearchObject from './SearchObject.jsx';
+import Loading from './images/loading.jsx'
 
 import { fetchJSON } from './http.jsx';
 import { getCookie } from './Cookie.jsx';
@@ -29,7 +29,8 @@ class SearchRequest extends React.Component {
       page: 1,
       resultHeader: '',
       loadResults: false,
-      scrollHasMore: true
+      scrollHasMore: true,
+      loading: false,
     }
 
     this.allowedListTypes = ['discover', 'popular', 'nowplaying', 'upcoming']
@@ -88,9 +89,9 @@ class SearchRequest extends React.Component {
         this.state.page = 1;
     }
 
-    writeLoading() {
+    setLoading(value) {
         this.setState({
-            responseMovieList: 'Loading...'
+            loading: value
         });
     }
 
@@ -122,10 +123,7 @@ class SearchRequest extends React.Component {
 
     // Here we first call api for a search with the input uri, handle any errors
     // and fill the reponseData from api into the state of reponseMovieList as movieObjects
-    callSearchFillMovieList(uri) {
-        // Write loading animation
-        // this.writeLoading();
-        
+    callSearchFillMovieList(uri) {      
         Promise.resolve()
         .then(() => this.callURI(uri, 'GET'))
         .then(response => {
@@ -152,7 +150,7 @@ class SearchRequest extends React.Component {
             }
 
             // Convert to json and update the state of responseMovieList with the results of the api call
-            // mapped as a movieObject.
+            // mapped as a SearchObject.
             response.json()
             .then(responseData => {
                 if (this.state.page === 1) {
@@ -180,7 +178,6 @@ class SearchRequest extends React.Component {
 
     callListFillMovieList(uri) {
         // Write loading animation
-        // this.writeLoading();
         
         Promise.resolve()
         .then(() => this.callURI(uri, 'GET', undefined))
@@ -198,7 +195,7 @@ class SearchRequest extends React.Component {
             }
 
             // Convert to json and update the state of responseMovieList with the results of the api call
-            // mapped as a movieObject.
+            // mapped as a SearchObject.
             response.json()
             .then(responseData => {
                 if (this.state.page === 1) {
@@ -218,6 +215,7 @@ class SearchRequest extends React.Component {
         })
         .catch((error) => {
             console.log('Something went wrong when fetching query.', error)
+
         })
     }
 
@@ -287,10 +285,10 @@ class SearchRequest extends React.Component {
     }
   }
 
-  // When called passes the variable to MovieObject and calls it's interal function for 
+  // When called passes the variable to SearchObject and calls it's interal function for 
   // generating the wanted HTML
   createMovieObjects(item, index) {
-    let movie = new MovieObject(item);
+    let movie = new SearchObject(item);
     return movie.getElement(index);
   }
 
@@ -379,7 +377,7 @@ class SearchRequest extends React.Component {
                 pageStart={0}
                 loadMore={this.pageForwards.bind(this)}
                 hasMore={this.state.scrollHasMore}
-                loader={loader}
+                loader={<Loading />}
                 initialLoad={this.state.loadResults}>
 
                 <MediaQuery minWidth={600}>
@@ -403,10 +401,10 @@ class SearchRequest extends React.Component {
                         </div>
 
                         <div id='requestMovieList' ref='requestMovieList' style={searchStyle.requestWrapper}>
-                            <span style={searchStyle.resultLargeHeader}>{this.state.resultHeader}</span>
-                            <br></br><br></br>
-                            
-                            {this.state.responseMovieList}     
+                           <span style={searchStyle.resultLargeHeader}>{this.state.resultHeader}</span>
+                           <br></br><br></br>
+
+                           {this.state.responseMovieList}
                         </div>
                     </div>
                 </MediaQuery>
@@ -435,7 +433,7 @@ class SearchRequest extends React.Component {
                             <span style={searchStyle.resultSmallHeader}>{this.state.resultHeader}</span>
                             <br></br><br></br>
 
-                            {this.state.responseMovieList}     
+                            {this.state.responseMovieList}
                         </div>
                     </div>
                 </MediaQuery>
