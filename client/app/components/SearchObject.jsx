@@ -3,7 +3,7 @@ import React from 'react';
 import Notifications, {notify} from 'react-notify-toast';
 
 // StyleComponents
-import searchResultCSS from './styles/searchResult.jsx';
+import searchObjectCSS from './styles/searchObject.jsx';
 import buttonsCSS from './styles/buttons.jsx';
 
 var MediaQuery = require('react-responsive');
@@ -85,27 +85,27 @@ class MovieObject {
          <div key={element_key}>
          <Notifications />
          
-         <div style={searchResultCSS.container} key={this.id}>
+         <div style={searchObjectCSS.container} key={this.id}>
             <MediaQuery minWidth={600}>
-               <div style={searchResultCSS.posterContainer}>
-                  <img style={searchResultCSS.posterImage} id='poster' src={posterPath}></img>
+               <div style={searchObjectCSS.posterContainer}>
+                  <img style={searchObjectCSS.posterImage} id='poster' src={posterPath}></img>
                </div>
-               <span style={searchResultCSS.title_large}>{this.title}</span>
+               <span style={searchObjectCSS.title_large}>{this.title}</span>
                <br></br>
-               <span style={searchResultCSS.stats_large}>Released: { this.year } | Rating: {this.rating}</span>
+               <span style={searchObjectCSS.stats_large}>Released: { this.year } | Rating: {this.rating}</span>
                <br></br>
-               <span style={searchResultCSS.summary}>{this.summary}</span>
+               <span style={searchObjectCSS.summary}>{this.summary}</span>
                <br></br>
             </MediaQuery>
 
             <MediaQuery maxWidth={600}>
-               <img src={ backgroundPath } style={searchResultCSS.backgroundImage}></img>
-               <span style={searchResultCSS.title_small}>{this.title}</span>
+               <img src={ backgroundPath } style={searchObjectCSS.backgroundImage}></img>
+               <span style={searchObjectCSS.title_small}>{this.title}</span>
                <br></br>
-               <span style={searchResultCSS.stats_small}>Released: {this.year} | Rating: {this.rating}</span>
+               <span style={searchObjectCSS.stats_small}>Released: {this.year} | Rating: {this.rating}</span>
             </MediaQuery>
 
-            <div style={searchResultCSS.buttons}>
+            <div style={searchObjectCSS.buttons}>
                {foundInPlex}
                
                <a href={themoviedbLink}>
@@ -125,8 +125,8 @@ class MovieObject {
              <br />
          </MediaQuery>
          
-         <div style={searchResultCSS.dividerRow}>
-             <div style={searchResultCSS.itemDivider}></div>
+         <div style={searchObjectCSS.dividerRow}>
+             <div style={searchObjectCSS.itemDivider}></div>
          </div>
          </div>
       )
