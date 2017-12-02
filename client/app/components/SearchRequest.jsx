@@ -4,7 +4,7 @@ import URI from 'urijs';
 import InfiniteScroll from 'react-infinite-scroller';
 
 // StyleComponents
-import searchStyle from './styles/searchRequestStyle.jsx';
+import searchRequestCSS from './styles/searchRequestStyle.jsx';
 
 import SearchObject from './SearchObject.jsx';
 import Loading from './images/loading.jsx'
@@ -343,12 +343,12 @@ class SearchRequest extends React.Component {
 
     movieToggle() {
         if (this.state.movieFilter) 
-            return <span style={searchStyle.searchFilterActive}
+            return <span style={searchRequestCSS.searchFilterActive}
                 className="search_category hvrUnderlineFromCenter" 
                 onClick={() => {this.toggleFilter('movies')}}
                 id="category_active">Movies</span>
         else
-            return <span style={searchStyle.searchFilterNotActive}
+            return <span style={searchRequestCSS.searchFilterNotActive}
                 className="search_category hvrUnderlineFromCenter" 
                 onClick={() => {this.toggleFilter('movies')}}
                 id="category_active">Movies</span>
@@ -356,12 +356,12 @@ class SearchRequest extends React.Component {
 
     showToggle() {
         if (this.state.showFilter) 
-            return <span style={searchStyle.searchFilterActive}
+            return <span style={searchRequestCSS.searchFilterActive}
                 className="search_category hvrUnderlineFromCenter" 
                 onClick={() => {this.toggleFilter('shows')}}
                 id="category_active">TV Shows</span>
         else
-            return <span style={searchStyle.searchFilterNotActive}
+            return <span style={searchRequestCSS.searchFilterNotActive}
                 className="search_category hvrUnderlineFromCenter" 
                 onClick={() => {this.toggleFilter('shows')}}
                 id="category_active">TV Shows</span>
@@ -381,17 +381,17 @@ class SearchRequest extends React.Component {
                 initialLoad={this.state.loadResults}>
 
                 <MediaQuery minWidth={600}>
-                    <div style={searchStyle.body}>
-                        <div className='backgroundHeader' style={searchStyle.backgroundLargeHeader}>
-                            <div className='pageTitle' style={searchStyle.pageTitle}>
-                                <span style={searchStyle.pageTitleLargeSpan}>Request new content</span>
+                    <div style={searchRequestCSS.body}>
+                        <div className='backgroundHeader' style={searchRequestCSS.backgroundLargeHeader}>
+                            <div className='pageTitle' style={searchRequestCSS.pageTitle}>
+                                <span style={searchRequestCSS.pageTitleLargeSpan}>Request new content</span>
                             </div>
                             
-                            <div className='box' style={searchStyle.box}>
-                                <div style={searchStyle.searchLargeContainer}>
-                                    <span style={searchStyle.searchIcon}><i className="fa fa-search"></i></span>
+                            <div className='box' style={searchRequestCSS.box}>
+                                <div style={searchRequestCSS.searchLargeContainer}>
+                                    <span style={searchRequestCSS.searchIcon}><i className="fa fa-search"></i></span>
 
-                                    <input style={searchStyle.searchLargeBar} type="text" id="search" placeholder="Search for new content..." 
+                                    <input style={searchRequestCSS.searchLargeBar} type="text" id="search" placeholder="Search for new content..." 
                                     onKeyPress={(event) => this._handleQueryKeyPress(event)}
                                     onChange={event => this.updateQueryState(event)}
                                     value={this.state.searchQuery}/>
@@ -400,8 +400,8 @@ class SearchRequest extends React.Component {
                             </div>
                         </div>
 
-                        <div id='requestMovieList' ref='requestMovieList' style={searchStyle.requestWrapper}>
-                           <span style={searchStyle.resultLargeHeader}>{this.state.resultHeader}</span>
+                        <div id='requestMovieList' ref='requestMovieList' style={searchRequestCSS.requestWrapper}>
+                           <span style={searchRequestCSS.resultLargeHeader}>{this.state.resultHeader}</span>
                            <br></br><br></br>
 
                            {this.state.responseMovieList}
@@ -410,17 +410,17 @@ class SearchRequest extends React.Component {
                 </MediaQuery>
 
                 <MediaQuery maxWidth={600}>
-                     <div style={searchStyle.body}>
-                        <div className='backgroundHeader' style={searchStyle.backgroundSmallHeader}>
-                            <div className='pageTitle' style={searchStyle.pageTitle}>
-                                <span style={searchStyle.pageTitleSmallSpan}>Request new content</span>
+                     <div style={searchRequestCSS.body}>
+                        <div className='backgroundHeader' style={searchRequestCSS.backgroundSmallHeader}>
+                            <div className='pageTitle' style={searchRequestCSS.pageTitle}>
+                                <span style={searchRequestCSS.pageTitleSmallSpan}>Request new content</span>
                             </div>
                             
-                            <div className='box' style={searchStyle.box}>
-                                <div style={searchStyle.searchSmallContainer}>
-                                    <span style={searchStyle.searchIcon}><i className="fa fa-search"></i></span>
+                            <div className='box' style={searchRequestCSS.box}>
+                                <div style={searchRequestCSS.searchSmallContainer}>
+                                    <span style={searchRequestCSS.searchIcon}><i className="fa fa-search"></i></span>
 
-                                    <input style={searchStyle.searchSmallBar} type="text" id="search" placeholder="Search for new content..." 
+                                    <input style={searchRequestCSS.searchSmallBar} type="text" id="search" placeholder="Search for new content..." 
                                     onKeyPress={(event) => this._handleQueryKeyPress(event)}
                                     onChange={event => this.updateQueryState(event)}
                                     value={this.state.searchQuery}/>
@@ -429,8 +429,8 @@ class SearchRequest extends React.Component {
                             </div>
                         </div>
 
-                        <div id='requestMovieList' ref='requestMovieList' style={searchStyle.requestWrapper}>
-                            <span style={searchStyle.resultSmallHeader}>{this.state.resultHeader}</span>
+                        <div id='requestMovieList' ref='requestMovieList' style={searchRequestCSS.requestWrapper}>
+                            <span style={searchRequestCSS.resultSmallHeader}>{this.state.resultHeader}</span>
                             <br></br><br></br>
 
                             {this.state.responseMovieList}
