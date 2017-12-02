@@ -13,7 +13,7 @@ import { fetchJSON } from './http.jsx';
 import Interactive from 'react-interactive';
 
 
-class MovieObject {
+class SearchObject {
     constructor(object) {
         this.id = object.id;
         this.title = object.title;
@@ -134,4 +134,4 @@ class MovieObject {
     }
 }
 
-export default MovieObject;
+export default SearchObject;
