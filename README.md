@@ -2,7 +2,13 @@
 Your customly seasoned movie and show requester, downloader and organizer
 
 ## About
+The goal of this project is to create a full custom stack that can to everything surround downloading, organizing and notifiyng of new media. From the top down we have a website using [tmdb](https://www.themoviedb.com) api to search for from over 350k movies and 70k tv shows. Using [hjone72](https://github.com/hjone72/PlexAuth) great PHP reverse proxy we can have a secure way of allowing users to login with their plex credentials which limits request capabilites to only users that are authenticated to use your plex library. 
 seasonedShows is a intelligent organizer for your tv show episodes. It is made to automate and simplify to process of renaming and moving newly downloaded tv show episodes following Plex file naming and placement. 
+
+So this is a multipart system that lets your plex users request movies, and then from the admin page the owner can.
+
+## Installation
+There are two main ways of 
 
 ## Architecture
 The flow of the system will first check for new folders in your tv shows directory, if a new file is found it's contents are analyzed, stored and tweets suggested changes to it's contents to use_admin.
