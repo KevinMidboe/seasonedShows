@@ -42,6 +42,10 @@ export default {
 		width: '100%'
 	},
 
+	buttons: {
+		paddingTop: '20px',
+	},
+
 	summary: {
 		fontSize: '15px',
 	},
