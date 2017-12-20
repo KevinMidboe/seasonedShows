@@ -88,7 +88,7 @@ class SqliteDatabase {
       const schemaPath = path.join(this.schemaDirectory, filename);
       console.log(schemaPath)
       const schema = fs.readFileSync(schemaPath).toString('utf-8');
-      console.log(schema)
+      console.log('schema: ', schema)
       return schema;
    }
 }
