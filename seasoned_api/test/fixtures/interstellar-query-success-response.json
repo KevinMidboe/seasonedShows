@@ -1,0 +1,89 @@
+{
+    "number_of_items_on_page": 5,
+    "page": 1,
+    "results": [
+        {
+            "background": "/xu9zaAevzQ5nnrsXN6JcahLnG4i.jpg",
+            "genre": [
+                12,
+                18,
+                878
+            ],
+            "id": 157336,
+            "matchedInPlex": false,
+            "popularity": 50.262329,
+            "poster": "/nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg",
+            "rating": 8.1,
+            "summary": "Interstellar chronicles the adventures of a group of explorers who make use of a newly discovered wormhole to surpass the limitations on human space travel and conquer the vast distances involved in an interstellar voyage.",
+            "title": "Interstellar",
+            "type": "movie",
+            "vote_count": 12095,
+            "year": 2014
+        },
+        {
+            "background": "/bT5jpIZE50MI0COE8pOeq0kMpQo.jpg",
+            "genre": [
+                99
+            ],
+            "id": 301959,
+            "matchedInPlex": false,
+            "popularity": 6.174326,
+            "poster": "/xZwUIPqBHyJ2QIfMPANOZ1mAld6.jpg",
+            "rating": 7.9,
+            "summary": "Behind the scenes of Christopher Nolan's sci-fi drama, which stars Matthew McConaughey and Anne Hathaway",
+            "title": "Interstellar: Nolan's Odyssey",
+            "type": "movie",
+            "vote_count": 102,
+            "year": 2014
+        },
+        {
+            "background": "/yTnHa6lgIv8rNneSNBDkBe8MnZe.jpg",
+            "genre": [
+                878
+            ],
+            "id": 398188,
+            "matchedInPlex": false,
+            "popularity": 3.847981,
+            "poster": "/cjvTebuqD8wmhchHE286ltVcbX6.jpg",
+            "rating": 4.7,
+            "summary": "For Millennia the Aliien force has watched and waited, a brooding menace that has now at last decided to take over the Earth. Communications systems worldwide are sent into chaos by a strange atmospheric interference and this has turned into a global phenomenon. A massive spaceship headed towards Earth and smaller spaceships began to cover entire cities around the world. Suddenly, the wonder turns into horror as the spaceships destroy the cities with energy weapons. When the world counterattacks, the alien ships are invincible to military weapons.  The survivors have to use their wits to kill the aliens, or die.",
+            "title": "Interstellar Wars",
+            "type": "movie",
+            "vote_count": 5,
+            "year": 2016
+        },
+        {
+            "background": "/mgb6tVEieDYLpQt666ACzGz5cyE.jpg",
+            "genre": [
+                35
+            ],
+            "id": 287954,
+            "matchedInPlex": false,
+            "popularity": 2.778622,
+            "poster": "/buoq7zYO4J3ttkEAqEMWelPDC0G.jpg",
+            "rating": 7,
+            "summary": "An undeniably beautiful alien is sent to Earth to study the complex mating rituals of human beings, which leads to the young interstellar traveler experiencing the passion that surrounds the centuries-old ritual of the species.",
+            "title": "Lolita from Interstellar Space",
+            "type": "movie",
+            "vote_count": 1,
+            "year": 2014
+        },
+        {
+            "background": null,
+            "genre": [
+                99
+            ],
+            "id": 336592,
+            "matchedInPlex": false,
+            "popularity": 2.147155,
+            "poster": "/6KBD7YSBjCfgBgHwpsQo3G3GGdx.jpg",
+            "rating": 7.8,
+            "summary": "The science of Christopher Nolan's sci-fi, Interstellar.",
+            "title": "The Science of Interstellar",
+            "type": "movie",
+            "vote_count": 6,
+            "year": 2014
+        }
+    ],
+    "total_pages": 1
+}
