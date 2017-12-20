@@ -1,5 +1,7 @@
 # 🌶 seasonedShows
-Your customly seasoned movie and show requester, downloader and organizer
+[![Build Status](https://travis-ci.org/KevinMidboe/seasonedShows.svg?branch=testing)](https://travis-ci.org/KevinMidboe/seasonedShows)
+
+Your customly *seasoned* movie and show requester, downloader and organizer.
 
 ## About
 The goal of this project is to create a full custom stack that can to everything surround downloading, organizing and notifiyng of new media. From the top down we have a website using [tmdb](https://www.themoviedb.com) api to search for from over 350k movies and 70k tv shows. Using [hjone72](https://github.com/hjone72/PlexAuth) great PHP reverse proxy we can have a secure way of allowing users to login with their plex credentials which limits request capabilites to only users that are authenticated to use your plex library. 
