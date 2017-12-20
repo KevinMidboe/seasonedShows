@@ -1,4 +1,3 @@
 DROP TABLE IF EXISTS user;
 DROP TABLE IF EXISTS search_history;
-DROP TABLE IF EXISTS list;
-DROP TABLE IF EXISTS list_content;
+DROP TABLE IF EXISTS requests;
