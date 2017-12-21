@@ -75,7 +75,6 @@ class SqliteDatabase {
    */
   tearDown() {
     const tearDownSchema = this.readSqlFile('tearDown.sql');
-    console.log(tearDownSchema);
     return this.execute(tearDownSchema);
   }
 
@@ -84,11 +83,8 @@ class SqliteDatabase {
    * @returns {String}
    */
    readSqlFile(filename) {
-      console.log(filename)
       const schemaPath = path.join(this.schemaDirectory, filename);
-      console.log(schemaPath)
       const schema = fs.readFileSync(schemaPath).toString('utf-8');
-      console.log('schema: ', schema)
       return schema;
    }
 }
