@@ -1,5 +1,6 @@
 # 🌶 seasonedShows
 [![Build Status](https://travis-ci.org/KevinMidboe/seasonedShows.svg?branch=testing)](https://travis-ci.org/KevinMidboe/seasonedShows)
+[![DUB](https://img.shields.io/dub/l/vibe-d.svg)]()
 
 Your customly *seasoned* movie and show requester, downloader and organizer.
 
