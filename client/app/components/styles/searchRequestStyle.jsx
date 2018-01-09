@@ -14,7 +14,7 @@ export default {
       backgroundColor: 'rgb(1, 28, 35)',
       // backgroundImage: 'radial-gradient(circle, #004c67 0, #005771 120%)',
       zIndex: 1,
-      marginBottom: '80px'
+      marginBottom: '70px'
     },
 
     backgroundSmallHeader: {
@@ -61,6 +61,7 @@ export default {
       width: '77%',
       paddingLeft: '23%',
       backgroundColor: 'white',
+      boxShadow: 'grey 0px 1px 2px',
     },
 
     searchSmallContainer: {
