@@ -20,10 +20,16 @@ class AdminComponent extends React.Component {
 		this.state = {
 			requested_objects: '',
 		}
+
+		this.updateHandler = this.updateHandler.bind(this)
 	}
 
 	// Fetches all requested elements and updates the state with response
 	componentWillMount() {
+		this.fetchRequestedItems()
+	}
+
+	fetchRequestedItems() {
 		fetchJSON('https://apollo.kevinmidboe.com/api/v1/plex/requests/all', 'GET')
 		.then(result => {
 			this.setState({
@@ -31,6 +37,10 @@ class AdminComponent extends React.Component {
 			})
 		})
 	}
+
+	updateHandler() {
+		this.fetchRequestedItems()
+  	}
 
 	// Displays loginform if not logged in and passes response from 
 	// api call to sidebar and infoPanel through props
@@ -52,17 +62,18 @@ class AdminComponent extends React.Component {
 
 		return (
 			<div>
+				<div style={adminCSS.selectedObjectPanel}>
+					<AdminRequestInfo 
+						selectedRequest={selectedRequest}
+						listItemSelected={listItemSelected}
+						updateHandler = {this.updateHandler} 
+					 />
+				</div>
 				<div style={adminCSS.sidebar}>
 					<Sidebar 
 						requested_objects={this.state.requested_objects} 
 						listItemSelected={listItemSelected}
 						/>
-				</div>
-				<div style={adminCSS.selectedObjectPanel}>
-					<AdminRequestInfo 
-						selectedRequest={selectedRequest}
-						listItemSelected={listItemSelected}
-					 />
 				</div>
 			</div>
 		)
