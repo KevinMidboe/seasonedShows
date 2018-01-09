@@ -7,7 +7,7 @@
   "license": "MIT",
   "scripts": {
     "start": "webpack-dev-server --open --config webpack.dev.js",
-    "build": "webpack --config webpack.prod.js",
+    "build": "NODE_ENV=production webpack --config webpack.prod.js",
     "build_dev": "webpack --config webpack.dev.js"
   },
   "dependencies": {
@@ -19,6 +19,7 @@
     "react-burger-menu": "^2.1.6",
     "react-dom": "^15.5.4",
     "react-infinite-scroller": "^1.0.15",
+    "react-interactive": "^0.8.1",
     "react-notify-toast": "^0.3.2",
     "react-redux": "^5.0.6",
     "react-responsive": "^1.3.4",

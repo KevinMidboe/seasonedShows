@@ -10,6 +10,6 @@ const database = new SqliteDatabase(configuration.get('database', 'host'));
  */
 Promise.resolve()
 .then(() => database.connect())
-// .then(() => database.setUp());
+.then(() => database.setUp());
 
 module.exports = database;

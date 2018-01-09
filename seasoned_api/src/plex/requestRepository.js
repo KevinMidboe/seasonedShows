@@ -22,7 +22,7 @@ class RequestRepository {
 	constructor(cache, database) {
 		this.database = database || establishedDatabase;
 		this.queries = {
-			'insertRequest': "INSERT INTO requests VALUES (?, ?, ?, ?, ?, ?, CURRENT_DATE, 'requested', ?, ?)",
+			'insertRequest': "INSERT INTO requests VALUES (?, ?, ?, ?, ?, ?, ?, CURRENT_DATE, 'requested', ?, ?)",
 			'fetchRequstedItems': "SELECT * FROM requests",
 			'updateRequestedById': "UPDATE requests SET status = ? WHERE id is ? AND type is ?",
 		}
@@ -117,7 +117,7 @@ class RequestRepository {
 				user = 'NULL';
 			console.log(user)
 			// Add request to database
-			this.database.run(this.queries.insertRequest, [movie.id, movie.title, movie.year, movie.poster, user, ip, user_agent, movie.type])
+			this.database.run(this.queries.insertRequest, [movie.id, movie.title, movie.year, movie.poster, movie.background, user, ip, user_agent, movie.type])
 
 
 			// create reusable transporter object using the default SMTP transport
