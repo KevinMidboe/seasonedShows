@@ -10,19 +10,19 @@ export default {
 
     backgroundLargeHeader: {
       width: '100%',
-      minHeight: '400px',
+      minHeight: '180px',
       backgroundColor: 'rgb(1, 28, 35)',
       // backgroundImage: 'radial-gradient(circle, #004c67 0, #005771 120%)',
       zIndex: 1,
-      marginBottom: '-100px'
+      marginBottom: '80px'
     },
 
     backgroundSmallHeader: {
       width: '100%',
-      minHeight: '300px',
+      minHeight: '120px',
       backgroundColor: '#011c23',
       zIndex: 1,
-      marginBottom: '-100px'
+      marginBottom: '40px'
     },
 
     requestWrapper: {
@@ -44,7 +44,7 @@ export default {
 
     pageTitleLargeSpan: {
       color: 'white',
-      fontSize: '4em',
+      fontSize: '3em',
       marginTop: '4vh',
       marginBottom: '6vh'
     },
@@ -54,39 +54,35 @@ export default {
       fontSize: '2em',
       marginTop: '3vh',
       marginBottom: '3vh'
-    },    
-
-    box: {
-      height: '50px',
     },
 
     searchLargeContainer: {
-      margin: '0 25%',
+      height: '52px',
+      width: '77%',
+      paddingLeft: '23%',
+      backgroundColor: 'white',
     },
 
     searchSmallContainer: {
-      margin: '0 10%',
     },
 
     searchIcon: {
       position: 'absolute',
-      fontSize: '1.2em',
-      marginTop: '12px',
-      marginLeft: '-13px',
-      color: '#4f5b66'
+      fontSize: '1.6em',
+      marginTop: '7px',
+      color: '#4f5b66',
+      display: 'block',
     },
 
     searchLargeBar: {
-      width: '100%',
+      width: '50%',
       height: '50px',
       background: '#ffffff',
       border: 'none',
-      fontSize: '10pt',
+      fontSize: '12pt',
       float: 'left',
       color: '#63717f',
-      paddingLeft: '45px',
-      marginLeft: '-25px',
-      borderRadius: '5px',
+      paddingLeft: '40px',
     },
 
     searchSmallBar: {
@@ -94,13 +90,57 @@ export default {
       height: '50px',
       background: '#ffffff',
       border: 'none',
-      fontSize: '13pt',
+      fontSize: '11pt',
       float: 'left',
       color: '#63717f',
-      paddingLeft: '45px',
+      paddingLeft: '65px',
       marginLeft: '-25px',
       borderRadius: '5px',
     },
+
+
+    // Dropdown for selecting tmdb lists
+    controls: {
+      textAlign: 'left',
+      paddingTop: '8px',
+      width: '33.3333%',
+      marginLeft: '0',
+      marginRight: '0',
+    },
+
+    withData: {
+      boxSizing: 'border-box',
+      marginBottom: '0',
+      display: 'block',
+      padding: '0',
+      verticalAlign: 'baseline',
+      font: 'inherit',
+      textAlign: 'left',
+      boxSizing: 'border-box',
+    },
+
+    sortOptions: {
+      border: '1px solid #000',
+      maxWidth: '100%',
+      overflow: 'hidden',
+      lineHeight: 'normal',
+      textAlign: 'left',
+      padding: '4px 12px',
+      paddingRight: '2rem',
+      backgroundImage: 'url("data:image/svg+xml;base64,PHN2ZyBpZD0iTGF5ZXJfMSIgZGF0YS1uYW1lPSJMYXllciAxIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxOCAxOCI+CiAgPHRpdGxlPmFycm93LWRvd24tbWljcm88L3RpdGxlPgogIDxwb2x5bGluZSBwb2ludHM9IjE0IDQuNjcgOSAxMy4zMyA0IDQuNjciIHN0eWxlPSJmaWxsOiBub25lO3N0cm9rZTogIzAwMDtzdHJva2UtbWl0ZXJsaW1pdDogMTA7c3Ryb2tlLXdpZHRoOiAycHgiLz4KPC9zdmc+Cg==")',
+      backgroundSize: '18px 18px',
+      backgroundPosition: 'right 8px center',
+      backgroundRepeat: 'no-repeat',
+      width: 'auto',
+      display: 'inline-block',
+      outline: 'none',
+      boxSizing: 'border-box',
+      fontSize: '15px',
+      WebkitAppearance: 'none',
+      MozAppearance: 'none',
+      appearance: 'none',
+    },
+
 
     searchFilterActive: {
       color: '#00d17c',
@@ -116,7 +156,6 @@ export default {
       cursor: 'pointer'
     },
 
-
     filter: {
       color: 'white',
       paddingLeft: '40px',
@@ -124,9 +163,9 @@ export default {
     },
 
     resultLargeHeader: {
-      paddingLeft: '30px',
       color: 'black',
       fontSize: '1.6em',
+      width: '20%',
     },
 
     resultSmallHeader: {

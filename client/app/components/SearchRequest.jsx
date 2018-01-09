@@ -47,7 +47,7 @@ class SearchRequest extends React.Component {
     // this.setState({responseMovieList: null})
     this.resetPageNumber();
     this.state.loadResults = true;
-    this.fetchTmdbList('upcoming');
+    this.fetchTmdbList('discover');
   }
   
     // Handles all errors of the response of a fetch call
@@ -384,25 +384,28 @@ class SearchRequest extends React.Component {
                     <div style={searchRequestCSS.body}>
                         <div className='backgroundHeader' style={searchRequestCSS.backgroundLargeHeader}>
                             <div className='pageTitle' style={searchRequestCSS.pageTitle}>
-                                <span style={searchRequestCSS.pageTitleLargeSpan}>Request new content</span>
+                                <span style={searchRequestCSS.pageTitleLargeSpan}>Request new content for plex</span>
                             </div>
                             
-                            <div className='box' style={searchRequestCSS.box}>
-                                <div style={searchRequestCSS.searchLargeContainer}>
-                                    <span style={searchRequestCSS.searchIcon}><i className="fa fa-search"></i></span>
+                            <div style={searchRequestCSS.searchLargeContainer}>
+                                <span style={searchRequestCSS.searchIcon}><i className="fa fa-search"></i></span>
 
-                                    <input style={searchRequestCSS.searchLargeBar} type="text" id="search" placeholder="Search for new content..." 
-                                    onKeyPress={(event) => this._handleQueryKeyPress(event)}
-                                    onChange={event => this.updateQueryState(event)}
-                                    value={this.state.searchQuery}/>
+                                <input style={searchRequestCSS.searchLargeBar} type="text" id="search" placeholder="Search for new content..." 
+                                onKeyPress={(event) => this._handleQueryKeyPress(event)}
+                                onChange={event => this.updateQueryState(event)}
+                                value={this.state.searchQuery}/>
 
-                                </div>
                             </div>
                         </div>
 
                         <div id='requestMovieList' ref='requestMovieList' style={searchRequestCSS.requestWrapper}>
-                           <span style={searchRequestCSS.resultLargeHeader}>{this.state.resultHeader}</span>
-                           <br></br><br></br>
+                            <div style={{marginLeft: '30px'}}>
+                               <div style={searchRequestCSS.resultLargeHeader}>{this.state.resultHeader}</div>
+                               <span style={{content: '', display: 'block', width: '2em', borderTop: '2px solid #000,'}}></span>
+                            
+                            </div>
+
+                           <br></br>
 
                            {this.state.responseMovieList}
                         </div>
@@ -441,7 +444,21 @@ class SearchRequest extends React.Component {
     )
   }
 
-  
+    // <form style={searchRequestCSS.controls}>
+    //     <label style={searchRequestCSS.withData}>
+    //         <div style={searchRequestCSS.sortOptions}>Discover</div>
+    //     </label>
+    // </form>
+
+    // <form style={searchRequestCSS.controls}>
+    //     <label style={searchRequestCSS.withData}>
+    //         <select style={searchRequestCSS.sortOptions}>
+    //             <option value="discover">All</option>
+    //             <option value="nowplaying">Movies</option>
+    //             <option value="nowplaying">TV Shows</option>
+    //         </select>
+    //     </label>
+    // </form>
 }
 
 export default SearchRequest;
