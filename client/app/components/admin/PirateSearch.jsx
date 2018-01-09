@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { fetchJSON } from '../http.jsx'; 
 
 // Components
-import TorrentTable from './torrentTable.jsx'
+import TorrentTable from './TorrentTable.jsx'
 
 // Stylesheets
 import btnStylesheet from '../styles/buttons.jsx';
