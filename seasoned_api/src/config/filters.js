@@ -10,7 +10,7 @@ class Filters {
   }
 
   isEmpty() {
-    return !this.hasValidType() || this.filters.length === 0;
+    return !this.hasValidType() || this.value.length === 0;
   }
 
   has(filter) {
