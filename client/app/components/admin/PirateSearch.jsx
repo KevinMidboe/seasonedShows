@@ -44,10 +44,16 @@ class PirateSearch extends Component {
       fetchJSON('https://apollo.kevinmidboe.com/api/v1/pirate/search?query='+query+'&type='+type, 'GET')
       // fetchJSON('http://localhost:31459/api/v1/pirate/search?query='+query+'&type='+type, 'GET')
       .then((response) => {
-         this.setState({
-            torrentResponse: response.torrents,
-            loading: null,
-         })
+         console.log('this is the first response: ', response)
+         if (response.success === true) {
+            this.setState({
+               torrentResponse: response.torrents,
+               loading: null,
+            })
+         }
+         else {
+            console.error(response.message)
+         }
       })
       .catch((error) => {
          console.error(error);
