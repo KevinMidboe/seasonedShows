@@ -5,6 +5,7 @@ import Notifications, {notify} from 'react-notify-toast';
 // StyleComponents
 import searchObjectCSS from './styles/searchObject.jsx';
 import buttonsCSS from './styles/buttons.jsx';
+import InfoButton from './buttons/InfoButton.jsx';
 
 var MediaQuery = require('react-responsive');
 
@@ -48,7 +49,7 @@ class SearchObject {
       if (this.poster == null || this.poster == undefined) {
          var posterPath = 'https://openclipart.org/image/2400px/svg_to_png/211479/Simple-Image-Not-Found-Icon.png'
       } else {
-         var posterPath = 'https://image.tmdb.org/t/p/w300' + this.poster;
+         var posterPath = 'https://image.tmdb.org/t/p/w185' + this.poster;
       }
       var backgroundPath = 'https://image.tmdb.org/t/p/w640_and_h360_bestv2/' + this.background;
 
@@ -75,11 +76,6 @@ class SearchObject {
          </Interactive>;
       }
 
-      if (this.type === 'movie') 
-         var themoviedbLink = 'https://www.themoviedb.org/movie/' + this.id
-      else if (this.type === 'show')  
-         var themoviedbLink = 'https://www.themoviedb.org/tv/' + this.id
-
       // TODO go away from using mediaQuery, and create custom resizer
       return (
          <div key={element_key}>
@@ -92,7 +88,9 @@ class SearchObject {
                </div>
                <span style={searchObjectCSS.title_large}>{this.title}</span>
                <br></br>
-               <span style={searchObjectCSS.stats_large}>Released: { this.year } | Rating: {this.rating}</span>
+               <span style={searchObjectCSS.stats_large}>
+                  Released: { this.year } | Rating: {this.rating} | Type: {this.type}
+               </span>
                <br></br>
                <span style={searchObjectCSS.summary}>{this.summary}</span>
                <br></br>
@@ -108,16 +106,7 @@ class SearchObject {
             <div style={searchObjectCSS.buttons}>
                {foundInPlex}
                
-               <a href={themoviedbLink}>
-                  <Interactive 
-                     as='button'
-                     hover={buttonsCSS.info_hover}
-                     focus={buttonsCSS.info_hover}
-                     style={buttonsCSS.info}>
-
-                     <span>Info</span>
-                  </Interactive>
-               </a>
+               <InfoButton id={this.id} type={this.type} />
             </div>
          </div>
          
