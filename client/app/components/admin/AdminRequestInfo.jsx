@@ -195,7 +195,7 @@ class AdminRequestInfo extends Component {
                   </div>
 
                   <div style={requestInfoCSS.info_movie}>
-                     <h3 style={requestInfoCSS.info_movie}>Movie info</h3>
+                     <h3 style={requestInfoCSS.info_movie_header}>Movie info</h3>
                      
                      { this.generateSummary() }
                   </div>

@@ -25,7 +25,7 @@ export default {
    },
 
    type_icon: {
-      marginLeft: '-1.9em',
+      marginLeft: '-0.2em',
       marginRight: '0.7em',
    },
    type_text: {
