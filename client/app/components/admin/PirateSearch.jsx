@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import { fetchJSON } from '../http.jsx'; 
 
+// Components
+import TorrentTable from './torrentTable.jsx'
+
 // Stylesheets
 import btnStylesheet from '../styles/buttons.jsx';
 
@@ -10,72 +13,77 @@ import Interactive from 'react-interactive';
 import Loading from '../images/loading.jsx'
 
 class PirateSearch extends Component {
-	constructor() {
-		super();
-		this.state = {
-			response: [],
-			name: '',
-			loading: '',
-		}
-	}
+   constructor() {
+      super();
+      this.state = {
+         torrentResponse: undefined,
+         name: '',
+         loading: null,
+         showButton: true,
+      }
+   }
 
-	sendToDownload(torrent) {
-		let data = {magnet: torrent.magnet}
-		fetchJSON('https://apollo.kevinmidboe.com/api/v1/pirate/add', 'POST', data)
-		.then((response) => {
-			console.log(response)
-		})
-	}
+   componentWillReceiveProps(props) {
+      if (props.name != this.state.name) {
+         this.setState({
+            torrentResponse: undefined,
+            showButton: true,
+         })
+      }
+   }
 
-	searchTheBay() {
-		const query = this.props.name;
-		const type = this.props.type;
+   searchTheBay() {
+      const query = this.props.name;
+      const type = this.props.type;
 
-		this.setState({
-			loading: <Loading />
-		})
+      this.setState({
+         showButton: false,
+         loading: <Loading />,
+      })
 
-		fetchJSON('https://apollo.kevinmidboe.com/api/v1/pirate/search?query='+query+'&type='+type, 'GET')
-		.then((response) => {
-			console.log(response.torrents)
-			this.setState({
-				loading: '',
-				response: response.torrents.map((torrent, index) => {
-					return (
-						<div key={index}>
-							<span>{torrent.name}</span><br />
-							<span>{torrent.size}</span><br />
-							<span>{torrent.seed}</span><br />
-							<button onClick={() => {this.sendToDownload(torrent)}}>Send to download</button>
-							<br /><br />
-						</div>
-					)
-				})
-			})
-		})
-	}
+      fetchJSON('https://apollo.kevinmidboe.com/api/v1/pirate/search?query='+query+'&type='+type, 'GET')
+      // fetchJSON('http://localhost:31459/api/v1/pirate/search?query='+query+'&type='+type, 'GET')
+      .then((response) => {
+         this.setState({
+            torrentResponse: response.torrents,
+            loading: null,
+         })
+      })
+      .catch((error) => {
+         console.error(error);
+         this.setState({
+            showButton: true,
+         })
+      })
+   }
 
-	render() {
-		return (
-			<div>
-				<div>
-				<Interactive 
-					as='button'
-					onClick={() => {this.searchTheBay()}}
-					style={btnStylesheet.submit}
-					focus={btnStylesheet.submit_hover}
-					hover={btnStylesheet.submit_hover}>
-					
-					<span style={{whiteSpace: 'nowrap'}}>Search for torrents</span>
-				</Interactive>
-				</div>
+   render() {
+      btnStylesheet.submit.top = '50%'
+      btnStylesheet.submit.position = 'absolute'
+      btnStylesheet.submit.marginLeft = '-75px'
 
-				{ this.state.loading }
-				
-				<span>{this.state.response}</span>
-			</div>
-		)
-	}
+      return (
+         <div>
+            { this.state.showButton ? 
+            <div style={{textAlign:'center'}}>
+               <Interactive 
+                  as='button'
+                  onClick={() => {this.searchTheBay()}}
+                  style={btnStylesheet.submit}
+                  focus={btnStylesheet.submit_hover}
+                  hover={btnStylesheet.submit_hover}>
+
+                  <span style={{whiteSpace: 'nowrap'}}>Search for torrents</span>
+               </Interactive>
+            </div>
+            : null }
+
+            { this.state.loading }
+
+            <TorrentTable response={this.state.torrentResponse} />
+         </div>
+      )
+   }
 }
 
 export default PirateSearch
