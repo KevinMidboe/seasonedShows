@@ -6,8 +6,8 @@ var PythonShell = require('python-shell');
 async function find(searchterm, callback) {
 
   var options = {
-		// pythonPath: '/usr/bin/python3', 
-		pythonPath: '/Library/Frameworks/Python.framework/Versions/3.6/bin/python3',
+		pythonPath: '/usr/bin/python3', 
+		// pythonPath: '/Library/Frameworks/Python.framework/Versions/3.6/bin/python3',
 		args: [searchterm, '-s', 'jackett', '--print']
 	}
 
