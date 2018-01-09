@@ -3,14 +3,12 @@ import React, { Component } from 'react';
 import { fetchJSON } from '../http.jsx'; 
 
 import PirateSearch from './PirateSearch.jsx'
+// No in use!
 import InfoButton from '../buttons/InfoButton.jsx';
 
 // Stylesheets
 import requestInfoCSS from '../styles/adminRequestInfo.jsx'
 import buttonsCSS from '../styles/buttons.jsx';
-
-// Interactive button
-import Interactive from 'react-interactive';
 
 
 String.prototype.capitalize = function() {
@@ -175,7 +173,7 @@ class AdminRequestInfo extends Component {
                <div style={requestInfoCSS.stick}>
                   <span style={requestInfoCSS.title}> {request.name}  {request.year}</span>
                   <span style={{marginLeft: '2em'}}>
-                     <span style={style.type_icon}>{this.generateTypeIcon(request.type)}</span>
+                     <span style={requestInfoCSS.type_icon}>{this.generateTypeIcon(request.type)}</span>
                      {/*<span style={style.type_text}>{request.type.capitalize()}</span> <br />*/}
                   </span>
                </div>
