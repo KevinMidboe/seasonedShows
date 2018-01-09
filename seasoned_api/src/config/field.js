@@ -4,7 +4,7 @@ const EnvironmentVariables = require('./environmentVariables.js');
 class Field {
 
 	constructor(rawValue, environmentVariables) {
-		this.rawValue, rawValue;
+		this.rawValue = rawValue;
 		this.filters = new Filters(rawValue);
 		this.valueWithoutFilters = this.filters.removeFiltersFromValue();
 		this.environmentVariables = new EnvironmentVariables(environmentVariables);
