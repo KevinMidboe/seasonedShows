@@ -47,7 +47,7 @@ class SearchRequest extends React.Component {
     // this.setState({responseMovieList: null})
     this.resetPageNumber();
     this.state.loadResults = true;
-    this.fetchTmdbList('discover');
+    this.fetchTmdbList(this.allowedListTypes[Math.floor(Math.random()*this.allowedListTypes.length)]);
   }
   
     // Handles all errors of the response of a fetch call
