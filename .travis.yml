@@ -1,0 +1,14 @@
+{
+   'dist': 'trusty',
+   'language': 'node_js',
+   'node_js': '6.9.5',
+   'cache': 'yarn',
+   'scripts': [
+      npm run test
+   ],
+   'before_install': [
+      'cd seasoned_api',
+   ],
+   'before_script': 'yarn',
+   'os': 'linux',
+}
