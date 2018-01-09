@@ -6,12 +6,12 @@ var PythonShell = require('python-shell');
 async function find(searchterm, callback) {
 
   var options = {
-		pythonPath: '/usr/bin/python3', 
-		// pythonPath: '/Library/Frameworks/Python.framework/Versions/3.6/bin/python3',
-		args: [searchterm]
+		// pythonPath: '/usr/bin/python3', 
+		pythonPath: '/Library/Frameworks/Python.framework/Versions/3.6/bin/python3',
+		args: [searchterm, '-s', 'jackett', '--print']
 	}
 
-	PythonShell.run('../app/pirateSearch.py', options, callback);
+	PythonShell.run('../app/torrent_search/torrentSearch/search.py', options, callback);
   // PythonShell does not support return
 };
 
@@ -29,6 +29,7 @@ async function callPythonAddMagnet(magnet, callback) {
 async function SearchPiratebay(query) {
 	return await new Promise((resolve) => {
 		return find(query, function(err, results) {
+			console.log('err', err, '. result', results);
 			resolve(JSON.parse(results, null, '\t'));
 		})
 	})
