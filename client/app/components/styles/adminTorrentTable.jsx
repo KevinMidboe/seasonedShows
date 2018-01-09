@@ -4,6 +4,17 @@ export default {
       marginRight: 'auto',
       marginLeft: 'auto',
    },
+   tableHeader: {
+   },
+   col: {
+      cursor: 'pointer',
+      borderBottom: '1px solid #e0e0e0',
+      paddingBottom: '0.5em',
+      textAlign: 'left',
+   },
+   bodyCol: {
+      marginTop: '0.5em',
+   },
 
    searchSidebar: {
       height: '4em',
