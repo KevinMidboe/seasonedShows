@@ -76,9 +76,9 @@ class TMDB {
 	* @returns {Promise} succeeds if movie was found
 	*/
 	lookup(identifier, queryType = 'movie') {
-		var type;
-		if (queryType === 'movie') { type = 'movieInfo'}
-		else if (queryType === 'show') { type = 'tvInfo'}
+		var type, tmdbType;
+		if (queryType === 'movie' || queryType === 'movieInfo') { type = 'movie', tmdbType = 'movieInfo' }
+		else if (queryType === 'show' || queryType === 'tvInfo') { type = 'show', tmdbType = 'tvInfo' }
 		else {
 			return Promise.resolve()
 			.then(() => {
@@ -89,14 +89,12 @@ class TMDB {
 		const cacheKey = `${this.cacheTags.lookup}:${type}:${identifier}`;
 		return Promise.resolve()
 		 	.then(() => this.cache.get(cacheKey))
-			.catch(() => this.tmdb(type, query))
+			.catch(() => this.tmdb(tmdbType, query))
 			.catch(() => { throw new Error('Could not find a movie with that id.'); })
 			.then((response) => this.cache.set(cacheKey, response))
 			.then((response) => {
 			  try {
-			    var car = convertTmdbToSeasoned(response, queryType);
-			    console.log(car);
-			    return car;
+			    return convertTmdbToSeasoned(response, type);
 			  } catch (parseError) {
 			    throw new Error('Could not parse movie.');
 			  }
@@ -142,7 +140,6 @@ class TMDB {
 			const mappedResults = response.results.map((result) => {
 				return convertTmdbToSeasoned(result, type)
 			})
-
 			return [mappedResults, response.page, response.total_pages]
 		})
 		.catch((error) => { throw new Error(error)})
