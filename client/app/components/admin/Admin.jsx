@@ -33,7 +33,7 @@ class AdminComponent extends React.Component {
 		fetchJSON('https://apollo.kevinmidboe.com/api/v1/plex/requests/all', 'GET')
 		.then(result => {
 			this.setState({
-				requested_objects: result.requestedItems.reverse()
+				requested_objects: result.results.reverse()
 			})
 		})
 	}
