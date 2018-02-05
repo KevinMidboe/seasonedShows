@@ -43,29 +43,11 @@ class TMDB {
 		 .catch(() => this.tmdb(methodTypes[type], query))
 		 .catch(() => { throw new Error('Could not search for movies/shows at tmdb.'); })
 		 .then((response) => this.cache.set(cacheKey, response))
-		 .then((response) => {
-		 	try {
-		 		let filteredTmdbItems = response.results.filter(function(tmdbResultItem) {
-		 			return ((tmdbResultItem.vote_count >= 10 || tmdbResultItem.popularity > 2) && (tmdbResultItem.release_date !== undefined || tmdbResultItem.first_air_date !== undefined))
-		 		})
-
-		 		let seasonedItems = filteredTmdbItems.map((tmdbItem) => {
-					if (type === 'movie')
-						return convertTmdbToSeasoned(tmdbItem, 'movie');
-					else if (type === 'show')
-						return convertTmdbToSeasoned(tmdbItem, 'show');
-					else
-		 				return convertTmdbToSeasoned(tmdbItem);
-		 		});
-		 		
-		 		// TODO add page number if results are larger than 20
-		 		return { 'results': seasonedItems, 'number_of_items_on_page': seasonedItems.length,
-						'page': 1, 'total_pages': 1 };
-
-		 	} catch (parseError) {
-		 		throw new Error('Could not parse result.');
-		 	}
-		 });
+		 .then((response) => this.mapResults(response))
+		 .catch((error) => { throw new Error(error); })
+		 .then(([mappedResults, pagenumber, totalpages, total_results]) => {
+		 	return {'results': mappedResults, 'page': pagenumber, 'total_results': total_results, 'total_pages': totalpages}
+		 })	 
 	}
 
 
@@ -140,7 +122,7 @@ class TMDB {
 			const mappedResults = response.results.map((result) => {
 				return convertTmdbToSeasoned(result, type)
 			})
-			return [mappedResults, response.page, response.total_pages]
+			return [mappedResults, response.page, response.total_pages, response.total_results]
 		})
 		.catch((error) => { throw new Error(error)})
 
@@ -164,8 +146,8 @@ class TMDB {
 			.then((response) => this.cache.set(cacheKey, response))
 			.then((response) => this.mapResults(response, media_type))
 			.catch((error) => { throw new Error(error); })
-			.then(([mappedResults, pagenumber, totalpages]) => {
-				return {'results': mappedResults, 'page': pagenumber, 'total_pages': totalpages}
+			.then(([mappedResults, pagenumber, totalpages, total_results]) => {
+				return {'results': mappedResults, 'page': pagenumber, 'total_pages': totalpages, 'total_results': total_results}
 			})
 	}
 
