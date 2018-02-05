@@ -111,6 +111,7 @@ class RequestRepository {
 			else if (type === 'tv') { tmdbType = 'tvInfo'}
 		return Promise.resolve()
 		.then(() => tmdb.lookup(identifier, tmdbType))
+		.then((tmdbMovie) => this.checkID(tmdbMovie))
 		.then((tmdbMovie) => {
 			return Promise.resolve(plexRepository.searchMedia(tmdbMovie.title))
 			.then((plexMovies) => {
@@ -122,35 +123,29 @@ class RequestRepository {
 						return tmdbMovie;
 					}
 				}
+				return tmdbMovie;
 			})
 			// Add it here
 			.catch((error) => {
 				console.log('there was a error:', error)
 				return tmdbMovie;
 			})
-			return tmdbMovie;
 		})
 		.catch((error) => {
 			console.log(error)
 		})
-		.then((item) => {
-			return this.checkID(item.id, item.type)
-			.then((result) => {
-				item.requested = result;
-				return item
-			})
-		})
 	}
 
-	checkID(id, type) {
-		return this.database.get(this.queries.checkIfIdRequested, [id, type])
+	checkID(tmdbMovie) {
+		return Promise.resolve()
+		.then(() => this.database.get(this.queries.checkIfIdRequested, [tmdbMovie.id, tmdbMovie.type]))
 		.then((result, error) => {
-			if (error)	return false
-
+			let already_requested = false;
 			if (result)
-				return true
-			else
-				return false
+				already_requested = true
+
+			tmdbMovie.requested = already_requested;
+			return tmdbMovie;
 		})
 	
 	}
