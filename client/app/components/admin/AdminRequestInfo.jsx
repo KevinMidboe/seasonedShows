@@ -171,7 +171,7 @@ class AdminRequestInfo extends Component {
             <div style={requestInfoCSS.wrapper}>
                
                <div style={requestInfoCSS.stick}>
-                  <span style={requestInfoCSS.title}> {request.name}  {request.year}</span>
+                  <span style={requestInfoCSS.title}> {request.title}  {request.year}</span>
                   <span style={{marginLeft: '2em'}}>
                      <span style={requestInfoCSS.type_icon}>{this.generateTypeIcon(request.type)}</span>
                      {/*<span style={style.type_text}>{request.type.capitalize()}</span> <br />*/}
@@ -201,7 +201,7 @@ class AdminRequestInfo extends Component {
                   </div>
                </div>
 
-              <PirateSearch style={requestInfoCSS.search} name={request.name} />
+              <PirateSearch style={requestInfoCSS.search} name={request.title} />
 
             </div>
          )
