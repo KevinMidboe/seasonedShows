@@ -38,7 +38,8 @@ class TorrentTable extends Component {
    // Link to repo: https://github.com/sindresorhus/pretty-bytes
    convertSizeToHumanSize(num) {
       if (!Number.isFinite(num)) {
-         throw new TypeError(`Expected a finite number, got ${typeof num}: ${num}`);
+         return num
+         // throw new TypeError(`Expected a finite number, got ${typeof num}: ${num}`);
       }
       const neg = num < 0;
       
@@ -55,6 +56,17 @@ class TorrentTable extends Component {
       const unit = this.UNITS[exponent];
 
       return (neg ? '-' : '') + numStr + ' ' + unit;
+   }
+
+   convertHumanSizeToBytes(string) {
+      const [numStr, unit] = string.split(' ');
+      if (this.UNITS.indexOf(unit) === -1) {
+         return string
+      }
+
+      const exponent = this.UNITS.indexOf(unit) * 3
+      
+      return numStr * (Math.pow(10, exponent))
    }
 
    sendToDownload(magnet) {
@@ -80,8 +92,6 @@ class TorrentTable extends Component {
             return item
       })
 
-      console.log(filteredByQuery)
-
       this.setState({
          torrentResponse: filteredByQuery,
          filterQuery: query,
@@ -100,6 +110,9 @@ class TorrentTable extends Component {
          // This is so we also can sort string that only contain numbers
          let valueA = isNaN(a[col]) ? a[col] : parseInt(a[col])
          let valueB = isNaN(b[col]) ? b[col] : parseInt(b[col])
+
+         valueA = (col == 'size') ? this.convertHumanSizeToBytes(valueA) : valueA
+         valueB = (col == 'size') ? this.convertHumanSizeToBytes(valueB) : valueB
 
          if (direction)
             return valueA<valueB? 1:valueA>valueB?-1:0;
