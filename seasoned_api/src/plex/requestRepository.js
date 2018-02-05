@@ -106,10 +106,11 @@ class RequestRepository {
 //			});
 //			return tmdbMovie;
 //		});
-	if (type === 'movie') { type = 'movieInfo'}
-			else if (type === 'tv') { type = 'tvInfo'}
+	let tmdbType = undefined;
+	if (type === 'movie') { tmdbType = 'movieInfo'}
+			else if (type === 'tv') { tmdbType = 'tvInfo'}
 		return Promise.resolve()
-		.then(() => tmdb.lookup(identifier, type))
+		.then(() => tmdb.lookup(identifier, tmdbType))
 		.then((tmdbMovie) => {
 			return Promise.resolve(plexRepository.searchMedia(tmdbMovie.title))
 			.then((plexMovies) => {

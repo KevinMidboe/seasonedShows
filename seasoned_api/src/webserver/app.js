@@ -62,7 +62,7 @@ app.use(function onError(err, req, res, next) {
  */
 router.post('/v1/user', require('./controllers/user/register.js'));
 router.post('/v1/user/login', require('./controllers/user/login.js'));
-router.get('/v1/user/history', mustBeAuthenticated, require('./controllers/user/history.js'));
+router.get('/v1/user/history', require('./controllers/user/history.js'));
 
 /**
  * Seasoned
@@ -84,7 +84,7 @@ router.get('/v1/plex/hook', require('./controllers/plex/hookDump.js'));
 /**
  * Requests
  */
-router.get('/v1/plex/requests/all', mustBeAuthenticated, require('./controllers/plex/fetchRequested.js'));
+router.get('/v1/plex/requests/all', require('./controllers/plex/fetchRequested.js'));
 router.put('/v1/plex/request/:requestId', mustBeAuthenticated, require('./controllers/plex/updateRequested.js'));
 
 /**
