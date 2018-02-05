@@ -9,22 +9,12 @@ const searchHistory = new SearchHistory();
 function searchRequestController(req, res) {
 	const user = req.headers.loggedinuser;
 	const { query, page, type } = req.query;
-	console.log('searchReq: ' + query, page, type);
 
 	Promise.resolve()
-	.then(() => {
-		if (user !== 'false') {
-			searchHistory.create(user, query);
-		}
-	})
-	.then(() => requestRepository.searchRequest(query, page, type))
+	.then(() => searchHistory.create(user, query))
+	.then(() => requestRepository.search(query, page, type))
 	.then((searchResult) => {
-		if (searchResult.results.length > 0) {
-			res.send(searchResult);
-		}
-		else {
-			res.status(404).send({success: false, error: 'Search query did not return any results.'})
-		}
+		res.send(searchResult);
 	})
 	.catch((error) => {
 		res.status(500).send({success: false, error: error.message });
