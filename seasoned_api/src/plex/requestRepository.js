@@ -25,6 +25,7 @@ class RequestRepository {
 			'insertRequest': "INSERT INTO requests VALUES (?, ?, ?, ?, ?, ?, ?, CURRENT_DATE, 'requested', ?, ?)",
 			'fetchRequstedItems': "SELECT * FROM requests",
 			'updateRequestedById': "UPDATE requests SET status = ? WHERE id is ? AND type is ?",
+			'checkIfIdRequested': "SELECT * FROM requests WHERE id IS ? AND type IS ?",
 		}
 	}
 
@@ -43,6 +44,7 @@ class RequestRepository {
 		// runnning through the entire plex loop. Many loops, but safe. 
 		let checkIfMatchesPlexObjects = function(title, year, plexarray) {
 			// Iterate all elements in plexarray
+			console.log(plexArray)
 			for (let plexItem of plexarray) {
 				// If matches with our title and year return true
 				if (plexItem.title === title && plexItem.year === year)
@@ -84,25 +86,68 @@ class RequestRepository {
 	}
 
 	lookup(identifier, type = 'movie') {
-		if (type === 'movie') { type = 'movieInfo'}
-			else if (type === 'tv') { type = 'tvInfo'}
+//		console.log('Lookup: ', identifier + ' : ' + type)
+//		if (type === 'movie') { type = 'movieInfo'}
+//			else if (type === 'tv') { type = 'tvInfo'}
+//		return Promise.resolve()
+//		.then(() => tmdb.lookup(identifier, type))
+//		.then((tmdbMovie) => {
+//			return Promise.resolve(plexRepository.searchMedia(tmdbMovie.title))
+//			.then((plexMovies) => {
+//				for (var i = 0; i < plexMovies.length; i++) {
+//					if (tmdbMovie.title === plexMovies[i].title && tmdbMovie.year === plexMovies[i].year) {
+//						tmdbMovie.matchedInPlex = true;
+//						return tmdbMovie;
+//					}
+//				}
+//			})
+//			.catch((error) => {
+//				return error;
+//			});
+//			return tmdbMovie;
+//		});
+	let tmdbType = undefined;
+	if (type === 'movie') { tmdbType = 'movieInfo'}
+			else if (type === 'tv') { tmdbType = 'tvInfo'}
 		return Promise.resolve()
-		.then(() => tmdb.lookup(identifier, type))
+		.then(() => tmdb.lookup(identifier, tmdbType))
+		.then((tmdbMovie) => this.checkID(tmdbMovie))
 		.then((tmdbMovie) => {
 			return Promise.resolve(plexRepository.searchMedia(tmdbMovie.title))
 			.then((plexMovies) => {
+				console.log('plexMovies lookup: ', plexMovies)
 				for (var i = 0; i < plexMovies.length; i++) {
 					if (tmdbMovie.title === plexMovies[i].title && tmdbMovie.year === plexMovies[i].year) {
+						console.log('matched')
 						tmdbMovie.matchedInPlex = true;
 						return tmdbMovie;
 					}
 				}
+				return tmdbMovie;
 			})
+			// Add it here
 			.catch((error) => {
-				return error;
-			});
+				console.log('there was a error:', error)
+				return tmdbMovie;
+			})
+		})
+		.catch((error) => {
+			console.log(error)
+		})
+	}
+
+	checkID(tmdbMovie) {
+		return Promise.resolve()
+		.then(() => this.database.get(this.queries.checkIfIdRequested, [tmdbMovie.id, tmdbMovie.type]))
+		.then((result, error) => {
+			let already_requested = false;
+			if (result)
+				already_requested = true
+
+			tmdbMovie.requested = already_requested;
 			return tmdbMovie;
-		});
+		})
+	
 	}
 
 	/**
@@ -117,7 +162,7 @@ class RequestRepository {
 				user = 'NULL';
 			console.log(user)
 			// Add request to database
-			this.database.run(this.queries.insertRequest, [movie.id, movie.title, movie.year, movie.poster, movie.background, user, ip, user_agent, movie.type])
+			this.database.run(this.queries.insertRequest, [movie.id, movie.title, movie.year, movie.poster_path, movie.background_path, user, ip, user_agent, movie.type])
 
 
 			// create reusable transporter object using the default SMTP transport

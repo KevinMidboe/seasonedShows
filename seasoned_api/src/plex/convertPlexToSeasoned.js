@@ -17,6 +17,15 @@ function convertPlexToSeasoned(plexObject) {
 
 		movie.mediaInfo = plexObject.Media;
 
+		// Don't need a for-loop when we have it in json format
+		file_sizes = []
+		for (let movie_info of plexObject.Media) {
+			for (let file_data of movie_info.Part) {
+				file_sizes.push(file_data.size)
+			}
+		}
+		movie.size = file_sizes;
+
 		return movie;
 	} 
 	else if (mediaType === 'show') {

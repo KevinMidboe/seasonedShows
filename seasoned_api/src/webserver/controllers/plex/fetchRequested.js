@@ -13,7 +13,7 @@ function historyController(req, res) {
 
   requestRepository.fetchRequested()
     .then((requestedItems) => {
-      res.send({ success: true, requestedItems });
+      res.send({ success: true, results: requestedItems, total_results: requestedItems.length });
     })
     .catch((error) => {
       res.status(401).send({ success: false, error: error.message });

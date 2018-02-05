@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS search_history (
 
 CREATE TABLE IF NOT EXISTS requests(
     id TEXT,
-    name TEXT,
+    title TEXT,
     year NUMBER,
     poster_path TEXT DEFAULT NULL,
     background_path TEXT DEFAULT NULL,
