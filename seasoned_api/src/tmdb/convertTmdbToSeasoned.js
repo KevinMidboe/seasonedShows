@@ -25,8 +25,8 @@ function convertTmdbToSeasoned(tmdbObject, strictType=undefined) {
 		movie.id = tmdbObject.id;
 		movie.summary = tmdbObject.overview;
 		movie.rating = tmdbObject.vote_average;
-		movie.poster = tmdbObject.poster_path;
-		movie.background = tmdbObject.backdrop_path;
+		movie.poster_path = tmdbObject.poster_path;
+		movie.background_path = tmdbObject.backdrop_path;
 		movie.genre = tmdbObject.genre_ids;
 
 		movie.popularity = tmdbObject.popularity;
@@ -42,8 +42,8 @@ function convertTmdbToSeasoned(tmdbObject, strictType=undefined) {
 		show.id = tmdbObject.id;
 		show.summary = tmdbObject.overview;
 		show.rating = tmdbObject.vote_average;
-		show.poster = tmdbObject.poster_path;
-		show.background = tmdbObject.backdrop_path;
+		show.poster_path = tmdbObject.poster_path;
+		show.background_path = tmdbObject.backdrop_path;
 		show.genre = tmdbObject.genre_ids;
 
 		show.popularity = tmdbObject.popularity;

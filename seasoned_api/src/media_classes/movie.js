@@ -7,7 +7,7 @@ class Movie {
 		this.release_date = undefined;
 		this.summary = undefined;
 		this.rating = undefined;
-		this.poster = undefined;
+		this.poster_path = undefined;
 		this.background = undefined;
 		this.genre = undefined;
 		this.date_added = undefined;
