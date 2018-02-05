@@ -29,108 +29,21 @@ class RequestRepository {
 		}
 	}
 
-	searchRequest(text, page, type) {
-		// STRIP METADATA THAT IS NOT ALLOWED
-
-		// Do a search in the tmdb api and return the results of the object
-		let getTmdbResults = function() {
-			return tmdb.search(text, page, type)
-				.then((tmdbSearch) => {
-					return tmdbSearch.results;
-				})
-		}
-
-		// Take inputs and verify them with a list. Now we are for every item in tmdb result
-		// runnning through the entire plex loop. Many loops, but safe. 
-		let checkIfMatchesPlexObjects = function(title, year, plexarray) {
-			// Iterate all elements in plexarray
-			console.log(plexArray)
-			for (let plexItem of plexarray) {
-				// If matches with our title and year return true
-				if (plexItem.title === title && plexItem.year === year)
-					return true;
-			}
-			// If no matches were found, return false
-			return false;
-		}
-
+	search(query, type, page) {
 		return Promise.resolve()
-		.then(() => plexRepository.searchMedia(text))
-		// Get the list of plexItems matching the query passed.
-		.then((plexItem) => {
-			let tmdbSearchResult = getTmdbResults();
-
-			// When we get the result from tmdbSearchResult we pass it along and iterate over each 
-			// element, and updates the matchedInPlex status of a item. 
-			return tmdbSearchResult.then((tmdbResult) => {
-				for (var i = 0; i < tmdbResult.length; i++) {
-					let foundMatchInPlex = checkIfMatchesPlexObjects(tmdbResult[i].title, tmdbResult[i].year, plexItem);
-					tmdbResult[i].matchedInPlex = foundMatchInPlex;
-				}
-				return { 'results': tmdbResult, 'page': 1 };
-			})
-			// TODO log error
-			.catch((error) => {
-				console.log(error);
-				throw new Error('Search query did not give any results.');
-			})
+		.then(() => tmdb.search(query, type, page))
+		// .then((tmdbResult) => plexRepository.multipleInPlex(tmdbResult))
+		.then((result) => {
+			return result
 		})
-		.catch(() => {
-			let tmdbSearchResult = getTmdbResults();
-
-			// Catch if empty, then 404
-			return tmdbSearchResult.then((tmdbResult) => {
-				return {'results': tmdbResult, 'page': 1 };
-			})
-		})
+		.catch((error) => {return 'error in the house' + error})
 	}
 
 	lookup(identifier, type = 'movie') {
-//		console.log('Lookup: ', identifier + ' : ' + type)
-//		if (type === 'movie') { type = 'movieInfo'}
-//			else if (type === 'tv') { type = 'tvInfo'}
-//		return Promise.resolve()
-//		.then(() => tmdb.lookup(identifier, type))
-//		.then((tmdbMovie) => {
-//			return Promise.resolve(plexRepository.searchMedia(tmdbMovie.title))
-//			.then((plexMovies) => {
-//				for (var i = 0; i < plexMovies.length; i++) {
-//					if (tmdbMovie.title === plexMovies[i].title && tmdbMovie.year === plexMovies[i].year) {
-//						tmdbMovie.matchedInPlex = true;
-//						return tmdbMovie;
-//					}
-//				}
-//			})
-//			.catch((error) => {
-//				return error;
-//			});
-//			return tmdbMovie;
-//		});
-	let tmdbType = undefined;
-	if (type === 'movie') { tmdbType = 'movieInfo'}
-			else if (type === 'tv') { tmdbType = 'tvInfo'}
 		return Promise.resolve()
-		.then(() => tmdb.lookup(identifier, tmdbType))
+		.then(() => tmdb.lookup(identifier, type))
 		.then((tmdbMovie) => this.checkID(tmdbMovie))
-		.then((tmdbMovie) => {
-			return Promise.resolve(plexRepository.searchMedia(tmdbMovie.title))
-			.then((plexMovies) => {
-				console.log('plexMovies lookup: ', plexMovies)
-				for (var i = 0; i < plexMovies.length; i++) {
-					if (tmdbMovie.title === plexMovies[i].title && tmdbMovie.year === plexMovies[i].year) {
-						console.log('matched')
-						tmdbMovie.matchedInPlex = true;
-						return tmdbMovie;
-					}
-				}
-				return tmdbMovie;
-			})
-			// Add it here
-			.catch((error) => {
-				console.log('there was a error:', error)
-				return tmdbMovie;
-			})
-		})
+		.then((tmdbMovie) => plexRepository.inPlex(tmdbMovie))
 		.catch((error) => {
 			console.log(error)
 		})
