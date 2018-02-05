@@ -7,7 +7,7 @@ class PlexRepository {
 
 	searchMedia(query) {
 		var options = {
-			uri: 'http://10.0.0.42:32400/search?query=' + query,
+			uri: 'http://10.0.0.44:32400/search?query=' + query,
 			headers: {
 				'Accept': 'application/json'
 			},
@@ -31,7 +31,7 @@ class PlexRepository {
 
 	nowPlaying() {
 		var options = {
-			uri: 'http://10.0.0.42:32400/status/sessions',
+			uri: 'http://10.0.0.44:32400/status/sessions',
 			headers: {
 				'Accept': 'application/json'
 			},
