@@ -92,7 +92,7 @@ class TMDB {
          }));
    }
 
-   static tmdbMethod(apiMethod, type) {
+   tmdbMethod(apiMethod, type) {
       const method = TMDB_METHODS[apiMethod][type];
       if (method !== undefined) return method;
       throw new Error('Could not find tmdb api method.');
@@ -104,7 +104,7 @@ class TMDB {
    * @param {type} The type declared in listSearch.
    * @returns {Promise} dict with tmdb results, mapped as movie/show objects.
    */
-   static mapResults(response, type) {
+   mapResults(response, type) {
       return Promise.resolve()
          .then(() => {
             const mappedResults = response.results.map(result => convertTmdbToSeasoned(result, type));
