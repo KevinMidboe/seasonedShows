@@ -34,7 +34,7 @@ function convertTmdbToSeasoned(tmdb, manualType = undefined) {
 
    const seasoned = new TMDB(
       title, year, type, id, summary, poster_path, background_path,
-      popularity, score, release_status, tagline, seasons, episodes,
+      popularity, score, release_status, tagline, seasons, episodes
    );
 
    // seasoned.print()
