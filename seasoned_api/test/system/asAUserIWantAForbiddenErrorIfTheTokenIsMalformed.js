@@ -8,7 +8,7 @@ describe('As a user I want a forbidden error if the token is malformed', () => {
 
   it('should return 401', () =>
     request(app)
-    .get('/api/v1/plex/requests/all')
+    .get('/api/v1/pirate/search?query=test')
     .set('Authorization', 'maLfOrMed TOKEN')
     .expect(401)
     .then(response => assert.equal(response.body.error, 'You must be logged in.'))
