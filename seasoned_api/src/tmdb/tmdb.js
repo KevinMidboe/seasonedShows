@@ -107,7 +107,7 @@ class TMDB {
       return Promise.resolve()
          .then(() => {
             const mappedResults = response.results.filter((element) => {
-               return (element.type === 'movie' || element.type === 'tv');
+               return (element.media_type === 'movie' || element.media_type === 'tv' || element.media_type === undefined);
             }).map((element) => convertTmdbToSeasoned(element, type));
             return [mappedResults, response.page, response.total_pages, response.total_results];
          })
