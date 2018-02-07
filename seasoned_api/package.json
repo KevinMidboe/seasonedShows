@@ -5,7 +5,7 @@
         "start": "cross-env SEASONED_CONFIG=conf/development.json NODE_PATH=. node src/webserver/server.js",
         "test": "cross-env SEASONED_CONFIG=conf/development.json NODE_PATH=. mocha --recursive test/system",
         "coverage": "cross-env PLANFLIX_CONFIG=conf/test.json NODE_PATH=. istanbul cover -x script/autogenerate-documentation.js --include-all-sources --dir test/.coverage node_modules/mocha/bin/_mocha --recursive test/**/* -- --report lcovonly && cat test/.coverage/lcov.info | coveralls && rm -rf test/.coverage",
-        "lint": "./node_modules/.bin/eslint src/webserver/"
+        "lint": "./node_modules/.bin/eslint src/"
     },
     "dependencies": {
         "bcrypt-nodejs": "^0.0.3",

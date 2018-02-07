@@ -9,15 +9,15 @@ const requestRepository = new RequestRepository();
  * @returns {Callback}
  */
 function historyController(req, res) {
-  const user = req.loggedInUser;
+   // const user = req.loggedInUser;
 
-  requestRepository.fetchRequested()
-    .then((requestedItems) => {
-      res.send({ success: true, requestedItems });
-    })
-    .catch((error) => {
-      res.status(401).send({ success: false, error: error.message });
-    });
+   requestRepository.fetchRequested()
+      .then((requestedItems) => {
+         res.send({ success: true, results: requestedItems, total_results: requestedItems.length });
+      })
+      .catch((error) => {
+         res.status(401).send({ success: false, error: error.message });
+      });
 }
 
 module.exports = historyController;

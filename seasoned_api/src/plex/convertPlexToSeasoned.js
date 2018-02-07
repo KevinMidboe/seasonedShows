@@ -1,39 +1,24 @@
-const Movie = require('src/media_classes/movie');
-const Show = require('src/media_classes/show');
+const Plex = require('src/media_classes/plex');
 
-function convertPlexToSeasoned(plexObject) {
+function translateAdded(date_string) {
+   return new Date(date_string * 1000);
+}
 
-	const mediaType = plexObject.type;
-	// There are many diff types of content, we only want to look at movies and tv shows
-	if (mediaType === 'movie') {
-		const movie = new Movie(plexObject.title, plexObject.year, mediaType);
+function convertPlexToSeasoned(plex) {
+   const title = plex.title;
+   const year = plex.year;
+   const type = plex.type;
+   const summary = plex.summary;
+   const poster_path = plex.thumb;
+   const background_path = plex.art;
+   const added = translateAdded(plex.addedAt);
+   // const genre = plex.genre;
+   const seasons = plex.childCount;
+   const episodes = plex.leafCount;
 
-		movie.summary = plexObject.summary;
-		movie.rating = plexObject.rating;
-		movie.poster = plexObject.thumb;
-		movie.background = plexObject.art;
-		movie.genre = plexObject.genre;
-		movie.added = new Date(plexObject.addedAt * 1000);
-
-		movie.mediaInfo = plexObject.Media;
-
-		return movie;
-	} 
-	else if (mediaType === 'show') {
-		const show = new Show(plexObject.title, plexObject.year, mediaType);
-
-		show.summary = plexObject.summary;
-		show.rating = plexObject.rating;
-		show.poster = plexObject.thumb;
-		show.background = plexObject.art;
-		show.genre = plexObject.genre;
-		show.added = new Date(plexObject.addedAt * 1000);
-
-		show.seasons = plexObject.childCount;
-		show.episodes = plexObject.leafCount;
-
-		return show;
-	}
+   const seasoned = new Plex(title, year, type, summary, poster_path, background_path, added, seasons, episodes);
+   // seasoned.print();
+   return seasoned;
 }
 
 module.exports = convertPlexToSeasoned;

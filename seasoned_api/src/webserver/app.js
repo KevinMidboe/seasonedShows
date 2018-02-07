@@ -5,8 +5,9 @@ const tokenToUser = require('./middleware/tokenToUser');
 const mustBeAuthenticated = require('./middleware/mustBeAuthenticated');
 const configuration = require('src/config/configuration').getInstance();
 
-// TODO: Have our raven router check if there is a value, if not don't enable raven. 
+// TODO: Have our raven router check if there is a value, if not don't enable raven.
 Raven.config(configuration.get('raven', 'DSN')).install();
+
 const app = express(); // define our app using express
 app.use(Raven.requestHandler());
 // this will let us get the data from a POST
@@ -18,7 +19,6 @@ app.use(bodyParser.json());
 /* Decode the Authorization header if provided */
 // router.use(tokenToUser);
 
-const port = 31459; // set our port
 const router = express.Router();
 const allowedOrigins = ['https://kevinmidboe.com', 'http://localhost:8080'];
 
@@ -28,32 +28,32 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 
 // This is probably a correct middleware/router setup
-/* Decode the Authorization header if provided */
+/* Translate the user token to a user name */
 router.use(tokenToUser);
 
 // TODO: Should have a separate middleware/router for handling headers.
 router.use((req, res, next) => {
-  // TODO add logging of all incoming
-  console.log('Request: ', req.originalUrl);
-  const origin = req.headers.origin;
-  if (allowedOrigins.indexOf(origin) > -1) {
-    console.log('allowed');
-    res.setHeader('Access-Control-Allow-Origin', origin);
-  }
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, loggedinuser');
-  res.header('Access-Control-Allow-Methods', 'POST, GET, PUT');
+   // TODO add logging of all incoming
+   console.log('Request: ', req.originalUrl);
+   const origin = req.headers.origin;
+   if (allowedOrigins.indexOf(origin) > -1) {
+      console.log('allowed');
+      res.setHeader('Access-Control-Allow-Origin', origin);
+   }
+   res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, loggedinuser');
+   res.header('Access-Control-Allow-Methods', 'POST, GET, PUT');
 
-  next();
+   next();
 });
 
 router.get('/', function mainHandler(req, res) {
-  throw new Error('Broke!');
+   throw new Error('Broke!');
 });
 
 app.use(Raven.errorHandler());
 app.use(function onError(err, req, res, next) {
-  res.statusCode = 500;
-  res.end(res.sentry + '\n');
+   res.statusCode = 500;
+   res.end(res.sentry + '\n');
 });
 
 /**
@@ -61,7 +61,7 @@ app.use(function onError(err, req, res, next) {
  */
 router.post('/v1/user', require('./controllers/user/register.js'));
 router.post('/v1/user/login', require('./controllers/user/login.js'));
-router.get('/v1/user/history', mustBeAuthenticated, require('./controllers/user/history.js'));
+router.get('/v1/user/history', require('./controllers/user/history.js'));
 
 /**
  * Seasoned
@@ -83,7 +83,7 @@ router.get('/v1/plex/hook', require('./controllers/plex/hookDump.js'));
 /**
  * Requests
  */
-router.get('/v1/plex/requests/all', mustBeAuthenticated, require('./controllers/plex/fetchRequested.js'));
+router.get('/v1/plex/requests/all', require('./controllers/plex/fetchRequested.js'));
 router.put('/v1/plex/request/:requestId', mustBeAuthenticated, require('./controllers/plex/updateRequested.js'));
 
 /**

@@ -1,4 +1,5 @@
 const SearchHistory = require('src/searchHistory/searchHistory');
+
 const searchHistory = new SearchHistory();
 
 /**
@@ -8,15 +9,15 @@ const searchHistory = new SearchHistory();
  * @returns {Callback}
  */
 function historyController(req, res) {
-  const user = req.loggedInUser;
+   const user = req.loggedInUser;
 
-  searchHistory.read(user)
-  .then((searchQueries) => {
-    res.send({ success: true, searchQueries });
-  })
-  .catch((error) => {
-    res.status(401).send({ success: false, error: error.message });
-  });
+   searchHistory.read(user)
+      .then((searchQueries) => {
+         res.send({ success: true, searchQueries });
+      })
+      .catch((error) => {
+         res.status(401).send({ success: false, error: error.message });
+      });
 }
 
 module.exports = historyController;
