@@ -1,10 +1,9 @@
-const assert = require('assert');
 
 class GitRepository {
-
-	dumpHook(body) {
-		console.log(body);
-	}
+   static dumpHook(body) {
+      /* eslint-disable no-console */
+      console.log(body);
+   }
 }
 
 module.exports = GitRepository;
