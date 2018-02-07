@@ -10,7 +10,7 @@ describe('As a user I want to request a movie', () => {
 
   it('should return 200 when item is requested', () =>
     request(app)
-    .post('/api/v1/plex/request/31749')
+    .post('/api/v1/plex/request/329865')
     .set('Authorization', createToken('test_user', 'secret'))
     .expect(200)
   );
