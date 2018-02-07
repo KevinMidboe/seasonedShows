@@ -16,8 +16,8 @@ class SqliteDatabase {
    */
    connect() {
       return Promise.resolve()
-      .then(() => sqlite.open(this.host))
-      .then(() => sqlite.exec('pragma foreign_keys = on;'));
+         .then(() => sqlite.open(this.host))
+         .then(() => sqlite.exec('pragma foreign_keys = on;'));
    }
 
    /**
@@ -73,10 +73,10 @@ class SqliteDatabase {
    * Tears down the database by running tearDown.sql file in schemas/.
    * @returns {Promise}
    */
-  tearDown() {
-    const tearDownSchema = this.readSqlFile('tearDown.sql');
-    return this.execute(tearDownSchema);
-  }
+   tearDown() {
+      const tearDownSchema = this.readSqlFile('tearDown.sql');
+      return this.execute(tearDownSchema);
+   }
 
    /**
    * Returns the file contents of a SQL file in schemas/.

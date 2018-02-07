@@ -1,5 +1,6 @@
 const configuration = require('src/config/configuration').getInstance();
 const SqliteDatabase = require('src/database/sqliteDatabase');
+
 const database = new SqliteDatabase(configuration.get('database', 'host'));
 
 /**
@@ -9,7 +10,7 @@ const database = new SqliteDatabase(configuration.get('database', 'host'));
  * If the tables already exists, it simply proceeds.
  */
 Promise.resolve()
-.then(() => database.connect())
-.then(() => database.setUp());
+   .then(() => database.connect())
+   .then(() => database.setUp());
 
 module.exports = database;
