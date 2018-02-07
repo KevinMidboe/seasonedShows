@@ -5,9 +5,8 @@ const tokenToUser = require('./middleware/tokenToUser');
 const mustBeAuthenticated = require('./middleware/mustBeAuthenticated');
 const configuration = require('src/config/configuration').getInstance();
 
-// TODO: Have our raven router check if there is a value, if not don't enable raven. 
+// TODO: Have our raven router check if there is a value, if not don't enable raven.
 Raven.config(configuration.get('raven', 'DSN')).install();
-
 
 const app = express(); // define our app using express
 app.use(Raven.requestHandler());
@@ -34,27 +33,27 @@ router.use(tokenToUser);
 
 // TODO: Should have a separate middleware/router for handling headers.
 router.use((req, res, next) => {
-  // TODO add logging of all incoming
-  console.log('Request: ', req.originalUrl);
-  const origin = req.headers.origin;
-  if (allowedOrigins.indexOf(origin) > -1) {
-    console.log('allowed');
-    res.setHeader('Access-Control-Allow-Origin', origin);
-  }
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, loggedinuser');
-  res.header('Access-Control-Allow-Methods', 'POST, GET, PUT');
+   // TODO add logging of all incoming
+   console.log('Request: ', req.originalUrl);
+   const origin = req.headers.origin;
+   if (allowedOrigins.indexOf(origin) > -1) {
+      console.log('allowed');
+      res.setHeader('Access-Control-Allow-Origin', origin);
+   }
+   res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, loggedinuser');
+   res.header('Access-Control-Allow-Methods', 'POST, GET, PUT');
 
-  next();
+   next();
 });
 
 router.get('/', function mainHandler(req, res) {
-  throw new Error('Broke!');
+   throw new Error('Broke!');
 });
 
 app.use(Raven.errorHandler());
 app.use(function onError(err, req, res, next) {
-  res.statusCode = 500;
-  res.end(res.sentry + '\n');
+   res.statusCode = 500;
+   res.end(res.sentry + '\n');
 });
 
 /**
