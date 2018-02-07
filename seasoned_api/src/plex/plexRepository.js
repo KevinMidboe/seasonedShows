@@ -23,7 +23,7 @@ class PlexRepository {
          .then(([mappedResults, resultCount]) => ({ results: mappedResults, total_results: resultCount }));
    }
 
-   static compareTmdbToPlex(tmdb, plexResult) {
+   compareTmdbToPlex(tmdb, plexResult) {
       return Promise.resolve()
          .then(() => {
             plexResult.results.map((plexItem) => {
@@ -34,7 +34,7 @@ class PlexRepository {
          });
    }
 
-   static mapResults(response) {
+   mapResults(response) {
       return Promise.resolve()
          .then(() => {
             if (!response.MediaContainer.hasOwnProperty('Metadata')) return [[], 0];

@@ -9,10 +9,15 @@ function translateGenre(tmdbGenres) {
    return tmdbGenres.map(genre => genre.name);
 }
 
+function convertType(tmdbType) {
+   if (tmdbType === 'tv') return 'show';
+   return undefined;
+}
+
 function convertTmdbToSeasoned(tmdb, manualType = undefined) {
    const title = tmdb.title || tmdb.name;
    const year = translateYear(tmdb.release_date || tmdb.first_air_date);
-   const type = tmdb.media_type || manualType;
+   const type = manualType || convertType(tmdb.media_type) || 'movie';
 
    const id = tmdb.id;
    const summary = tmdb.overview;
@@ -29,7 +34,7 @@ function convertTmdbToSeasoned(tmdb, manualType = undefined) {
 
    const seasoned = new TMDB(
       title, year, type, id, summary, poster_path, background_path,
-      popularity, score, release_status, tagline, seasons, episodes,
+      popularity, score, release_status, tagline, seasons, episodes
    );
 
    // seasoned.print()

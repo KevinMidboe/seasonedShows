@@ -12,7 +12,6 @@ const TMDB_METHODS = {
 };
 
 class TMDB {
-
    constructor(cache, apiKey, tmdbLibrary) {
       this.cache = cache;
       this.tmdbLibrary = tmdbLibrary || moviedb(apiKey);
@@ -63,7 +62,7 @@ class TMDB {
          .catch(() => this.tmdb(this.tmdbMethod('search', type), query))
          .catch(() => { throw new Error('Could not search for movies/shows at tmdb.'); })
          .then(response => this.cache.set(cacheKey, response))
-         .then(response => this.mapResults(response, type))
+         .then(response => this.mapResults(response))
          .catch((error) => { throw new Error(error); })
          .then(([mappedResults, pagenumber, totalpages, total_results]) => ({
             results: mappedResults, page: pagenumber, total_results, total_pages: totalpages,
@@ -107,7 +106,9 @@ class TMDB {
    mapResults(response, type) {
       return Promise.resolve()
          .then(() => {
-            const mappedResults = response.results.map(result => convertTmdbToSeasoned(result, type));
+            const mappedResults = response.results.filter((element) => {
+               return (element.media_type === 'movie' || element.media_type === 'tv' || element.media_type === undefined);
+            }).map((element) => convertTmdbToSeasoned(element, type));
             return [mappedResults, response.page, response.total_pages, response.total_results];
          })
          .catch((error) => { throw new Error(error); });
