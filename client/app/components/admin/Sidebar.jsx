@@ -79,11 +79,10 @@ class SidebarComponent extends Component {
       const query = event.target.value;
 
       let filteredByQuery = this.props.requested_objects.map((item, index) => {
-         if (item.name.toLowerCase().indexOf(query.toLowerCase()) != -1)
+         if (item.title.toLowerCase().indexOf(query.toLowerCase()) != -1)
             return this.generateListElements(index, item);
       })
 
-      console.log(filteredByQuery)
       this.setState({
          requestItemsToBeDisplayed: filteredByQuery,
          filterQuery: query,
@@ -190,7 +189,7 @@ class SidebarComponent extends Component {
                   active={sidebarCSS.cardSelected}>
 
                   <h2 style={sidebarCSS.titleCard}>
-                     <span>{ item.name }</span>
+                     <span>{ item.title }</span>
                   </h2>
 
                   <p style={sidebarCSS.pCard}>

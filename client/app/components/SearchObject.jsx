@@ -21,8 +21,8 @@ class SearchObject {
         this.year = object.year;
         this.type = object.type;
         this.rating = object.rating;
-        this.poster = object.poster;
-        this.background = object.background;
+        this.poster = object.poster_path;
+        this.background = object.background_path;
         this.matchedInPlex = object.matchedInPlex;
         this.summary = object.summary;
     }
