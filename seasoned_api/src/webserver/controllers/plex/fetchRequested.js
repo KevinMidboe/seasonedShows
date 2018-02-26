@@ -10,8 +10,9 @@ const requestRepository = new RequestRepository();
  */
 function historyController(req, res) {
    // const user = req.loggedInUser;
+   const { status } = req.query;
 
-   requestRepository.fetchRequested()
+   requestRepository.fetchRequested(status)
       .then((requestedItems) => {
          res.send({ success: true, results: requestedItems, total_results: requestedItems.length });
       })

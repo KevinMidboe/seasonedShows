@@ -17,7 +17,8 @@ class RequestRepository {
       this.database = database || establishedDatabase;
       this.queries = {
          insertRequest: "INSERT INTO requests VALUES (?, ?, ?, ?, ?, ?, ?, CURRENT_DATE, 'requested', ?, ?)",
-         fetchRequstedItems: 'SELECT * FROM requests',
+         fetchRequestedItems: 'SELECT * FROM requests',
+         fetchRequestedItemsByStatus: 'SELECT * FROM requests WHERE status is ?',
          updateRequestedById: 'UPDATE requests SET status = ? WHERE id is ? AND type is ?',
          checkIfIdRequested: 'SELECT * FROM requests WHERE id IS ? AND type IS ?',
       };
@@ -105,8 +106,11 @@ class RequestRepository {
       return Promise.resolve();
    }
 
-   fetchRequested() {
-      return this.database.all(this.queries.fetchRequstedItems);
+   fetchRequested(status) {
+      if (status === 'requested' || status === 'downloading' || status === 'downloaded')
+         return this.database.all(this.queries.fetchRequestedItemsByStatus, status);
+      else
+         return this.database.all(this.queries.fetchRequestedItems);
    }
 
    updateRequestedById(id, type, status) {
