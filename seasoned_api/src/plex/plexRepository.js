@@ -26,10 +26,15 @@ class PlexRepository {
    compareTmdbToPlex(tmdb, plexResult) {
       return Promise.resolve()
          .then(() => {
-            plexResult.results.map((plexItem) => {
-               if (tmdb.title === plexItem.title && tmdb.year === plexItem.year) { tmdb.matchedInPlex = true; }
-               return tmdb;
-            });
+            if (plexResult.results.length === 0) {
+               tmdb.matchedInPlex = false
+            } 
+            else {
+               plexResult.results.map((plexItem) => {
+                  if (tmdb.title === plexItem.title && tmdb.year === plexItem.year) { tmdb.matchedInPlex = true; }
+                  return tmdb;
+               });
+            }
             return tmdb;
          });
    }
