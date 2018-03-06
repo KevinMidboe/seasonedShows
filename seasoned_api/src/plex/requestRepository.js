@@ -17,7 +17,7 @@ class RequestRepository {
       this.database = database || establishedDatabase;
       this.queries = {
          insertRequest: "INSERT INTO requests VALUES (?, ?, ?, ?, ?, ?, ?, CURRENT_DATE, 'requested', ?, ?)",
-         fetchRequestedItems: 'SELECT * FROM requests ORDER BY name ASC',
+         fetchRequestedItems: 'SELECT * FROM requests ORDER BY requested_by ASC',
          fetchRequestedItemsByStatus: 'SELECT * FROM requests WHERE status IS ? AND type LIKE ?',
          updateRequestedById: 'UPDATE requests SET status = ? WHERE id is ? AND type is ?',
          checkIfIdRequested: 'SELECT * FROM requests WHERE id IS ? AND type IS ?',
