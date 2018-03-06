@@ -3,6 +3,7 @@ const Raven = require('raven');
 const bodyParser = require('body-parser');
 const tokenToUser = require('./middleware/tokenToUser');
 const mustBeAuthenticated = require('./middleware/mustBeAuthenticated');
+const mustBeAdmin = require('./middleware/mustBeAdmin');
 const configuration = require('src/config/configuration').getInstance();
 
 // TODO: Have our raven router check if there is a value, if not don't enable raven.
@@ -61,7 +62,8 @@ app.use(function onError(err, req, res, next) {
  */
 router.post('/v1/user', require('./controllers/user/register.js'));
 router.post('/v1/user/login', require('./controllers/user/login.js'));
-router.get('/v1/user/history', require('./controllers/user/history.js'));
+router.get('/v1/user/history', mustBeAuthenticated, require('./controllers/user/history.js'));
+router.get('/v1/user/requests', mustBeAuthenticated, require('./controllers/user/requests.js'));
 
 /**
  * Seasoned
@@ -89,7 +91,7 @@ router.put('/v1/plex/request/:requestId', mustBeAuthenticated, require('./contro
 /**
  * Pirate
  */
-router.get('/v1/pirate/search', mustBeAuthenticated, require('./controllers/pirate/searchTheBay.js'));
+router.get('/v1/pirate/search', mustBeAdmin, require('./controllers/pirate/searchTheBay.js'));
 router.post('/v1/pirate/add', mustBeAuthenticated, require('./controllers/pirate/addMagnet.js'));
 
 /**
