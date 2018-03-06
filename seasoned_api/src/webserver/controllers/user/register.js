@@ -1,6 +1,9 @@
 const User = require('src/user/user');
+const Token = require('src/user/token');
 const UserSecurity = require('src/user/userSecurity');
+const configuration = require('src/config/configuration').getInstance();
 
+const secret = configuration.get('authentication', 'secret');
 const userSecurity = new UserSecurity();
 
 /**
@@ -15,7 +18,8 @@ function registerController(req, res) {
 
    userSecurity.createNewUser(user, password)
       .then(() => {
-         res.send({ success: true, message: 'Welcome to Seasoned!' });
+         const token = new Token(user).toString(secret);
+         res.send({ success: true, message: 'Welcome to Seasoned!', token});
       })
       .catch((error) => {
          res.status(401).send({ success: false, error: error.message });
