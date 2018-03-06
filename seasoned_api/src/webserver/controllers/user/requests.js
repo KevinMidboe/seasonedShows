@@ -3,14 +3,13 @@ const RequestRepository = require('src/plex/requestRepository.js');
 const requestRepository = new RequestRepository();
 
 /**
- * Controller: Retrieves search history of a logged in user
+ * Controller: Retrieves requested items of a logged in user
  * @param {Request} req http request variable
  * @param {Response} res
  * @returns {Callback}
  */
 function requestsController(req, res) {
    const user = req.loggedInUser;
-   console.log('user: ', user)
 
    requestRepository.userRequests(user)
       .then((requests) => {
