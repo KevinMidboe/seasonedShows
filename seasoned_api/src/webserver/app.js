@@ -106,6 +106,10 @@ router.get('/v1/tmdb/:mediaId', require('./controllers/tmdb/readMedia.js'));
  */
 router.post('/v1/git/dump', require('./controllers/git/dumpHook.js'));
 
+/**
+ * misc
+ */
+ router.get('v1/emoji', require('./controllers/misc/emoji.js'));
 
 // REGISTER OUR ROUTES -------------------------------
 // all of our routes will be prefixed with /api
