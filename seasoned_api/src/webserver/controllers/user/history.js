@@ -16,7 +16,7 @@ function historyController(req, res) {
          res.send({ success: true, searchQueries });
       })
       .catch((error) => {
-         res.status(401).send({ success: false, error: error.message });
+         res.status(404).send({ success: false, error: error });
       });
 }
 
