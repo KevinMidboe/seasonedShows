@@ -14,12 +14,10 @@ class SqliteDatabase {
    * Connect to the database.
    * @returns {Promise} succeeds if connection was established
    */
-   async connect() {
-      return Promise.resolve()
-      .then(() => { 
-         this.connection = new sqlite3.Database(this.host);
-         this.connection.run('PRAGMA foreign_keys=on')
-      });
+   connect() {
+      let database = new sqlite3.Database(this.host);
+      this.connection = database;
+      return database;
    }
 
    /**
@@ -67,7 +65,6 @@ class SqliteDatabase {
             if (err) {
                reject(err);
             }
-            console.log('rows', rows)
             resolve(rows);
          })
       })
