@@ -8,7 +8,7 @@ const requestRepository = new RequestRepository();
  * @param {Response} res
  * @returns {Callback}
  */
-function historyController(req, res) {
+function fetchRequestedController(req, res) {
    // const user = req.loggedInUser;
    const { status } = req.query;
 
@@ -21,4 +21,4 @@ function historyController(req, res) {
       });
 }
 
-module.exports = historyController;
+module.exports = fetchRequestedController;
