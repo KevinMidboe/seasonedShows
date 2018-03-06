@@ -8,7 +8,7 @@ const searchHistory = new SearchHistory();
 
 
 function searchRequestController(req, res) {
-   const user = req.headers.loggedinuser;
+   const user = req.loggedInUser;
    const { query, page, type } = req.query;
 
    Promise.resolve()
