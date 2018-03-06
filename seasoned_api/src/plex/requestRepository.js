@@ -75,7 +75,10 @@ class RequestRepository {
    fetchRequested(status, type = '%') {
    	return Promise.resolve()
    	.then(() => {
-	      return this.database.all(this.queries.fetchRequestedItems);
+	      if (status === 'requested' || status === 'downloading' || status === 'downloaded')
+	         return this.database.all(this.queries.fetchRequestedItemsByStatus, [status, type]);
+	      else
+	         return this.database.all(this.queries.fetchRequestedItems);
    	})
    }
 
