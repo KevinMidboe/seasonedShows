@@ -15,8 +15,6 @@ class UserSecurity {
    createNewUser(user, clearPassword) {
       if (user.username.trim() === '') {
          throw new Error('The username is empty.');
-      } else if (user.email.trim() === '') {
-         throw new Error('The email is empty.');
       } else if (clearPassword.trim() === '') {
          throw new Error('The password is empty.');
       } else {

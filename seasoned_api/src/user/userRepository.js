@@ -6,7 +6,7 @@ class UserRepository {
       this.database = database || establishedDatabase;
       this.queries = {
          read: 'select * from user where lower(user_name) = lower(?)',
-         create: 'insert into user (user_name, email) values(?, ?)',
+         create: 'insert into user (user_name) values (?)',
          change: 'update user set password = ? where user_name = ?',
          retrieveHash: 'select * from user where user_name = ?',
       };
@@ -20,13 +20,10 @@ class UserRepository {
    create(user) {
       return Promise.resolve()
          .then(() => this.database.get(this.queries.read, user.username))
-         .then(row => assert.equal(row, undefined))
-         .then(() => this.database.run(this.queries.create, [user.username, user.email]))
+         .then(() => this.database.run(this.queries.create, user.username))
          .catch((error) => {
-            if (error.message.endsWith('email')) {
-               throw new Error('That email is already taken');
-            } else if (error.name === 'AssertionError' || error.message.endsWith('user_name')) {
-               throw new Error('That username is already taken');
+            if (error.name === 'AssertionError' || error.message.endsWith('user_name')) {
+               throw new Error('That username is already registered');
             }
          });
    }
