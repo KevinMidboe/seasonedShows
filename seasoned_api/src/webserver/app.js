@@ -91,7 +91,7 @@ router.put('/v1/plex/request/:requestId', mustBeAuthenticated, require('./contro
 /**
  * Pirate
  */
-router.get('/v1/pirate/search', mustBeAdmin, require('./controllers/pirate/searchTheBay.js'));
+router.get('/v1/pirate/search', mustBeAuthenticated, require('./controllers/pirate/searchTheBay.js'));
 router.post('/v1/pirate/add', mustBeAuthenticated, require('./controllers/pirate/addMagnet.js'));
 
 /**

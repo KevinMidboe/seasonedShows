@@ -11,6 +11,7 @@ const mustBeAdmin = (req, res, next) => {
    } else {
       database.get(`SELECT admin FROM user WHERE user_name IS ?`, req.loggedInUser.username)
       .then((isAdmin) => {
+         console.log(isAdmin, req.loggedInUser)
          if (isAdmin.admin == 0) {
             return res.status(401).send({
                success: false,
