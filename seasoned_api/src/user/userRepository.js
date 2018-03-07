@@ -9,7 +9,7 @@ class UserRepository {
          create: 'insert into user (user_name) values (?)',
          change: 'update user set password = ? where user_name = ?',
          retrieveHash: 'select * from user where user_name = ?',
-         getAdminByUser: 'select admin from user where user_name = ?'
+         getAdminStateByUser: 'select admin from user where user_name = ?'
       };
    }
 
@@ -51,8 +51,8 @@ class UserRepository {
       return this.database.run(this.queries.change, [password, user.username]);
    }
 
-   isAdmin(user) {
-      return this.database.get(this.queries.getAdminByUser, user.username).then((row) => {
+   checkAdmin(user) {
+      return this.database.get(this.queries.getAdminStateByUser, user.username).then((row) => {
          return row.admin;
       })
    }
