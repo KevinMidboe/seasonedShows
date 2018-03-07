@@ -16,8 +16,8 @@ class RequestRepository {
    constructor(cache, database) {
       this.database = database || establishedDatabase;
       this.queries = {
-         insertRequest: "INSERT INTO requests VALUES (?, ?, ?, ?, ?, ?, ?, CURRENT_DATE, 'requested', ?, ?)",
-         fetchRequestedItems: 'SELECT * FROM requests ORDER BY requested_by ASC',
+         insertRequest: "INSERT INTO requests VALUES (?, ?, ?, ?, ?, ?, ?, DEFAULT, DEFAULT, ?, ?)",
+         fetchRequestedItems: 'SELECT * FROM requests ORDER BY date ASC',
          fetchRequestedItemsByStatus: 'SELECT * FROM requests WHERE status IS ? AND type LIKE ?',
          updateRequestedById: 'UPDATE requests SET status = ? WHERE id is ? AND type is ?',
          checkIfIdRequested: 'SELECT * FROM requests WHERE id IS ? AND type IS ?',
@@ -68,7 +68,7 @@ class RequestRepository {
       tmdb.lookup(identifier, type).then((movie) => {
          if (user === 'false') { user = 'NULL'; }
          // Add request to database
-         this.database.run(this.queries.insertRequest, [movie.id, movie.title, movie.year, movie.poster_path, movie.background_path, user, ip, user_agent, movie.type]);
+         this.database.run(this.queries.insertRequest, [movie.id, movie.title, movie.year, movie.poster_path, movie.background_path, user.username, ip, user_agent, movie.type]);
       });
    }
 
