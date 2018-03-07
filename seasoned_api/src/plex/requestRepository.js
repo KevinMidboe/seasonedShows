@@ -16,7 +16,8 @@ class RequestRepository {
    constructor(cache, database) {
       this.database = database || establishedDatabase;
       this.queries = {
-         insertRequest: "INSERT INTO requests VALUES (?, ?, ?, ?, ?, ?, ?, DEFAULT, DEFAULT, ?, ?)",
+         insertRequest: `INSERT INTO requests(id,title,year,poster_path,background_path,requested_by,ip,user_agent,type)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
          fetchRequestedItems: 'SELECT * FROM requests ORDER BY date ASC',
          fetchRequestedItemsByStatus: 'SELECT * FROM requests WHERE status IS ? AND type LIKE ?',
          updateRequestedById: 'UPDATE requests SET status = ? WHERE id is ? AND type is ?',
@@ -32,8 +33,7 @@ class RequestRepository {
    search(query, type, page) {
       return Promise.resolve()
          .then(() => tmdb.search(query, type, page))
-         .then(result => result)
-         .catch(error => `error in the house${error}`);
+         .catch(error => Error(`error in the house${error}`));
    }
 
    lookup(identifier, type = 'movie') {
@@ -65,10 +65,12 @@ class RequestRepository {
    * @returns {Promise} If nothing has gone wrong.
    */
    sendRequest(identifier, type, ip, user_agent, user) {
-      tmdb.lookup(identifier, type).then((movie) => {
-         if (user === 'false') { user = 'NULL'; }
+   	return Promise.resolve()
+   	.then(() => tmdb.lookup(identifier, type))
+      .then((movie) => {
+      	const username = user == undefined ? undefined : user.username;
          // Add request to database
-         this.database.run(this.queries.insertRequest, [movie.id, movie.title, movie.year, movie.poster_path, movie.background_path, user.username, ip, user_agent, movie.type]);
+         return this.database.run(this.queries.insertRequest, [movie.id, movie.title, movie.year, movie.poster_path, movie.background_path, username, ip, user_agent, movie.type]);
       });
    }
 
