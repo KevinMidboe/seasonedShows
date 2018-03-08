@@ -1,3 +1,6 @@
 [submodule "include/torrent_search"]
 	path = include/torrent_search
 	url = git@github.com:KevinMidboe/torrent_search.git
+[submodule "torrent_search"]
+	path = torrent_search
+	url = git@github.com:KevinMidboe/torrent_search.git
