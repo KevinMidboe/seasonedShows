@@ -5,10 +5,10 @@ async function find(searchterm, callback) {
    const options = {
       pythonPath: '/usr/bin/python3',
       // pythonPath: '/Library/Frameworks/Python.framework/Versions/3.6/bin/python3',
-      args: [searchterm, '-s', 'jackett', '-f', '--print'],
+      args: [searchterm, '-s', 'piratebay', '--print'],
    };
 
-   PythonShell.run('../torrent_search/torrentSearch/search.py', options, callback);
+   PythonShell.run('../app/torrent_search/torrentSearch/search.py', options, callback);
    // PythonShell does not support return
 }
 
@@ -27,7 +27,7 @@ async function SearchPiratebay(query) {
    return await new Promise((resolve, reject) => find(query, (err, results) => {
       if (err) {
          /* eslint-disable no-console */
-         console.log('THERE WAS A FUCKING ERROR!\n', err);
+         console.log('THERE WAS A FUCKING ERROR!');
          reject(Error('There was a error when searching for torrents'));
       }
       if (results) {
