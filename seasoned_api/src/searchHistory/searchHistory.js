@@ -15,8 +15,15 @@ class SearchHistory {
    * @returns {Promise}
    */
    read(user) {
-      return this.database.all(this.queries.read, user.username)
-         .then(rows => rows.map(row => row.search_query));
+      return new Promise((resolve, reject) => this.database.all(this.queries.read, user)
+         .then((result, error) => {
+            if (error) throw new Error(error);
+            resolve(result.map(row => row.search_query));
+         })
+         .catch((error) => {
+            console.log('Error when fetching history from database:', error)
+            reject('Unable to get history.');
+         }));
    }
 
    /**
@@ -26,7 +33,8 @@ class SearchHistory {
    * @returns {Promise}
    */
    create(user, searchQuery) {
-      return this.database.run(this.queries.create, [searchQuery, user.username])
+      return Promise.resolve()
+         .then(() => this.database.run(this.queries.create, [searchQuery, user]))
          .catch((error) => {
             if (error.message.includes('FOREIGN')) {
                throw new Error('Could not create search history.');
