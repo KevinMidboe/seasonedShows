@@ -8,7 +8,7 @@ async function find(searchterm, callback) {
       args: [searchterm, '-s', 'jackett', '-f', '--print'],
    };
 
-   PythonShell.run('../include/torrent_search/torrentSearch/search.py', options, callback);
+   PythonShell.run('../torrent_search/torrentSearch/search.py', options, callback);
    // PythonShell does not support return
 }
 
