@@ -1,3 +1,0 @@
-[submodule "torrent_search"]
-	path = include/torrent_search
-	url = https://github.com/kevinmidboe/torrent_search
