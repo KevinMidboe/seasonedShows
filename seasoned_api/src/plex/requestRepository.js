@@ -18,7 +18,7 @@ class RequestRepository {
       this.queries = {
          insertRequest: `INSERT INTO requests(id,title,year,poster_path,background_path,requested_by,ip,user_agent,type)
           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-         fetchRequestedItems: 'SELECT * FROM requests ORDER BY date ASC',
+         fetchRequestedItems: 'SELECT * FROM requests ORDER BY date DESC',
          fetchRequestedItemsByStatus: 'SELECT * FROM requests WHERE status IS ? AND type LIKE ?',
          updateRequestedById: 'UPDATE requests SET status = ? WHERE id is ? AND type is ?',
          checkIfIdRequested: 'SELECT * FROM requests WHERE id IS ? AND type IS ?',
