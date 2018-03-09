@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS requests(
     background_path TEXT DEFAULT NULL,
     requested_by TEXT,
     ip TEXT,
-    requested_date DATE DEFAULT CURRENT_DATE NOT NULL,
+    date DATE DEFAULT CURRENT_TIMESTAMP,
     status CHAR(25) DEFAULT 'requested' NOT NULL,
     user_agent CHAR(255) DEFAULT NULL,
     type CHAR(50) DEFAULT 'movie'
