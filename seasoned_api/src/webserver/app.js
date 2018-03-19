@@ -3,6 +3,7 @@ const Raven = require('raven');
 const bodyParser = require('body-parser');
 const tokenToUser = require('./middleware/tokenToUser');
 const mustBeAuthenticated = require('./middleware/mustBeAuthenticated');
+const mustBeAdmin = require('./middleware/mustBeAdmin');
 const configuration = require('src/config/configuration').getInstance();
 
 // TODO: Have our raven router check if there is a value, if not don't enable raven.
@@ -61,7 +62,8 @@ app.use(function onError(err, req, res, next) {
  */
 router.post('/v1/user', require('./controllers/user/register.js'));
 router.post('/v1/user/login', require('./controllers/user/login.js'));
-router.get('/v1/user/history', require('./controllers/user/history.js'));
+router.get('/v1/user/history', mustBeAuthenticated, require('./controllers/user/history.js'));
+router.get('/v1/user/requests', mustBeAuthenticated, require('./controllers/user/requests.js'));
 
 /**
  * Seasoned
@@ -104,6 +106,10 @@ router.get('/v1/tmdb/:mediaId', require('./controllers/tmdb/readMedia.js'));
  */
 router.post('/v1/git/dump', require('./controllers/git/dumpHook.js'));
 
+/**
+ * misc
+ */
+ router.get('/v1/emoji', require('./controllers/misc/emoji.js'));
 
 // REGISTER OUR ROUTES -------------------------------
 // all of our routes will be prefixed with /api

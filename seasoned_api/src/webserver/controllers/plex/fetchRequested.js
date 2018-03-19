@@ -8,10 +8,11 @@ const requestRepository = new RequestRepository();
  * @param {Response} res
  * @returns {Callback}
  */
-function historyController(req, res) {
+function fetchRequestedController(req, res) {
    // const user = req.loggedInUser;
+   const { status } = req.query;
 
-   requestRepository.fetchRequested()
+   requestRepository.fetchRequested(status)
       .then((requestedItems) => {
          res.send({ success: true, results: requestedItems, total_results: requestedItems.length });
       })
@@ -20,4 +21,4 @@ function historyController(req, res) {
       });
 }
 
-module.exports = historyController;
+module.exports = fetchRequestedController;

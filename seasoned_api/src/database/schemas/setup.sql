@@ -2,6 +2,7 @@ CREATE TABLE IF NOT EXISTS user (
     user_name varchar(127) UNIQUE,
     password varchar(127),
     email varchar(127) UNIQUE,
+    admin boolean DEFAULT 0,
     primary key (user_name)
 );
 
@@ -29,7 +30,7 @@ CREATE TABLE IF NOT EXISTS requests(
     background_path TEXT DEFAULT NULL,
     requested_by TEXT,
     ip TEXT,
-    requested_date DATE DEFAULT CURRENT_DATE NOT NULL,
+    date DATE DEFAULT CURRENT_TIMESTAMP,
     status CHAR(25) DEFAULT 'requested' NOT NULL,
     user_agent CHAR(255) DEFAULT NULL,
     type CHAR(50) DEFAULT 'movie'

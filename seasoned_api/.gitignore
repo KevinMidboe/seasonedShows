@@ -61,4 +61,6 @@ typings/
 # - - - - - 
 # My own gitignore files and folders
 shows.db
-conf/
+conf/development.json
+
+# conf/development-prod.json

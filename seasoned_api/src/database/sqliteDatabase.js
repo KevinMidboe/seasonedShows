@@ -1,12 +1,12 @@
 const fs = require('fs');
 const path = require('path');
-const sqlite = require('sqlite');
+const sqlite3 = require('sqlite3').verbose();
 
 class SqliteDatabase {
 
    constructor(host) {
       this.host = host;
-      this.connection = sqlite;
+      this.connection = this.connect()
       this.schemaDirectory = path.join(__dirname, 'schemas');
    }
 
@@ -15,9 +15,9 @@ class SqliteDatabase {
    * @returns {Promise} succeeds if connection was established
    */
    connect() {
-      return Promise.resolve()
-         .then(() => sqlite.open(this.host))
-         .then(() => sqlite.exec('pragma foreign_keys = on;'));
+      let database = new sqlite3.Database(this.host);
+      this.connection = database;
+      return database;
    }
 
    /**
@@ -27,7 +27,13 @@ class SqliteDatabase {
    * @returns {Promise}
    */
    run(sql, parameters) {
-      return this.connection.run(sql, parameters);
+      return new Promise((resolve, reject) => {
+         this.connection.run(sql, parameters, (error, result) => {
+            if (error)
+               reject(error);
+            resolve(result)
+         });
+      });
    }
 
    /**
@@ -36,8 +42,15 @@ class SqliteDatabase {
    * @param {Array} parameters in the SQL query
    * @returns {Promise}
    */
-   all(sql, parameters) {
-      return this.connection.all(sql, parameters);
+   async all(sql, parameters) {
+      return new Promise((resolve, reject) => {
+         this.connection.all(sql, parameters, (err, rows) => {
+            if (err) {
+               reject(err);
+            }
+            resolve(rows);
+         })
+      })
    }
 
    /**
@@ -46,8 +59,15 @@ class SqliteDatabase {
    * @param {Array} parameters in the SQL query
    * @returns {Promise}
    */
-   get(sql, parameters) {
-      return this.connection.get(sql, parameters);
+   async get(sql, parameters) {
+      return new Promise((resolve, reject) => {
+         this.connection.get(sql, parameters, (err, rows) => {
+            if (err) {
+               reject(err);
+            }
+            resolve(rows);
+         })
+      })
    }
 
    /**
@@ -56,8 +76,10 @@ class SqliteDatabase {
    * @param {Array} parameters in the SQL query
    * @returns {Promise}
    */
-   execute(sql) {
-      return this.connection.exec(sql);
+   async execute(sql) {
+      return new Promise(resolve => {
+         resolve(this.connection.exec(sql));
+      })
    }
 
    /**

@@ -10,13 +10,14 @@ const searchHistory = new SearchHistory();
  */
 function historyController(req, res) {
    const user = req.loggedInUser;
+   const username = user == undefined ? undefined : user.username;
 
-   searchHistory.read(user)
+   searchHistory.read(username)
       .then((searchQueries) => {
          res.send({ success: true, searchQueries });
       })
       .catch((error) => {
-         res.status(401).send({ success: false, error: error.message });
+         res.status(404).send({ success: false, error: error });
       });
 }
 

@@ -15,7 +15,7 @@ function submitRequestController(req, res) {
    const type = req.query.type;
    const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
    const user_agent = req.headers['user-agent'];
-   const user = req.headers.loggedinuser;
+   const user = req.loggedInUser;
 
    requestRepository.sendRequest(id, type, ip, user_agent, user)
       .then(() => {

@@ -6,7 +6,12 @@ class PlexRepository {
    inPlex(tmdbResult) {
       return Promise.resolve()
          .then(() => this.search(tmdbResult.title))
-         .then(plexResult => this.compareTmdbToPlex(tmdbResult, plexResult));
+         .then(plexResult => this.compareTmdbToPlex(tmdbResult, plexResult))
+         .catch((error) => {
+            console.log(error)
+            tmdbResult.matchedInPlex = false;
+            return tmdbResult;
+         });
    }
 
    search(query) {
@@ -19,6 +24,9 @@ class PlexRepository {
       };
 
       return rp(options)
+         .catch((error) => {
+            throw new Error('Unable to search plex.')
+         })
          .then(result => this.mapResults(result))
          .then(([mappedResults, resultCount]) => ({ results: mappedResults, total_results: resultCount }));
    }
@@ -26,10 +34,15 @@ class PlexRepository {
    compareTmdbToPlex(tmdb, plexResult) {
       return Promise.resolve()
          .then(() => {
-            plexResult.results.map((plexItem) => {
-               if (tmdb.title === plexItem.title && tmdb.year === plexItem.year) { tmdb.matchedInPlex = true; }
-               return tmdb;
-            });
+            if (plexResult.results.length === 0) {
+               tmdb.matchedInPlex = false
+            } 
+            else {
+               plexResult.results.map((plexItem) => {
+                  if (tmdb.title === plexItem.title && tmdb.year === plexItem.year) { tmdb.matchedInPlex = true; }
+                  return tmdb;
+               });
+            }
             return tmdb;
          });
    }
