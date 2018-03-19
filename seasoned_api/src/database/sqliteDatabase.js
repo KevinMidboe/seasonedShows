@@ -101,7 +101,7 @@ class SqliteDatabase {
    * @returns {Promise}
    */
    tearDown() {
-      const tearDownSchema = this.readSqlFile('tearDown.sql');
+      const tearDownSchema = this.readSqlFile('teardown.sql');
       return Promise.resolve(this.execute(tearDownSchema));
    }
 
