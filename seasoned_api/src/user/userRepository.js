@@ -35,10 +35,13 @@ class UserRepository {
    * @returns {Promise}
    */
    retrieveHash(user) {
-      return this.database.get(this.queries.retrieveHash, user.username).then((row) => {
-         assert(row, 'The user does not exist.');
-         return row.password;
-      });
+      return Promise.resolve()
+         .then(() => this.database.get(this.queries.retrieveHash, user.username))
+         .then((row) => {
+            assert(row, 'The user does not exist.');
+            return row.password;
+         })
+         .catch((err) => console.log('there was a error when getting hash', err));
    }
 
    /**
@@ -48,7 +51,7 @@ class UserRepository {
    * @returns {Promise}
    */
    changePassword(user, password) {
-      return this.database.run(this.queries.change, [password, user.username]);
+      return Promise.resolve(this.database.run(this.queries.change, [password, user.username]));
    }
 
    checkAdmin(user) {
