@@ -5,8 +5,10 @@ const createUser = require('test/helpers/createUser');
 const resetDatabase = require('test/helpers/resetDatabase');
 
 describe('As a user I want to log in', () => {
-  before(() => resetDatabase());
-  before(() => createUser('test_user', 'test@gmail.com', 'password'));
+  before(() => {
+    return resetDatabase()
+    .then(() => createUser('test_user', 'password'))
+  })
 
   it('should return 200 with a token if correct credentials are given', () =>
     request(app)
