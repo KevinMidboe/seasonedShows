@@ -1,8 +1,8 @@
 const configuration = require('src/config/configuration').getInstance();
 const SqliteDatabase = require('src/database/sqliteDatabase');
 
-const database = new SqliteDatabase(configuration.get('database', 'host'));
-
+const host = process.env.TESTING ? ':memory:' : configuration.get('database', 'host');
+const database = new SqliteDatabase(host);
 /**
  * This module establishes a connection to the database
  * specified in the confgiuration file. It tries to setup
@@ -10,7 +10,6 @@ const database = new SqliteDatabase(configuration.get('database', 'host'));
  * If the tables already exists, it simply proceeds.
  */
 Promise.resolve()
-   .then(() => database.connect())
    .then(() => database.setUp());
 
 module.exports = database;

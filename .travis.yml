@@ -1,14 +1,11 @@
-{
-   'dist': 'trusty',
-   'language': 'node_js',
-   'node_js': '8.7.0',
-   'cache': 'yarn',
-   'scripts': [
-      'npm run test'
-   ],
-   'before_install': [
-      'cd seasoned_api',
-   ],
-   'before_script': 'yarn',
-   'os': 'linux',
-}
+language: node_js
+node_js: '8.7.0'
+git:
+   submodules: false
+script:
+   yarn test
+before_install:
+   - cd seasoned_api
+before_script: yarn
+cache: false
+os: linux

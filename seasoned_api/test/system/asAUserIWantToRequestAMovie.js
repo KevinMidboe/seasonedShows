@@ -5,8 +5,10 @@ const createUser = require('test/helpers/createUser');
 const createToken = require('test/helpers/createToken');
 
 describe('As a user I want to request a movie', () => {
-  before(() => resetDatabase());
-  before(() => createUser('test_user', 'test@gmail.com', 'password'));
+  before(() => {
+   return resetDatabase()
+   .then(() => createUser('test_user', 'test@gmail.com', 'password'));
+   })
 
   it('should return 200 when item is requested', () =>
     request(app)

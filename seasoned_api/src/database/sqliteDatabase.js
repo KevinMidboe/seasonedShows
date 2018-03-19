@@ -3,10 +3,9 @@ const path = require('path');
 const sqlite3 = require('sqlite3').verbose();
 
 class SqliteDatabase {
-
    constructor(host) {
       this.host = host;
-      this.connection = this.connect()
+      this.connection = new sqlite3.Database(this.host);
       this.schemaDirectory = path.join(__dirname, 'schemas');
    }
 
@@ -14,11 +13,11 @@ class SqliteDatabase {
    * Connect to the database.
    * @returns {Promise} succeeds if connection was established
    */
-   connect() {
-      let database = new sqlite3.Database(this.host);
-      this.connection = database;
-      return database;
-   }
+   // connect() {
+   //    let database = ;
+   //    this.connection = database;
+   //    return database;
+   // }
 
    /**
    * Run a SQL query against the database.
@@ -26,7 +25,7 @@ class SqliteDatabase {
    * @param {Array} parameters in the SQL query
    * @returns {Promise}
    */
-   run(sql, parameters) {
+   async run(sql, parameters) {
       return new Promise((resolve, reject) => {
          this.connection.run(sql, parameters, (error, result) => {
             if (error)
@@ -78,7 +77,13 @@ class SqliteDatabase {
    */
    async execute(sql) {
       return new Promise(resolve => {
-         resolve(this.connection.exec(sql));
+         this.connection.exec(sql, (err, database) => {
+             if (err) {
+               console.log('ERROR: ', err);
+               reject(err);
+            }
+            resolve();
+         })
       })
    }
 
@@ -88,7 +93,7 @@ class SqliteDatabase {
    */
    setUp() {
       const setupSchema = this.readSqlFile('setup.sql');
-      return this.execute(setupSchema);
+      return Promise.resolve(this.execute(setupSchema));
    }
 
    /**
@@ -96,8 +101,8 @@ class SqliteDatabase {
    * @returns {Promise}
    */
    tearDown() {
-      const tearDownSchema = this.readSqlFile('tearDown.sql');
-      return this.execute(tearDownSchema);
+      const tearDownSchema = this.readSqlFile('teardown.sql');
+      return Promise.resolve(this.execute(tearDownSchema));
    }
 
    /**

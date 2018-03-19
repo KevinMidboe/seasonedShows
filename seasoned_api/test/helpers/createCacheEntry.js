@@ -2,8 +2,7 @@ const Cache = require('src/tmdb/cache');
 const SqliteDatabase = require('src/database/sqliteDatabase');
 
 function createCacheEntry(key, value) {
-  const database = new SqliteDatabase(':memory:');
-  const cache = new Cache(database);
+  const cache = new Cache();
   return cache.set(key, value);
 }
 

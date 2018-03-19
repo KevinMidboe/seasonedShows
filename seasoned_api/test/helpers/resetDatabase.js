@@ -1,11 +1,9 @@
-const SqliteDatabase = require('src/database/sqliteDatabase');
+const establishedDatabase = require('src/database/database');
 
-function resetDatabase() {
-  const database = new SqliteDatabase(':memory:');
-  return Promise.resolve()
-  .then(() => database.connect())
-  // .then(() => database.tearDown())
-  .then(() => database.setUp());
+function resetDatabase() {   
+   return Promise.resolve()
+      .then(() => establishedDatabase.tearDown())
+      .then(() => establishedDatabase.setUp())
 }
 
 module.exports = resetDatabase;
