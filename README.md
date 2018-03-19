@@ -1,5 +1,6 @@
 # 🌶 seasonedShows
 [![Build Status](https://travis-ci.org/KevinMidboe/seasonedShows.svg?branch=master)](https://travis-ci.org/KevinMidboe/seasonedShows)
+[![Known Vulnerabilities](https://snyk.io/test/github/KevinMidboe/seasonedShows/badge.svg?targetFile=seasoned_api/package.json)](https://snyk.io/test/github/KevinMidboe/seasonedShows)
 [![DUB](https://img.shields.io/dub/l/vibe-d.svg)]()
 
 Your customly *seasoned* movie and show requester, downloader and organizer. Demo page can be viewed [here](https://kevinmidboe.com/request)
