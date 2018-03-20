@@ -1,0 +1,17 @@
+{
+	"database": {
+		"host": ":memory:"
+	},
+	"webserver": {
+		"port": 31400
+	},
+	"tmdb": {
+		"apiKey": "bogus-api-key"
+	},
+	"raven": {
+		"DSN": ""
+	},
+	"authentication": {
+    		"secret": "secret"
+    	}
+}
