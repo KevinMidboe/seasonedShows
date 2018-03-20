@@ -37,7 +37,7 @@ class TMDB {
       const cacheKey = `${this.cacheTags.info}:${type}:${identifier}`;
       return Promise.resolve()
          .then(() => this.cache.get(cacheKey))
-         .catch(() => this.tmdb(TMDB_METHODS['info'][type]), query))
+         .catch(() => this.tmdb(TMDB_METHODS['info'][type], query))
          .catch(() => { throw new Error('Could not find a movie with that id.'); })
          .then(response => this.cache.set(cacheKey, response))
          .then((response) => {
