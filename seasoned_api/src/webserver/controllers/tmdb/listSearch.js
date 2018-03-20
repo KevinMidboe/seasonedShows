@@ -13,8 +13,8 @@ const tmdb = new TMDB(cache, configuration.get('tmdb', 'apiKey'));
  */
 function listSearchController(req, res) {
    const listname = req.params.listname;
-   const { type, id, page } = req.query;
-   tmdb.listSearch(listname, type, id, page)
+   const { type, page } = req.query;
+   tmdb.listSearch(listname, type, page)
       .then((results) => {
          res.send(results);
       }).catch((error) => {
