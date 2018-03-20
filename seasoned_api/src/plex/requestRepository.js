@@ -18,8 +18,8 @@ class RequestRepository {
       this.queries = {
          insertRequest: `INSERT INTO requests(id,title,year,poster_path,background_path,requested_by,ip,user_agent,type)
           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-         fetchRequestedItems: 'SELECT * FROM requests ORDER BY date DESC',
-         fetchRequestedItemsByStatus: 'SELECT * FROM requests WHERE status IS ? AND type LIKE ?',
+         fetchRequestedItems: 'SELECT * FROM requests ORDER BY date DESC LIMIT 25 OFFSET ?*25-25',
+         fetchRequestedItemsByStatus: 'SELECT * FROM requests WHERE status IS ? AND type LIKE ? DESC LIMIT 25 OFFSET ?*25-25',
          updateRequestedById: 'UPDATE requests SET status = ? WHERE id is ? AND type is ?',
          checkIfIdRequested: 'SELECT * FROM requests WHERE id IS ? AND type IS ?',
          userRequests: 'SELECT * FROM requests WHERE requested_by IS ?'
@@ -68,19 +68,19 @@ class RequestRepository {
    	return Promise.resolve()
    	.then(() => tmdb.lookup(identifier, type))
       .then((movie) => {
-      	const username = user == undefined ? undefined : user.username;
+         const username = user === undefined ? undefined : user.username;
          // Add request to database
          return this.database.run(this.queries.insertRequest, [movie.id, movie.title, movie.year, movie.poster_path, movie.background_path, username, ip, user_agent, movie.type]);
       });
    }
 
-   fetchRequested(status, type = '%') {
+   fetchRequested(status, page = '1', type = '%') {
    	return Promise.resolve()
    	.then(() => {
 	      if (status === 'requested' || status === 'downloading' || status === 'downloaded')
-	         return this.database.all(this.queries.fetchRequestedItemsByStatus, [status, type]);
+	         return this.database.all(this.queries.fetchRequestedItemsByStatus, [status, type, page]);
 	      else
-	         return this.database.all(this.queries.fetchRequestedItems);
+	         return this.database.all(this.queries.fetchRequestedItems, page);
    	})
    }
 
