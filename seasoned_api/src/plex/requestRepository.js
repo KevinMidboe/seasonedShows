@@ -8,12 +8,8 @@ const plexRepository = new PlexRepository();
 const cache = new Cache();
 const tmdb = new TMDB(cache, configuration.get('tmdb', 'apiKey'));
 
-const MailTemplate = require('src/plex/mailTemplate');
-const nodemailer = require('nodemailer');
-
-
 class RequestRepository {
-   constructor(cache, database) {
+   constructor(database) {
       this.database = database || establishedDatabase;
       this.queries = {
          insertRequest: `INSERT INTO requests(id,title,year,poster_path,background_path,requested_by,ip,user_agent,type)
@@ -22,7 +18,7 @@ class RequestRepository {
          fetchRequestedItemsByStatus: 'SELECT * FROM requests WHERE status IS ? AND type LIKE ? ORDER BY date DESC LIMIT 25 OFFSET ?*25-25',
          updateRequestedById: 'UPDATE requests SET status = ? WHERE id is ? AND type is ?',
          checkIfIdRequested: 'SELECT * FROM requests WHERE id IS ? AND type IS ?',
-         userRequests: 'SELECT * FROM requests WHERE requested_by IS ?'
+         userRequests: 'SELECT * FROM requests WHERE requested_by IS ?',
       };
       this.cacheTags = {
          search: 'se',
@@ -51,10 +47,7 @@ class RequestRepository {
          .then(() => this.database.get(this.queries.checkIfIdRequested, [tmdbMovie.id, tmdbMovie.type]))
          .then((result, error) => {
             if (error) { throw new Error(error); }
-            let already_requested = false;
-            if (result) { already_requested = true; }
-
-            tmdbMovie.requested = already_requested;
+            tmdbMovie.requested = result ? true : false;
             return tmdbMovie;
          });
    }
@@ -85,13 +78,15 @@ class RequestRepository {
    }
 
    userRequests(user) {
-   	return Promise.resolve()
+      return Promise.resolve()
          .then(() => this.database.all(this.queries.userRequests, user.username))
          .catch((error) => {
-            if (String(error).includes('no such column')) { throw new Error('Username not found'); }
-            else { throw new Error('Unable to fetch your requests')}
+            if (String(error).includes('no such column')) {
+               throw new Error('Username not found');
+            }
+            throw new Error('Unable to fetch your requests');
          })
-         .then((result) => { return result })
+         .then((result) => { return result; });
    }
 
    updateRequestedById(id, type, status) {
