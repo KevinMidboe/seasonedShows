@@ -6,7 +6,7 @@ const interstellarQuerySuccess = require('test/fixtures/interstellar-query-succe
 
 describe('As an anonymous user I want to search for a movie', () => {
   before(() => resetDatabase());
-  before(() => createCacheEntry('s:1:movie:interstellar', interstellarQuerySuccess));
+  before(() => createCacheEntry('se:1:multi:interstellar', interstellarQuerySuccess));
 
   it('should return 200 with the search results even if user is not logged in', () =>
     request(app)

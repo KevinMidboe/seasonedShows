@@ -1,8 +1,7 @@
 const configuration = require('src/config/configuration').getInstance();
 const SqliteDatabase = require('src/database/sqliteDatabase');
 
-const host = process.env.TESTING ? ':memory:' : configuration.get('database', 'host');
-const database = new SqliteDatabase(host);
+const database = new SqliteDatabase(configuration.get('database', 'host'));
 /**
  * This module establishes a connection to the database
  * specified in the confgiuration file. It tries to setup

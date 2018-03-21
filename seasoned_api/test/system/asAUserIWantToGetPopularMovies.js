@@ -7,7 +7,7 @@ const popularMoviesSuccess = require('test/fixtures/popular-movies-success-respo
 
 describe('As a user I want to get popular movies', () => {
   before(() => resetDatabase());
-  before(() => createCacheEntry('p:movie::1', popularMoviesSuccess));
+  before(() => createCacheEntry('p:movie:1', popularMoviesSuccess));
 
   it('should return 200 with the information', () =>
     request(app)

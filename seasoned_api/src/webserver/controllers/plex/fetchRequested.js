@@ -10,9 +10,9 @@ const requestRepository = new RequestRepository();
  */
 function fetchRequestedController(req, res) {
    // const user = req.loggedInUser;
-   const { status } = req.query;
+   const { status, page } = req.query;
 
-   requestRepository.fetchRequested(status)
+   requestRepository.fetchRequested(status, page)
       .then((requestedItems) => {
          res.send({ success: true, results: requestedItems, total_results: requestedItems.length });
       })

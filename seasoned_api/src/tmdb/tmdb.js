@@ -29,6 +29,7 @@ class TMDB {
    /**
    * Retrieve a specific movie by id from TMDB.
    * @param {Number} identifier of the movie you want to retrieve
+   * @param {String} type filter results by type (default movie).
    * @returns {Promise} succeeds if movie was found
    */
    lookup(identifier, type = 'movie') {
@@ -36,7 +37,7 @@ class TMDB {
       const cacheKey = `${this.cacheTags.info}:${type}:${identifier}`;
       return Promise.resolve()
          .then(() => this.cache.get(cacheKey))
-         .catch(() => this.tmdb(this.tmdbMethod('info', type), query))
+         .catch(() => this.tmdb(TMDB_METHODS['info'][type], query))
          .catch(() => { throw new Error('Could not find a movie with that id.'); })
          .then(response => this.cache.set(cacheKey, response))
          .then((response) => {
@@ -50,70 +51,66 @@ class TMDB {
    }
 
    /**
-   * Retrive list of of items from TMDB matching the query and/or type given.
-   * @param {queryText, page, type} the page number to specify in the request for discover,
+   * Retrive search results from TMDB.
+   * @param {String} text query you want to search for
+   * @param {Number} page representing pagination of results
+   * @param {String} type filter results by type (default multi)
    * @returns {Promise} dict with query results, current page and total_pages
    */
    search(text, page = 1, type = 'multi') {
-      const query = { query: text, page };
+      const query = { query: text, page: page };
       const cacheKey = `${this.cacheTags.search}:${page}:${type}:${text}`;
       return Promise.resolve()
          .then(() => this.cache.get(cacheKey))
-         .catch(() => this.tmdb(this.tmdbMethod('search', type), query))
+         .catch(() => this.tmdb(TMDB_METHODS['search'][type], query))
          .catch(() => { throw new Error('Could not search for movies/shows at tmdb.'); })
          .then(response => this.cache.set(cacheKey, response))
          .then(response => this.mapResults(response))
-         .catch((error) => { throw new Error(error); })
-         .then(([mappedResults, pagenumber, totalpages, total_results]) => ({
-            results: mappedResults, page: pagenumber, total_results, total_pages: totalpages,
-         }));
    }
 
    /**
    * Fetches a given list from tmdb.
-   * @param {listName} List we want to fetch.
-   * @param {type} The  to specify in the request for discover (default 'movie').
-   * @param {id} When finding similar a id can be added to query
-   * @param {page} Page number we want to fetch.
+   * @param {String} listName Name of list
+   * @param {String} type filter results by type (default movie)
+   * @param {Number} page representing pagination of results
    * @returns {Promise} dict with query results, current page and total_pages
    */
-   listSearch(listName, type = 'movie', id, page = '1') {
-      const params = { id, page };
-      const cacheKey = `${this.cacheTags[listName]}:${type}:${id}:${page}`;
+   listSearch(listName, type = 'movie', page = '1') {
+      const query = { page: page }
+      console.log(query)
+      const cacheKey = `${this.cacheTags[listName]}:${type}:${page}`;
       return Promise.resolve()
          .then(() => this.cache.get(cacheKey))
-         .catch(() => this.tmdb(this.tmdbMethod(listName, type), params))
+         .catch(() => this.tmdb(TMDB_METHODS[listName][type], query))
+         .catch(() => { throw new Error('Error fetching list from tmdb.')})
          .then(response => this.cache.set(cacheKey, response))
          .then(response => this.mapResults(response, type))
-         .catch((error) => { throw new Error(error); })
-         .then(([mappedResults, pagenumber, totalpages, total_results]) => ({
-            results: mappedResults, page: pagenumber, total_pages: totalpages, total_results,
-         }));
-   }
-
-   tmdbMethod(apiMethod, type) {
-      const method = TMDB_METHODS[apiMethod][type];
-      if (method !== undefined) return method;
-      throw new Error('Could not find tmdb api method.');
    }
 
    /**
    * Maps our response from tmdb api to a movie/show object.
-   * @param {response} JSON response from tmdb.
-   * @param {type} The type declared in listSearch.
+   * @param {String} response from tmdb.
+   * @param {String} The type declared in listSearch.
    * @returns {Promise} dict with tmdb results, mapped as movie/show objects.
    */
    mapResults(response, type) {
+      console.log(response.page)
       return Promise.resolve()
          .then(() => {
             const mappedResults = response.results.filter((element) => {
                return (element.media_type === 'movie' || element.media_type === 'tv' || element.media_type === undefined);
             }).map((element) => convertTmdbToSeasoned(element, type));
-            return [mappedResults, response.page, response.total_pages, response.total_results];
+            return {results: mappedResults, page: response.page, total_pages: response.total_pages, total_results: response.total_results}
          })
          .catch((error) => { throw new Error(error); });
    }
 
+  /**
+   * Wraps moviedb library to support Promises.
+   * @param {String} method function name in the library
+   * @param {Object} argument argument to function being called
+   * @returns {Promise} succeeds if callback succeeds
+   */
    tmdb(method, argument) {
       return new Promise((resolve, reject) => {
          const callback = (error, reponse) => {

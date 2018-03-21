@@ -28,7 +28,7 @@ class Config {
       const field = new Field(this.fields[section][option]);
 
       if (field.value === '') {
-         const envField = process.env[[section.toUpperCase(), option.toUpperCase()].join('_')];
+         const envField = process.env[['SEASONED', section.toUpperCase(), option.toUpperCase()].join('_')];
          if (envField !== undefined && envField.length !== 0) { return envField; }
       }
 
