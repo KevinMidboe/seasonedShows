@@ -19,7 +19,7 @@ class RequestRepository {
          insertRequest: `INSERT INTO requests(id,title,year,poster_path,background_path,requested_by,ip,user_agent,type)
           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
          fetchRequestedItems: 'SELECT * FROM requests ORDER BY date DESC LIMIT 25 OFFSET ?*25-25',
-         fetchRequestedItemsByStatus: 'SELECT * FROM requests WHERE status IS ? AND type LIKE ? DESC LIMIT 25 OFFSET ?*25-25',
+         fetchRequestedItemsByStatus: 'SELECT * FROM requests WHERE status IS ? AND type LIKE ? ORDER BY date DESC LIMIT 25 OFFSET ?*25-25',
          updateRequestedById: 'UPDATE requests SET status = ? WHERE id is ? AND type is ?',
          checkIfIdRequested: 'SELECT * FROM requests WHERE id IS ? AND type IS ?',
          userRequests: 'SELECT * FROM requests WHERE requested_by IS ?'
