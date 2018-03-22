@@ -9,13 +9,11 @@
   "scripts": {
     "start": "cross-env SEASONED_CONFIG=conf/development.json NODE_PATH=. node src/webserver/server.js",
     "test": "cross-env SEASONED_CONFIG=conf/test.json NODE_PATH=. mocha --recursive test",
-    "cov": "cross-env SEASONED_CONFIG=conf/test.json NODE_PATH=. nyc mocha --recursive test && nyc report --reporter=text-lcov | coveralls",
-    "coverage": "cross-env SEASONED_CONFIG=conf/test.json NODE_PATH=. istanbul cover -x script/autogenerate-documentation.js --include-all-sources --dir test/.coverage node_modules/mocha/bin/_mocha --recursive test/**/* -- --report lcovonly && cat test/.coverage/lcov.info | coveralls && rm -rf test/.coverage",
+    "coverage": "cross-env SEASONED_CONFIG=conf/test.json NODE_PATH=. nyc mocha --recursive test && nyc report --reporter=text-lcov | coveralls",
     "lint": "./node_modules/.bin/eslint src/"
   },
   "dependencies": {
     "bcrypt-nodejs": "^0.0.3",
-    "blanket": "^1.2.3",
     "body-parser": "~1.18.2",
     "cross-env": "~5.1.4",
     "express": "~4.16.0",
