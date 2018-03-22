@@ -23,9 +23,9 @@
     "moviedb": "^0.2.10",
     "node-cache": "^4.1.1",
     "python-shell": "^0.5.0",
+    "request": "^2.85.0",
     "request-promise": "^4.2",
-    "sqlite3": "4.0.0",
-    "superagent": "^3.8.2"
+    "sqlite3": "4.0.0"
   },
   "devDependencies": {
     "eslint": "^4.9.0",
