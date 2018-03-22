@@ -4,7 +4,7 @@ git:
    submodules: true
 script:
    - yarn test
-   - yarn doc
+   - yarn cov 
 before_install:
    - cd seasoned_api
 before_script: yarn
