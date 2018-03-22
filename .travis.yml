@@ -3,7 +3,8 @@ node_js: '8.7.0'
 git:
    submodules: true
 script:
-   yarn test
+   - yarn test
+   - yarn doc
 before_install:
    - cd seasoned_api
 before_script: yarn
