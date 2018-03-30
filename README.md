@@ -2,7 +2,7 @@
 [![Build Status](https://travis-ci.org/KevinMidboe/seasonedShows.svg?branch=master)](https://travis-ci.org/KevinMidboe/seasonedShows)
 [![Coverage Status](https://coveralls.io/repos/github/KevinMidboe/seasonedShows/badge.svg?branch=coverage)](https://coveralls.io/github/KevinMidboe/seasonedShows?branch=coverage)
 [![Known Vulnerabilities](https://snyk.io/test/github/KevinMidboe/seasonedShows/badge.svg?targetFile=seasoned_api/package.json)](https://snyk.io/test/github/KevinMidboe/seasonedShows?targetFile=seasoned_api/package.json)
-[![DUB](https://img.shields.io/dub/l/vibe-d.svg)]()
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 Your customly *seasoned* movie and show requester, downloader and organizer.  
 📺 [Demo](https://kevinmidboe.com/request)
