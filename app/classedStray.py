@@ -188,7 +188,7 @@ def XOR(list1, list2):
 	return set(list1) ^ set(list2)
 
 def filterChildItems(parent):
-	if ! os.path.isdir(parent):
+	if (not os.path.isdir(parent)):
 		strayEpisode(parent[:-4], parent)
 		return
 	try:
