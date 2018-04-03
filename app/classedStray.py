@@ -3,7 +3,7 @@
 # @Author: KevinMidboe
 # @Date:   2017-04-05 18:40:11
 # @Last Modified by:   KevinMidboe
-# @Last Modified time: 2017-06-18 21:49:33
+# @Last Modified time: 2018-04-03 22:58:20
 import os.path, hashlib, time, glob, sqlite3, re, json, tweepy
 import logging
 from functools import reduce
@@ -188,6 +188,9 @@ def XOR(list1, list2):
 	return set(list1) ^ set(list2)
 
 def filterChildItems(parent):
+	if ! os.path.isdir(parent):
+		strayEpisode(parent[:-4], parent)
+		return
 	try:
 		children = getDirContent('/'.join([env.input_dir, parent]))
 		if children:
