@@ -1,6 +1,7 @@
 # 🌶 seasonedShows
 [![Build Status](https://travis-ci.org/KevinMidboe/seasonedShows.svg?branch=master)](https://travis-ci.org/KevinMidboe/seasonedShows)
 [![Coverage Status](https://coveralls.io/repos/github/KevinMidboe/seasonedShows/badge.svg?branch=coverage)](https://coveralls.io/github/KevinMidboe/seasonedShows?branch=coverage)
+[![Dependency Status](https://www.versioneye.com/user/projects/5ac541370fb24f4489396e02/badge.svg)](https://www.versioneye.com/user/projects/5ac541370fb24f4489396e02)
 [![Known Vulnerabilities](https://snyk.io/test/github/KevinMidboe/seasonedShows/badge.svg?targetFile=seasoned_api/package.json)](https://snyk.io/test/github/KevinMidboe/seasonedShows?targetFile=seasoned_api/package.json)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
