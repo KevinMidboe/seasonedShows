@@ -61,7 +61,7 @@ class strayEpisode(object):
 		return hashlib.md5("b'{}'".format(self.parent).encode()).hexdigest()[:8]
 
 	def findSeriesName(self):
-		find = re.compile("^[a-zA-Z. ]*")
+		find = re.compile("^[a-zA-Z0-9. ]*")
 		m = re.match(find, self.parent)
 		if m:
 			name, hit = process.extractOne(m.group(0), getShowNames().keys())
