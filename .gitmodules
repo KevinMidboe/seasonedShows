@@ -3,3 +3,4 @@
 [submodule "torrent_search"]
 	path = torrent_search
 	url = https://github.com/KevinMidboe/torrent_search.git
+	branch = master
