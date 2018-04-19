@@ -36,8 +36,9 @@
 </p>
 
 ## <a name="demo-documentation"></a> Demo & Documentation
-📺 [Demo](https://kevinmidboe.com/request) using seasonedRequest.  
-📝 Documentation of the api.
+📺 [DEMO](https://kevinmidboe.com/request)  
+📝 Documentation of the api.  
+💖 Checkout my [fancy vue.js page](https://github.com/KevinMidboe/seasonedRequest) for interfacing the api.  
 
 ## <a name="about"></a> About
 This is the backend api for [seasoned request] that allows for uesrs to request movies and shows by fetching movies from themoviedb api and checks them with your plex library to identify if a movie is already present or not. This api allows to search my query, get themoviedb movie lists like popular and now playing, all while checking if the item is already in your plex library. Your friends can create users to see what movies or shows they have requested and searched for.   
