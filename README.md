@@ -1,8 +1,6 @@
 
 <h1 align="center">
-  <br/>
   🌶 seasonedShows
-  <br/>
 </h1>
 
 <h4 align="center"> Season your media library with the shows and movies that you and your friends want.</h4>
@@ -38,7 +36,7 @@
 </p>
 
 ## <a name="demo-documentation"></a> Demo & Documentation
-📺 [Demo](https://kevinmidboe.com/request) using seasonedRequest.
+📺 [Demo](https://kevinmidboe.com/request) using seasonedRequest.  
 📝 Documentation of the api.
 
 ## <a name="about"></a> About
