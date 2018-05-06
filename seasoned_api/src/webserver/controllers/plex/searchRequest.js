@@ -10,7 +10,7 @@ const searchHistory = new SearchHistory();
 function searchRequestController(req, res) {
    const user = req.loggedInUser;
    const { query, page, type } = req.query;
-   const username = user == undefined ? undefined : user.username;
+   const username = user === undefined ? undefined : user.username;
 
    Promise.resolve()
       .then(() => searchHistory.create(username, query))
