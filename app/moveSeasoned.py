@@ -92,7 +92,9 @@ def moveStray(strayId):
 		logging.warning('Cannot remove ' + ep.typeDir('parent_input') + ', file no longer exists.')
 
 if __name__ == '__main__':
-	if (os.path.exists(env.logfile)):
+	abspath = os.path.abspath(__file__)
+	dname = os.path.dirname(abspath)
+	if (os.path.exists(os.path.join(dname, env.logfile))):
 		logging.basicConfig(filename=env.logfile, level=logging.INFO)
 	else:
 		print('Logfile could not be found at ' + env.logfile + '. Verifiy presence or disable logging in config.')
