@@ -41,7 +41,7 @@ class UserRepository {
             assert(row, 'The user does not exist.');
             return row.password;
          })
-         .catch((err) => console.log('there was a error when getting hash', err));
+         .catch((err) => { console.log(error); throw new Error('Unable to find your user.'); });
    }
 
    /**
@@ -57,7 +57,7 @@ class UserRepository {
    checkAdmin(user) {
       return this.database.get(this.queries.getAdminStateByUser, user.username).then((row) => {
          return row.admin;
-      })
+      });
    }
 }
 

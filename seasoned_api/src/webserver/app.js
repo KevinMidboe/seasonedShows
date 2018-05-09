@@ -17,9 +17,6 @@ app.use(bodyParser.json());
 // router.use(bodyParser.urlencoded({ extended: true }));
 
 
-/* Decode the Authorization header if provided */
-// router.use(tokenToUser);
-
 const router = express.Router();
 const allowedOrigins = ['https://kevinmidboe.com', 'http://localhost:8080'];
 
@@ -27,9 +24,7 @@ const allowedOrigins = ['https://kevinmidboe.com', 'http://localhost:8080'];
 // router.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-
-// This is probably a correct middleware/router setup
-/* Translate the user token to a user name */
+/* Decode the Authorization header if provided */
 router.use(tokenToUser);
 
 // TODO: Should have a separate middleware/router for handling headers.

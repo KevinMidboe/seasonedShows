@@ -22,8 +22,10 @@ function registerController(req, res) {
       .then(() => userRepository.checkAdmin(user))
       .then((checkAdmin) => {
          const token = new Token(user).toString(secret);
-         const admin_state = checkAdmin == 1 ? true : false;
-         res.send({ success: true, message: 'Welcome to Seasoned!', token, admin: admin_state });
+         const admin_state = checkAdmin === 1 ? true : false;
+         res.send({
+            success: true, message: 'Welcome to Seasoned!', token, admin: admin_state,
+         });
       })
       .catch((error) => {
          res.status(401).send({ success: false, error: error.message });

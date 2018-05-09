@@ -8,7 +8,7 @@ const TMDB_METHODS = {
    nowplaying: { movie: 'miscNowPlayingMovies', show: 'tvOnTheAir' },
    similar: { movie: 'movieSimilar', show: 'tvSimilar' },
    search: { movie: 'searchMovie', show: 'searchTv', multi: 'searchMulti' },
-   info: { movie: 'movieInfo', show: 'tvInfo' },
+   info: { movie: 'movieInfo', show: 'tvInfo' }
 };
 
 class TMDB {
@@ -65,7 +65,7 @@ class TMDB {
          .catch(() => this.tmdb(TMDB_METHODS['search'][type], query))
          .catch(() => { throw new Error('Could not search for movies/shows at tmdb.'); })
          .then(response => this.cache.set(cacheKey, response))
-         .then(response => this.mapResults(response))
+         .then(response => this.mapResults(response));
    }
 
    /**
@@ -76,15 +76,15 @@ class TMDB {
    * @returns {Promise} dict with query results, current page and total_pages
    */
    listSearch(listName, type = 'movie', page = '1') {
-      const query = { page: page }
-      console.log(query)
+      const query = { page: page };
+      console.log(query);
       const cacheKey = `${this.cacheTags[listName]}:${type}:${page}`;
       return Promise.resolve()
          .then(() => this.cache.get(cacheKey))
          .catch(() => this.tmdb(TMDB_METHODS[listName][type], query))
-         .catch(() => { throw new Error('Error fetching list from tmdb.')})
+         .catch(() => { throw new Error('Error fetching list from tmdb.'); })
          .then(response => this.cache.set(cacheKey, response))
-         .then(response => this.mapResults(response, type))
+         .then(response => this.mapResults(response, type));
    }
 
    /**
@@ -94,13 +94,18 @@ class TMDB {
    * @returns {Promise} dict with tmdb results, mapped as movie/show objects.
    */
    mapResults(response, type) {
-      console.log(response.page)
+      console.log(response.page);
       return Promise.resolve()
          .then(() => {
             const mappedResults = response.results.filter((element) => {
                return (element.media_type === 'movie' || element.media_type === 'tv' || element.media_type === undefined);
             }).map((element) => convertTmdbToSeasoned(element, type));
-            return {results: mappedResults, page: response.page, total_pages: response.total_pages, total_results: response.total_results}
+            return { 
+               results: mappedResults,
+               page: response.page,
+               total_pages: response.total_pages,
+               total_results: response.total_results
+            }
          })
          .catch((error) => { throw new Error(error); });
    }
