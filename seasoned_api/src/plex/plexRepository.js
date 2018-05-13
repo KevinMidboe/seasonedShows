@@ -15,6 +15,7 @@ class PlexRepository {
    }
 
    search(query) {
+      console.log('searching:', query)
       const options = {
          uri: `http://10.0.0.44:32400/search?query=${query}`,
          headers: {
@@ -39,7 +40,8 @@ class PlexRepository {
             } 
             else {
                plexResult.results.map((plexItem) => {
-                  if (tmdb.title === plexItem.title && tmdb.year === plexItem.year) { tmdb.matchedInPlex = true; }
+                  if (tmdb.title === plexItem.title && tmdb.year === plexItem.year)
+                     tmdb.matchedInPlex = true;
                   return tmdb;
                });
             }
@@ -50,6 +52,7 @@ class PlexRepository {
    mapResults(response) {
       return Promise.resolve()
          .then(() => {
+            console.log('plexResponse:', response)
             if (!response.MediaContainer.hasOwnProperty('Metadata')) return [[], 0];
 
             const mappedResults = response.MediaContainer.Metadata.filter((element) => {
