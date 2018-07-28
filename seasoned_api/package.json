@@ -7,10 +7,11 @@
   },
   "main": "webserver/server.js",
   "scripts": {
-    "start": "cross-env SEASONED_CONFIG=conf/development.json NODE_PATH=. node src/webserver/server.js",
+    "start": "cross-env SEASONED_CONFIG=conf/development.json PROD=true NODE_PATH=. node src/webserver/server.js",
     "test": "cross-env SEASONED_CONFIG=conf/test.json NODE_PATH=. mocha --recursive test",
     "coverage": "cross-env SEASONED_CONFIG=conf/test.json NODE_PATH=. nyc mocha --recursive test && nyc report --reporter=text-lcov | coveralls",
-    "lint": "./node_modules/.bin/eslint src/"
+    "lint": "./node_modules/.bin/eslint src/",
+    "update": "cross-env SEASONED_CONFIG=conf/development.json NODE_PATH=. node src/plex/updateRequestsInPlex.js"
   },
   "dependencies": {
     "bcrypt-nodejs": "^0.0.3",
