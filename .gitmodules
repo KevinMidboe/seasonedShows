@@ -4,3 +4,8 @@
 	path = torrent_search
 	url = https://github.com/KevinMidboe/torrent_search.git
 	branch = master
+
+[submodule "delugeClient"]
+	path = delugeClient
+	url = git@github.com:KevinMidboe/delugeClient.git
+	branch = master
