@@ -75,7 +75,7 @@ class PlexRepository {
       return rp(options)
          .then((result) => {
             if (result.MediaContainer.size > 0) {
-               const playing = result.MediaContainer.Video.map(convertPlexToStream);
+               const playing = result.MediaContainer.Metadata.map(convertPlexToStream);
                return { size: Object.keys(playing).length, video: playing };
             }
             return { size: 0, video: [] };
