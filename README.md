@@ -69,7 +69,7 @@ After you have downloaded a package manager and node.js javascript engine, the f
 - Open terminal
 - Install git. This can be done by running `xcode-select --install` in your favorite terminal.
 - Install a package manager, refer to this [wiki page] for yarn or [wiki page] for npm
-- Type: `git clone https://github.com/KevinMidboe/seasonedShows.git`
+- Type: `git clone --recurse-submodules git@github.com:KevinMidboe/seasonedShows.git`
 - Type: `cd seasonedShows/`
 - Install required packages
    * yarn: `yarn install`
@@ -85,7 +85,7 @@ After you have downloaded a package manager and node.js javascript engine, the f
 - Install git
    * Ubuntu/Debian: `sudo apt-get install git-core`
    * Fedora: `sudo yum install git`
-- Type: `git clone https://github.com/KevinMidboe/seasonedShows.git`
+- Type: `git clone --recurse-submodules git@github.com:KevinMidboe/seasonedShows.git`
 - Type: `cd seasonedShows/`
 - Install required packages
    * yarn: `yarn install`
