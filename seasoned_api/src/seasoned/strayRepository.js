@@ -43,7 +43,7 @@ class StrayRepository {
          assert.notEqual(row, undefined, `Stray '${strayId}' already verified.`);
 
          const options = {
-            pythonPath: '/usr/bin/python3',
+	    pythonPath: '../app/env/bin/python3',
             args: [strayId],
          };
 
