@@ -7,5 +7,4 @@
 
 [submodule "delugeClient"]
 	path = delugeClient
-	url = git@github.com:KevinMidboe/delugeClient.git
-	branch = master
+	url = https://github.com/KevinMidboe/delugeClient.git
