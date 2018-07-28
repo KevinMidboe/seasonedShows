@@ -94,9 +94,9 @@ def moveStray(strayId):
 		logging.warning('Cannot remove ' + ep.typeDir('parent_input') + ', file no longer exists.')
 
 	# Remove from deluge client
-	logging.info('Removing {} for deluge'.format(ep.name))
+	logging.info('Removing {} for deluge'.format(ep.parent))
 	deluge = delugeCli.Deluge()
-	response = deluge.remove(ep.name)
+	response = deluge.remove(ep.parent)
 	logging.info('Deluge response after delete: {}'.format(response))
 
 
