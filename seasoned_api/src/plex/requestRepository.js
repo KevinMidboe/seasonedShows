@@ -18,7 +18,7 @@ class RequestRepository {
          fetchRequestedItemsByStatus: 'SELECT * FROM requests WHERE status IS ? AND type LIKE ? ORDER BY date DESC LIMIT 25 OFFSET ?*25-25',
          updateRequestedById: 'UPDATE requests SET status = ? WHERE id is ? AND type is ?',
          checkIfIdRequested: 'SELECT * FROM requests WHERE id IS ? AND type IS ?',
-         userRequests: 'SELECT * FROM requests WHERE requested_by IS ?',
+         userRequests: 'SELECT * FROM requests WHERE requested_by IS ? ORDER BY date DESC',
       };
       this.cacheTags = {
          search: 'se',

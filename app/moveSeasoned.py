@@ -3,12 +3,14 @@
 # @Author: KevinMidboe
 # @Date:   2017-04-12 23:27:51
 # @Last Modified by:   KevinMidboe
-# @Last Modified time: 2017-06-27 15:58:09
+# @Last Modified time: 2018-05-13 19:17:17
 
 import sys, sqlite3, json, os.path
 import logging
 import env_variables as env
 import shutil
+
+import delugeClient.deluge_cli as delugeCli
 
 class episode(object):
 	def __init__(self, id):
@@ -91,8 +93,18 @@ def moveStray(strayId):
 	except FileNotFoundError:
 		logging.warning('Cannot remove ' + ep.typeDir('parent_input') + ', file no longer exists.')
 
+	# Remove from deluge client
+	logging.info('Removing {} for deluge'.format(ep.name))
+	deluge = delugeCli.Deluge()
+	response = deluge.remove(ep.name)
+	logging.info('Deluge response after delete: {}'.format(response))
+
+
+
 if __name__ == '__main__':
-	if (os.path.exists(env.logfile)):
+	abspath = os.path.abspath(__file__)
+	dname = os.path.dirname(abspath)
+	if (os.path.exists(os.path.join(dname, env.logfile))):
 		logging.basicConfig(filename=env.logfile, level=logging.INFO)
 	else:
 		print('Logfile could not be found at ' + env.logfile + '. Verifiy presence or disable logging in config.')
