@@ -56,3 +56,23 @@ CREATE TABLE IF NOT EXISTS shows(
 	date_added DATE, 
 	date_modified DATE DEFUALT CURRENT_DATE NOT NULL
 );
+
+CREATE TABLE IF NOT EXISTS requested_torrent (
+    magnet TEXT UNIQUE,
+    torrent_name TEXT,
+    tmdb_id TEXT
+    date_added DATE DEFAULT (datetime('now','localtime'))
+);
+
+CREATE TABLE IF NOT EXISTS deluge_torrent (
+    key TEXT UNIQUE,
+    name TEXT,
+    progress TEXT,
+    eta NUMBER,
+    save_path TEXT,
+    state TEXT,
+    paused BOOLEAN,
+    finished BOOLEAN,
+    files TEXT,
+    is_folder BOOLEAN
+)
