@@ -3,6 +3,8 @@ const http = require('http');
 const { URL } = require('url');
 const PythonShell = require('python-shell');
 
+const establishedDatabase = require('src/database/database');
+
 function getMagnetFromURL(url) {
    return new Promise((resolve, reject) => {
       const options = new URL(url);
@@ -66,10 +68,18 @@ async function AddMagnet(magnet) {
       if (err) {
          /* eslint-disable no-console */
          console.log(err);
-	 reject(Error('Enable to add torrent', err)) 
+         reject(Error('Enable to add torrent', err)) 
       }
       /* eslint-disable no-console */
       console.log('result/error:', err, results);
+
+      database = establishedDatabase;
+      insert_query = "INSERT INTO requested_torrent(magnet,torrent_name,tmdb_id) \
+         VALUES (?,?,?)";
+
+      let response = await database.run(insert_query, [magnet, name, tmdb_id]));
+      console.log('Response from requsted_torrent insert: ' + response);
+
       resolve({ success: true });
    }));
 }
