@@ -4,9 +4,15 @@ git:
    submodules: true
 script:
    - yarn test
-   - yarn coverage 
+   - yarn coverage
 before_install:
    - cd seasoned_api
-before_script: yarn
+before_script: 
+   - yarn
+   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+   - chmod +x ./cc-test-reporter
+   - ./cc-test-reporter before-build
+after-script:
+   - ./cc-test-resporter after-build --exit-code $TRAVIS_TEST_RESULT
 cache: false
 os: linux
