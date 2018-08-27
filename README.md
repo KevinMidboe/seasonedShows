@@ -13,9 +13,6 @@
   <a href="https://coveralls.io/github/KevinMidboe/seasonedShows?branch=coverage">
     <img src="https://coveralls.io/repos/github/KevinMidboe/seasonedShows/badge.svg?branch=coverage" alt="">
   </a>
-  <a href="https://www.versioneye.com/user/projects/5ac541370fb24f4489396e02">
-    <img src="https://www.versioneye.com/user/projects/5ac541370fb24f4489396e02/badge.svg" alt="">
-  </a>
   <a href="https://snyk.io/test/github/KevinMidboe/seasonedShows?targetFile=seasoned_api/package.json">
     <img src="https://snyk.io/test/github/KevinMidboe/seasonedShows/badge.svg?targetFile=seasoned_api/package.json" alt="">
   </a>
