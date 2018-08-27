@@ -140,20 +140,3 @@ Then there is a script for looking for replies on twitter by user_admin, if caan
 
 After approval by user the files are modified and moved to folders in resptected area. If error occours, pasteee link if log is sent to user.
 
-#### External
- + Seasoned: request, discover and manage.
- + Stray: Overview of downloaded episodes before they are organized.
- + (+) Admin Panel: Overview of all stray episodes/movies.
-
-#### Api
- + All communication between public website to server.
- + Plex: All querying to what is localy available in your plex library. 
- + Stray (seasoned) -> also calls services (moveStray) through api.
- + Tmdb: Requesting information from tmdb.
- + (+) Admin Panel: Use secure login and session tokens to handle logged in viewer. 
-
-#### Services
- + Parse directories for new content.
- + Extract and save in db information about stray item.
- + Move a confirmed stray item.
- + (+) Search for torrents matching new content.
