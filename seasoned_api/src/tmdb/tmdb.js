@@ -1,4 +1,4 @@
-const moviedb = require('moviedb');
+const moviedb = require('km-moviedb');
 const convertTmdbToSeasoned = require('src/tmdb/convertTmdbToSeasoned');
 
 const TMDB_METHODS = {
