@@ -30,8 +30,8 @@
     "redux-thunk": "^2.2.0",
     "urijs": "^1.18.12",
     "webfontloader": "^1.6.28",
-    "webpack": "^3.5.5",
-    "webpack-dev-server": "^2.4.5",
+    "webpack": "^4.0.0",
+    "webpack-dev-server": "^3.1.6",
     "webpack-merge": "^4.1.0"
   },
   "devDependencies": {
