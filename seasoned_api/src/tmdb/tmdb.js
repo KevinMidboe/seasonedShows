@@ -68,6 +68,17 @@ class TMDB {
          .then(response => this.mapResults(response));
    }
 
+  multiSearch(search_query, page=1) {
+    const query = { query: search_query, page: page };
+    const cacheKey = `${this.cacheTags.multiSeach}:${page}:${search_query}`;
+    return Promise.resolve()
+      .then(() => this.cache.get(cacheKey))
+      .catch(() => this.tmdb('searchMulti', query))
+      .catch(() => { throw new Error('Could not complete search to tmdb'); })
+      .then(response => this.cache.set(cacheKey, response))
+      .then(response => this.mapResults(response));
+  }
+
    /**
    * Fetches a given list from tmdb.
    * @param {String} listName Name of list
@@ -122,7 +133,7 @@ class TMDB {
             if (error) {
                return reject(error);
             }
-            return resolve(reponse);
+            resolve(reponse);
          };
 
          if (!argument) {

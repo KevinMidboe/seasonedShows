@@ -67,6 +67,14 @@ router.get('/v1/seasoned/all', require('./controllers/seasoned/readStrays.js'));
 router.get('/v1/seasoned/:strayId', require('./controllers/seasoned/strayById.js'));
 router.post('/v1/seasoned/verify/:strayId', require('./controllers/seasoned/verifyStray.js'));
 
+router.get('/v2/search/', require('./controllers/search/multiSearch.js'));
+router.get('/v2/search/movie', require('./controllers/search/movieSearch.js'));
+router.get('/v2/search/show', require('./controllers/search/showSearch.js'));
+router.get('/v2/search/person', require('./controllers/search/personSearch.js'));
+
+router.get('/v2/movie/:id', require('./controllers/info/movieInfo.js'));
+router.get('/v2/show/:id', require('./controllers/info/showInfo.js'));
+router.get('/v2/person/:id', require('./controllers/info/personInfo.js'));
 /**
  * Plex
  */
