@@ -8,6 +8,9 @@
 	"tmdb": {
 		"apiKey": ""
 	},
+	"plex": {
+		"ip": ""
+	},
 	"raven": {
 		"DSN": ""
 	},
