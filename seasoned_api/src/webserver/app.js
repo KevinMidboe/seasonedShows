@@ -78,6 +78,8 @@ router.get('/v2/person/:id', require('./controllers/info/personInfo.js'));
 /**
  * Plex
  */
+router.get('/v2/plex/search', require('./controllers/plex/search'));
+
 router.get('/v1/plex/search', require('./controllers/plex/searchMedia.js'));
 router.get('/v1/plex/playing', require('./controllers/plex/plexPlaying.js'));
 router.get('/v1/plex/request', require('./controllers/plex/searchRequest.js'));
