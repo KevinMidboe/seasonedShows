@@ -8,6 +8,9 @@
 	"tmdb": {
 		"apiKey": "bogus-api-key"
 	},
+	"plex": {
+		"ip": "0.0.0.0"
+	},
 	"raven": {
 		"DSN": ""
 	},
