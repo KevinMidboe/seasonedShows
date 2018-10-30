@@ -4,18 +4,19 @@ const app = require('src/webserver/app');
 const request = require('supertest-as-promised');
 const createUser = require('test/helpers/createUser');
 const createToken = require('test/helpers/createToken');
-const infoMovieSuccess = require('test/fixtures/arrival-info-success-response.json');
+const infoMovieSuccess = require('test/fixtures/blade_runner_2049-info-success-response.json');
 
 describe('As a user I want to request a movie', () => {
   before(() => {
    return resetDatabase()
    .then(() => createUser('test_user', 'test@gmail.com', 'password'));
    })
-  before(() => createCacheEntry('i:movie:329865', infoMovieSuccess));
+  before(() => createCacheEntry('mi:335984', infoMovieSuccess));
 
   it('should return 200 when item is requested', () =>
     request(app)
-    .post('/api/v1/plex/request/329865')
+    .post('/api/v2/request/335984', {tmdbType: 'movie'})
+    .send({ tmdbType: 'movie' })
     .set('Authorization', createToken('test_user', 'secret'))
     .expect(200)
   );

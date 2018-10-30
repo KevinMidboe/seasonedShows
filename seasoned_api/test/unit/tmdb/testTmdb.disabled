@@ -1,0 +1,31 @@
+const assert = require('assert');
+// const Movie = require('src/movie/movie');
+const TMDB = require('src/tmdb/tmdb');
+const Cache = require('src/tmdb/cache');
+const SqliteDatabase = require('src/database/sqliteDatabase');
+const tmdbMock = require('test/helpers/tmdbMock');
+
+const emptyQuerySuccess = require('test/fixtures/empty-query-success-response.json');
+const interstellarQuerySuccess = require('test/fixtures/arrival-info-success-response.json');
+const popularMovieSuccessResponse = require('test/fixtures/popular-movies-success-response.json');
+
+describe('TMDB', function test() {
+  beforeEach(() => {
+    this.mockMoviedb = tmdbMock();
+    this.database = new SqliteDatabase(':memory:');
+    return Promise.resolve()
+    .then(() => this.database.setUp());
+    });
+
+    describe('popular', () => {
+      it('should return the "Blade Runner 2049" year in the collection of popular movies', () => {
+        this.mockMoviedb.response = popularMovieSuccessResponse;
+          const cache = new Cache(this.database);
+          const tmdb = new TMDB(cache, 'bogus-api-key', this.mockMoviedb);
+          return tmdb.popular()
+          .then(movies =>
+            assert.equal(movies[0].title, "Blade Runner 2049")
+          );
+      });
+    })
+});

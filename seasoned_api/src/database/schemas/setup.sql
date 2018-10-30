@@ -36,6 +36,14 @@ CREATE TABLE IF NOT EXISTS requests(
     type CHAR(50) DEFAULT 'movie'
 );
 
+CREATE TABLE IF NOT EXISTS request(
+   id int not null,
+   title text not null,
+   year int not null,
+   type char(10) not null,
+   date default current_timestamp
+);
+
 
 CREATE TABLE IF NOT EXISTS stray_eps(
 	id TEXT UNIQUE,
