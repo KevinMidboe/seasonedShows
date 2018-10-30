@@ -3,7 +3,6 @@ const convertTmdbToMovie = require('src/tmdb/convertTmdbToMovie');
 const convertTmdbToShow = require('src/tmdb/convertTmdbToShow');
 const convertTmdbToPerson = require('src/tmdb/convertTmdbToPerson');
 
-
 const TMDB_METHODS = {
    upcoming: { movie: 'miscUpcomingMovies' },
    discover: { movie: 'discoverMovie', show: 'discoverTv' },
