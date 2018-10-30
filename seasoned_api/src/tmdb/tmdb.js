@@ -88,7 +88,7 @@ class TMDB {
     return Promise.resolve()
     .then(() => this.cache.get(cacheKey))
     .catch(() => this.tmdb('movieInfo', query))
-    .catch(() => { throw new Error('Could not find a movie with that id.'); })
+    .catch((error) => { console.log(error); throw new Error('Could not find a movie with that id.'); })
     .then(response => this.cache.set(cacheKey, response))
     .then((response) => {
       try {
