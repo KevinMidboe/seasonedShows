@@ -3,34 +3,25 @@ const convertTmdbToMovie = require('src/tmdb/convertTmdbToMovie');
 const convertTmdbToShow = require('src/tmdb/convertTmdbToShow');
 const convertTmdbToPerson = require('src/tmdb/convertTmdbToPerson');
 
-
-const TMDB_METHODS = {
-   upcoming: { movie: 'miscUpcomingMovies' },
-   discover: { movie: 'discoverMovie', show: 'discoverTv' },
-   popular: { movie: 'miscPopularMovies', show: 'miscPopularTvs' },
-   nowplaying: { movie: 'miscNowPlayingMovies', show: 'tvOnTheAir' },
-   similar: { movie: 'movieSimilar', show: 'tvSimilar' },
-   search: { movie: 'searchMovie', show: 'searchTv', multi: 'searchMulti' },
-   info: { movie: 'movieInfo', show: 'tvInfo' }
-};
-
 class TMDB {
   constructor(cache, apiKey, tmdbLibrary) {
     this.cache = cache;
     this.tmdbLibrary = tmdbLibrary || moviedb(apiKey);
     this.cacheTags = {
-      multiSearch: 'muse',
-      movieSearch: 'mose',
-      showSearch: 'sse',
-      personSearch: 'pse',
-      movieInfo: 'mi',
-      showInfo: 'si',
+      multiSearch: 'mus', 
+      movieSearch: 'mos', 
+      showSearch: 'ss',
+      personSearch: 'ps',
+      movieInfo: 'mi', 
+      showInfo: 'si', 
       personInfo: 'pi',
-      upcoming: 'u',
-      discover: 'd',
-      popular: 'p',
-      nowplaying: 'n',
-      similar: 'sim',
+      miscNowPlayingMovies: 'npm',
+      miscPopularMovies: 'pm',
+      miscTopRatedMovies: 'tpm',
+      miscUpcomingMovies: 'um',
+      tvOnTheAir: 'toa',
+      miscPopularTvs: 'pt',
+      miscTopRatedTvs: 'trt',
     };
   }
 
@@ -176,19 +167,8 @@ class TMDB {
     .catch(() => this.tmdb('searchMovie', tmdbquery))
     .catch(() => { throw new Error('Could not complete movie search to tmdb'); })
     .then(response => this.cache.set(cacheKey, response))
-    .then((response) => {
-      try {
-        return {
-          results: response.results.map(convertTmdbToMovie),
-          page: page,
-          total_results: response.total_results,
-          total_pages: response.total_pages
-        }
-      } catch (parseError) {
-        console.error(`ParseError: ${parseError}`);
-        throw new Error('Could not parse movie search results.')
-      }
-    });
+    .then(response => this.mapAndCreateResponse(response, convertTmdbToMovie))
+    .catch((error) => { console.log(error); throw new Error('Could not parse movie search result') })
   }
 
   /**
@@ -205,19 +185,8 @@ class TMDB {
     .catch(() => this.tmdb('searchTv', tmdbquery))
     .catch(() => { throw new Error('Could not complete show search to tmdb'); })
     .then(response => this.cache.set(cacheKey, response))
-    .then((response) => {
-      try {
-        return {
-          results: response.results.map(convertTmdbToShow),
-          page: page,
-          total_results: response.total_results,
-          total_pages: response.total_pages
-        }
-      } catch (parseError) {
-        console.error(`ParseError: ${parseError}`);
-        throw new Error('Could not parse show search results.')
-      }
-    });
+    .then(response => this.mapAndCreateResponse(response, convertTmdbToShow))
+    .catch((error) => { console.log(error); throw new Error('Could not parse show search result') })
   }
 
   /**
@@ -234,23 +203,42 @@ class TMDB {
     .catch(() => this.tmdb('searchPerson', tmdbquery))
     .catch(() => { throw new Error('Could not complete person search to tmdb'); })
     .then(response => this.cache.set(cacheKey, response))
-    .then((response) => {
-      try {
-        return {
-          results: response.results.map(convertTmdbToPerson),
-          page: page,
-          total_results: response.total_results,
-          total_pages: response.total_pages
-        }
-      } catch (parseError) {
-        console.error(`ParseError: ${parseError}`);
-        throw new Error('Could not parse show search results.')
-      }
-    });
+    .then(response => this.mapAndCreateResponse(response, convertTmdbToPerson))
+    .catch((error) => { console.log(error); throw new Error('Could not parse person search result') })
+  }
+
+  mapAndCreateResponse(response, resultConvertFunction) {
+    // console.log(response)
+    return {
+      results: response.results.map(resultConvertFunction),
+      page: response.page,
+      total_results: response.total_results,
+      total_pages: response.total_pages
+    }
   }
 
 
+  movieList(listname, page = 1) {
+    const query = { page: page };
+    const cacheKey = `${this.cacheTags[listname]}:${page}`;
+    return Promise.resolve()
+      .then(() => this.cache.get(cacheKey))
+      .catch(() => this.tmdb(listname, query))
+      .catch(() => { throw new Error('Unable to get movie list from tmdb')})
+      .then(response => this.cache.set(cacheKey, response))
+      .then(response => this.mapAndCreateResponse(response, convertTmdbToMovie));
+  }
 
+  showList(listname, page = 1) {
+    const query = { page: page };
+    const cacheKey = `${this.cacheTags[listname]}:${page}`;
+    return Promise.resolve()
+      .then(() => this.cache.get(cacheKey))
+      .catch(() => this.tmdb(listname, query))
+      .catch(() => { throw new Error('Unable to get show list from tmdb')})
+      .then(response => this.cache.set(cacheKey, response))
+      .then(response => this.mapAndCreateResponse(response, convertTmdbToShow));
+  }
 
    /**
    * Fetches a given list from tmdb.
@@ -288,7 +276,7 @@ class TMDB {
    * @param {String} The type declared in listSearch.
    * @returns {Promise} dict with tmdb results, mapped as movie/show objects.
    */
-  mapResults(response, type) {
+  mapResults(response, _) {
     let results = response.results.map((result) => {
       if (result.media_type === 'movie') {
         return convertTmdbToMovie(result);
