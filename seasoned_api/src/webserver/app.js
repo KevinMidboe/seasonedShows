@@ -6,16 +6,14 @@ const mustBeAuthenticated = require('./middleware/mustBeAuthenticated');
 const mustBeAdmin = require('./middleware/mustBeAdmin');
 const configuration = require('src/config/configuration').getInstance();
 
+const listController = require('./controllers/list/listController');
+
 // TODO: Have our raven router check if there is a value, if not don't enable raven.
 Raven.config(configuration.get('raven', 'DSN')).install();
 
 const app = express(); // define our app using express
 app.use(Raven.requestHandler());
-// this will let us get the data from a POST
-// configure app to use bodyParser()
 app.use(bodyParser.json());
-// router.use(bodyParser.urlencoded({ extended: true }));
-
 
 const router = express.Router();
 const allowedOrigins = ['https://kevinmidboe.com', 'http://localhost:8080'];
@@ -31,10 +29,10 @@ router.use(tokenToUser);
 router.use((req, res, next) => {
    // TODO add logging of all incoming
    console.log('Request: ', req.originalUrl);
-   const origin = req.headers.origin;
+
+  const origin = req.headers.origin;
    if (allowedOrigins.indexOf(origin) > -1) {
-      console.log('allowed');
-      res.setHeader('Access-Control-Allow-Origin', origin);
+       res.setHeader('Access-Control-Allow-Origin', origin);
    }
    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, loggedinuser');
    res.header('Access-Control-Allow-Methods', 'POST, GET, PUT');
@@ -72,6 +70,15 @@ router.get('/v2/search/movie', require('./controllers/search/movieSearch.js'));
 router.get('/v2/search/show', require('./controllers/search/showSearch.js'));
 router.get('/v2/search/person', require('./controllers/search/personSearch.js'));
 
+router.get('/v2/movie/now_playing', listController.nowPlayingMovies);
+router.get('/v2/movie/popular', listController.popularMovies);
+router.get('/v2/movie/top_rated', listController.topRatedMovies);
+router.get('/v2/movie/upcoming', listController.upcomingMovies);
+
+router.get('/v2/show/now_playing', listController.nowPlayingShows);
+router.get('/v2/show/popular', listController.popularShows);
+router.get('/v2/show/top_rated', listController.topRatedShows);
+
 router.get('/v2/movie/:id', require('./controllers/info/movieInfo.js'));
 router.get('/v2/show/:id', require('./controllers/info/showInfo.js'));
 router.get('/v2/person/:id', require('./controllers/info/personInfo.js'));
@@ -80,6 +87,9 @@ router.get('/v2/person/:id', require('./controllers/info/personInfo.js'));
  */
 router.get('/v2/plex/search', require('./controllers/plex/search'));
 
+/**
+ * List
+ */
 router.get('/v1/plex/search', require('./controllers/plex/searchMedia.js'));
 router.get('/v1/plex/playing', require('./controllers/plex/plexPlaying.js'));
 router.get('/v1/plex/request', require('./controllers/plex/searchRequest.js'));
