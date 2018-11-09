@@ -41,7 +41,7 @@ CREATE TABLE IF NOT EXISTS request(
    title text not null,
    year int not null,
    type char(10) not null,
-   date default current_timestamp
+   date timestamp default (strftime('%s', 'now'))
 );
 
 

@@ -6,14 +6,14 @@ const cache = new Cache();
 const tmdb = new TMDB(cache, configuration.get('tmdb', 'apiKey'));
 const request = new RequestRepository();
 
-const typeFunction = (type) => {
+const requestAsTmdb = (type, id) => {
   if (type !== undefined) {
     type = type.toLowerCase();
 
     if (type === 'movie') {
-      return tmdb.movieInfo;
+      return tmdb.movieInfo(id);
     } else if (type === 'show') {
-      return tmdb.showInfo;
+      return tmdb.showInfo(id);
     } else {
       throw new Error("Unprocessable Entity: Invalid type for body parameter 'type'. Allowed values: movie|show");
     }
@@ -28,14 +28,11 @@ const typeFunction = (type) => {
  * @returns {Callback}
  */
 function requestTmdbIdController(req, res) {
-  const requestId = req.params.id;
-  const tmdbType = req.body.tmdbType;
+  const { id, type } = req.body;
 
   Promise.resolve()
-  .then(() => typeFunction(tmdbType))
-  //  .then(() => checkType
-  .then(() => tmdb.movieInfo(requestId))
-  .then((movie) => request.addTmdb(movie))
+  .then(() => requestAsTmdb(type, id))
+  .then((requesAsTmdb) => request.addTmdb(requesAsTmdb))
   .then(() => res.send({sucess: true, message: 'Request has been submitted.'}))
   .catch((error) => {
     res.status(404).send({ success: false, error: error.message });
