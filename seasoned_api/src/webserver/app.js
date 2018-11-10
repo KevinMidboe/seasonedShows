@@ -101,6 +101,7 @@ router.get('/v1/plex/hook', require('./controllers/plex/hookDump.js'));
  * Requests
  */
 
+router.get('/v2/request', require('./controllers/request/fetchAllRequests.js'));
 router.post('/v2/request', require('./controllers/request/requestTmdbId.js'));
 router.get('/v1/plex/requests/all', require('./controllers/plex/fetchRequested.js'));
 router.put('/v1/plex/request/:requestId', mustBeAuthenticated, require('./controllers/plex/updateRequested.js'));
