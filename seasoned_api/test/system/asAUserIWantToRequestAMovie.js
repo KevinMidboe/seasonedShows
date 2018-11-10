@@ -15,8 +15,8 @@ describe('As a user I want to request a movie', () => {
 
   it('should return 200 when item is requested', () =>
     request(app)
-    .post('/api/v2/request/335984', {tmdbType: 'movie'})
-    .send({ tmdbType: 'movie' })
+    .post('/api/v2/request')
+    .send({ id: 335984, type: 'movie' })
     .set('Authorization', createToken('test_user', 'secret'))
     .expect(200)
   );
