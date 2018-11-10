@@ -141,7 +141,6 @@ class TMDB {
 
 
 
-
   multiSearch(search_query, page=1) {
     const query = { query: search_query, page: page };
     const cacheKey = `${this.cacheTags.multiSearch}:${page}:${search_query}`;

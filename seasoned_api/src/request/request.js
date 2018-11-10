@@ -97,22 +97,13 @@ class RequestRepository {
   }
 
   fetchAll(sort_by=undefined, sort_direction='asc', filter_param=undefined, query=undefined) {
-    if (sort_by !== undefined && ! utils.validSort(sort_by, sort_direction)) {
-      throw new Error('Invalid sort parameters')
-    } else if (filter_param !== undefined && ! utils.validFilter(filter_param)) {
-      throw new Error('Invalid filter parameter')
-    }
-
     return Promise.resolve()
+      .then(() => utils.validSort(sort_by, sort_direction))
+      .then(() => utils.validFilter(filter_param))
       .then(() => this.sortAndFilterToDbQuery(sort_by, sort_direction, filter_param, query))
       .then((dbQuery) => this.database.all(dbQuery))
       .then((rows) => Promise.all(this.mapToTmdbByType(rows)))
-      .catch((err) => { throw new Error(`err ${err}`) })
   }
-
-  //   return Promise.resolve()
-  //     .then(() => this.database.get(this.))
-  // }
 }
 
 module.exports = RequestRepository;
