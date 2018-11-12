@@ -96,6 +96,14 @@ class RequestRepository {
     });
   }
 
+  /**
+   * Fetch all requests with optional sort and filter params
+   * @param {String} what we are sorting by
+   * @param {String} direction that can be either 'asc' or 'desc', default 'asc'.
+   * @param {String} params to filter by
+   * @param {String} query param to filter result on. Filters on title and year
+   * @returns {Promise}
+   */
   fetchAll(sort_by=undefined, sort_direction='asc', filter_param=undefined, query=undefined) {
     return Promise.resolve()
       .then(() => utils.validSort(sort_by, sort_direction))
