@@ -15,9 +15,11 @@ class PlexRepository {
    }
 
    search(query) {
-      console.log('searching:', query)
+      console.log(`Searching plex with query ${query}`)
+      let uri_query = encodeURIComponent(query)
+
       const options = {
-         uri: `http://10.0.0.44:32400/search?query=${query}`,
+         uri: `http://10.0.0.44:32400/search?query=${uri_query}`,
          headers: {
             Accept: 'application/json',
          },
@@ -26,6 +28,7 @@ class PlexRepository {
 
       return rp(options)
          .catch((error) => {
+            console.log(error)
             throw new Error('Unable to search plex.')
          })
          .then(result => this.mapResults(result))
@@ -52,7 +55,6 @@ class PlexRepository {
    mapResults(response) {
       return Promise.resolve()
          .then(() => {
-            console.log('plexResponse:', response)
             if (!response.MediaContainer.hasOwnProperty('Metadata')) return [[], 0];
 
             const mappedResults = response.MediaContainer.Metadata.filter((element) => {
