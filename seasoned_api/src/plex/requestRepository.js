@@ -4,7 +4,7 @@ const configuration = require('src/config/configuration').getInstance();
 const TMDB = require('src/tmdb/tmdb');
 const establishedDatabase = require('src/database/database');
 
-const plexRepository = new PlexRepository();
+const plexRepository = new PlexRepository(configuration.get('plex', 'ip'));
 const cache = new Cache();
 const tmdb = new TMDB(cache, configuration.get('tmdb', 'apiKey'));
 

@@ -3,6 +3,10 @@ const convertPlexToStream = require('src/plex/convertPlexToStream');
 const rp = require('request-promise');
 
 class PlexRepository {
+   constructor(plexIP) {
+    this.plexIP = plexIP;
+   }
+
    inPlex(tmdbResult) {
       return Promise.resolve()
          .then(() => this.search(tmdbResult.title))
@@ -17,7 +21,7 @@ class PlexRepository {
    search(query) {
       console.log('searching:', query)
       const options = {
-         uri: `http://10.0.0.44:32400/search?query=${query}`,
+         uri: `http://${plexIP}:32400/search?query=${query}`,
          headers: {
             Accept: 'application/json',
          },
@@ -65,7 +69,7 @@ class PlexRepository {
 
    nowPlaying() {
       const options = {
-         uri: 'http://10.0.0.44:32400/status/sessions',
+         uri: `http://${plexIP}:32400/status/sessions`,
          headers: {
             Accept: 'application/json',
          },

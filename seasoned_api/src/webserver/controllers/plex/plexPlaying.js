@@ -1,6 +1,7 @@
 const PlexRepository = require('src/plex/plexRepository');
+const configuration = require('src/config/configuration').getInstance();
 
-const plexRepository = new PlexRepository();
+const plexRepository = new PlexRepository(onfiguration.get('plex', 'ip'));
 
 function playingController(req, res) {
    plexRepository.nowPlaying()
