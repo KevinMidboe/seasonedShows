@@ -111,6 +111,7 @@ class RequestRepository {
       .then(() => this.sortAndFilterToDbQuery(sort_by, sort_direction, filter_param, query))
       .then((dbQuery) => this.database.all(dbQuery))
       .then((rows) => Promise.all(this.mapToTmdbByType(rows)))
+      .then(result => Promise.resolve({results: result, total_results: result.length}))
   }
 }
 
