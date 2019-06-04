@@ -1,7 +1,7 @@
 const Person = require('src/tmdb/types/person');
 const convertTmdbToMovie = require('src/tmdb/convertTmdbToMovie');
 
-function convertTmdbToPerson(tmdbPerson) {
+function convertTmdbToPerson(tmdbPerson, cast=undefined) {
   const person = new Person(tmdbPerson.id, tmdbPerson.name);
 
   if (tmdbPerson.profile_path !== undefined) {
@@ -18,6 +18,10 @@ function convertTmdbToPerson(tmdbPerson) {
 
   if (tmdbPerson.known_for !== undefined) {
     person.known_for = tmdbPerson.known_for.map(convertTmdbToMovie);
+  }
+
+  if (cast) {
+    person.cast = cast.cast;
   }
 
   return person;

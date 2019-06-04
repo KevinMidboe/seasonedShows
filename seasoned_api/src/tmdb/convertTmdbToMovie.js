@@ -2,10 +2,14 @@ const Movie = require('src/tmdb/types/movie');
 
 const tmdbSwitcher = (tmdbMovie, property) => tmdbMovie[property]
 
-function convertTmdbToMovie(tmdbMovie) {
+function convertTmdbToMovie(tmdbMovie, credits=undefined) {
   const movie = new Movie(tmdbMovie.id, tmdbMovie.title)
   movie.overview = tmdbMovie.overview;
   movie.rank = tmdbMovie.vote_average;
+
+  if (credits) {
+    movie.credits = credits;
+  }
 
   if (tmdbMovie.release_date !== undefined) {
     movie.release_date = new Date(tmdbMovie.release_date);
