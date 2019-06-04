@@ -1,7 +1,7 @@
 const PlexRepository = require('src/plex/plexRepository');
 const configuration = require('src/config/configuration').getInstance();
 
-const plexRepository = new PlexRepository(onfiguration.get('plex', 'ip'));
+const plexRepository = new PlexRepository(configuration.get('plex', 'ip'));
 
 /**
  * Controller: Search for media and check existence
