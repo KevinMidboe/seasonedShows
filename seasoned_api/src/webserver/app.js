@@ -95,7 +95,7 @@ router.get('/v1/plex/playing', require('./controllers/plex/plexPlaying.js'));
 router.get('/v1/plex/request', require('./controllers/plex/searchRequest.js'));
 router.get('/v1/plex/request/:mediaId', require('./controllers/plex/readRequest.js'));
 router.post('/v1/plex/request/:mediaId', require('./controllers/plex/submitRequest.js'));
-router.get('/v1/plex/hook', require('./controllers/plex/hookDump.js'));
+router.post('/v1/plex/hook', require('./controllers/plex/hookDump.js'));
 
 /**
  * Requests
