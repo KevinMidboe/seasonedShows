@@ -13,11 +13,15 @@ const plex = new Plex(configuration.get('plex', 'ip'));
  * @returns {Callback}
  */
 
-function showInfoController(req, res) {
+async function showInfoController(req, res) {
   const showId = req.params.id;
-  tmdb.showInfo(showId)
-  .then((show) => plex.existsInPlex(show))
-  .then((show) => {
+  const { credits } = req.query;
+  const show = await tmdb.showInfo(showId, credits);
+
+  plex.existsInPlex(show)
+  .catch((error) => { console.log('Error when searching plex'); })
+  .then(() => {
+    console.log('show', show)
     res.send(show);
   }).catch((error) => {
     res.status(404).send({ success: false, error: error.message });

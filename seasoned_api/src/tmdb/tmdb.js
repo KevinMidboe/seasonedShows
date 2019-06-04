@@ -39,7 +39,7 @@ class TMDB {
          .catch(() => this.tmdb(TMDB_METHODS['info'][type], query))
          .catch(() => { throw new Error('Could not find a movie with that id.'); })
          .then(response => this.cache.set(cacheKey, response))
-         .then((response) => {
+         .then(response => {
             try {
                return convertTmdbToSeasoned(response, type);
             } catch (parseError) {
@@ -73,22 +73,22 @@ class TMDB {
    * @param {String} type filter results by type (default movie).
    * @returns {Promise} succeeds if movie was found
    */
-  movieInfo(identifier) {
+  movieInfo(identifier, credits=false) {
     const query = { id: identifier };
-    const cacheKey = `${this.cacheTags.movieInfo}:${identifier}`;
+    const cacheKey = `${this.cacheTags.movieInfo}:${identifier}:${credits}`;
+
+    const requests = [this.tmdb('movieInfo', query)]
+
+    if (credits) {
+      requests.push(this.tmdb('movieCredits', query))
+    }
+
     return Promise.resolve()
-    .then(() => this.cache.get(cacheKey))
-    .catch(() => this.tmdb('movieInfo', query))
-    .catch((error) => { console.log(error); throw new Error('Could not find a movie with that id.'); })
-    .then(response => this.cache.set(cacheKey, response))
-    .then((response) => {
-      try {
-        return convertTmdbToMovie(response);
-      } catch (parseError) {
-        console.error(parseError);
-        throw new Error('Could not parse movie.');
-      }
-    });
+      .then(() => this.cache.get(cacheKey))
+      .catch(() => Promise.all(requests))
+      .catch((error) => { console.log(error); throw new Error('Could not find a movie with that id.'); })
+      .then(([movies, credits]) => this.cache.set(cacheKey, [movies, credits]))
+      .then(([movies, credits]) => convertTmdbToMovie(movies, credits))
   }
  
   /**
@@ -97,22 +97,22 @@ class TMDB {
    * @param {String} type filter results by type (default show).
    * @returns {Promise} succeeds if show was found
    */
-  showInfo(identifier) {
+  showInfo(identifier, credits=false) {
     const query = { id: identifier };
-    const cacheKey = `${this.cacheTags.showInfo}:${identifier}`;
+    const cacheKey = `${this.cacheTags.showInfo}:${identifier}:${credits}`;
+
+    const requests = [this.tmdb('tvInfo', query)]
+
+    if (credits) {
+      requests.push(this.tmdb('tvCredits', query))
+    }
+
     return Promise.resolve()
     .then(() => this.cache.get(cacheKey))
-    .catch(() => this.tmdb('tvInfo', query))
+      .catch(() => Promise.all(requests))
     .catch(() => { throw new Error('Could not find a show with that id.'); })
-    .then(response => this.cache.set(cacheKey, response))
-    .then((response) => {
-      try {
-        return convertTmdbToShow(response);
-      } catch (parseError) {
-        console.error(parseError);
-        throw new Error('Could not parse show.');
-      }
-    });
+    .then(([shows, credits]) => this.cache.set(cacheKey, [shows, credits]))
+    .then(([shows, credits]) => convertTmdbToShow(shows, credits))
   }
 
   /**
@@ -124,19 +124,14 @@ class TMDB {
   personInfo(identifier) {
     const query = { id: identifier };
     const cacheKey = `${this.cacheTags.personInfo}:${identifier}`;
+
     return Promise.resolve()
-    .then(() => this.cache.get(cacheKey))
-    .catch(() => this.tmdb('personInfo', query))
-    .catch(() => { throw new Error('Could not find a person with that id.'); })
-    .then(response => this.cache.set(cacheKey, response))
-    .then((response) => {
-      try {
-        return convertTmdbToPerson(response);
-      } catch (parseError) {
-        console.error(parseError);
-        throw new Error('Could not parse person.');
-      }
-    });
+      .then(() => this.cache.get(cacheKey))
+      .catch(() => Promise.all([this.tmdb('personInfo', query), this.tmdb('personCombinedCredits', query)]))
+      .catch(() => { throw new Error('Could not find a person with that id.'); })
+      .then(([person, cast]) => this.cache.set(cacheKey, [person, cast]))
+      .then(([person, cast]) => convertTmdbToPerson(person, cast))
+      .catch(err => new Error('Unable to convert result to person', err))
   }
 
 
@@ -161,6 +156,7 @@ class TMDB {
   movieSearch(query, page=1) {
     const tmdbquery = { query: query, page: page };
     const cacheKey = `${this.cacheTags.movieSearch}:${page}:${query}`;
+
     return Promise.resolve()
     .then(() => this.cache.get(cacheKey))
     .catch(() => this.tmdb('searchMovie', tmdbquery))
