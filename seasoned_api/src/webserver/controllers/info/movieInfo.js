@@ -12,11 +12,15 @@ const plex = new Plex(configuration.get('plex', 'ip'));
  * @param {Response} res
  * @returns {Callback}
  */
-function movieInfoController(req, res) {
+async function movieInfoController(req, res) {
   const movieId = req.params.id;
-  tmdb.movieInfo(movieId)
-  .then((movie) => plex.existsInPlex(movie))
-  .then((movie) => {
+  const { credits } = req.query;
+  const movie = await tmdb.movieInfo(movieId, credits);
+
+  plex.existsInPlex(movie)
+  .catch((error) => { console.log('Error when searching plex'); })
+  .then(() => {
+    console.log('movie', movie)
     res.send(movie);
   }).catch((error) => {
     res.status(404).send({ success: false, error: error.message });
