@@ -20,7 +20,7 @@ class RequestRepository {
       downloaded: '(select status from requests where id is request.id and type is request.type limit 1)',
       // deluge: '(select status from deluge_torrent where id is request.id and type is request.type limit 1)',
       // fetchAllFilterStatus: 'select * from request where '
-      read: 'select * from request where id is ? and type is ?'
+      read: 'select id, title, year, type, status, requested_by, ip, date, user_agent from requests where id is ? and type is ?'
     };
   }
 
@@ -94,6 +94,22 @@ class RequestRepository {
       console.log('Error @ request.addTmdb:', error);
       throw new Error('Could not add request');
     });
+  }
+
+  /**
+   * Get request item by id
+   * @param {String} id
+   * @param {String} type
+   * @returns {Promise}
+   */
+  getRequestByIdAndType(id, type) {
+    console.log('id & type', id, type)
+    return Promise.resolve()
+      .then(() => this.database.get(this.queries.read, [id, type]))
+      .then(row => {
+        assert(row, 'Could not find request item with that id and type')
+        return JSON.stringify(row)
+      })
   }
 
   /**
