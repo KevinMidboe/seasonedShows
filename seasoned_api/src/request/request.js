@@ -13,7 +13,9 @@ class RequestRepository {
     this.queries = {
       add: 'insert into requests (id,title,year,poster_path,background_path,requested_by,ip,user_agent,type) values(?,?,?,?,?,?,?,?,?)',
       fetchAll: 'select * from requests where status != "downloaded" order by date desc LIMIT 25 OFFSET ?*25-25',
+      fetchAllFilteredStatus: 'select * from requests where status = ? order by date desc LIMIT 25 offset ?*25-25',
       totalRequests: 'select count(*) as totalRequests from requests where status != "downloaded"',
+      totalRequestsFilteredStatus: 'select count(*) as totalRequests from requests where status = ?',
       fetchAllSort: `select id, type from request order by ? ?`,
       fetchAllFilter: `select id, type from request where ? is "?"`,
       fetchAllQuery: `select id, type from request where title like "%?%" or year like "%?%"`,
@@ -104,7 +106,6 @@ class RequestRepository {
    * @returns {Promise}
    */
   getRequestByIdAndType(id, type) {
-    console.log('id & type', id, type)
     return Promise.resolve()
       .then(() => this.database.get(this.queries.read, [id, type]))
       .then(row => {
@@ -121,15 +122,27 @@ class RequestRepository {
    * @param {String} query param to filter result on. Filters on title and year
    * @returns {Promise}
    */
-  fetchAll(page, sort_by=undefined, sort_direction='asc', filter_param=undefined, query=undefined) {
+  fetchAll(page=1, sort_by=undefined, sort_direction='asc', filter=undefined, query=undefined) {
     // TODO implemented sort and filter
-    // console.log('hit', sort_by, sort_direction, filter_param, query)
+    let fetchQuery = this.queries.fetchAll
+    let fetchTotalResults = this.queries.totalRequests
+    let fetchParams = [page]
+
+    if (filter && (filter === 'downloading' || filter === 'downloaded' || filter === 'requested')) {
+      console.log('tes')
+      fetchQuery = this.queries.fetchAllFilteredStatus
+      fetchTotalResults = this.queries.totalRequestsFilteredStatus
+      fetchParams = [filter, page]
+    } else {
+      filter = undefined
+    }
+
     return Promise.resolve()
-      .then((dbQuery) => this.database.all(this.queries.fetchAll, page))
+      .then((dbQuery) => this.database.all(fetchQuery, fetchParams))
       .then(async (rows) => {
-        const sqliteResponse = await this.database.get(this.queries.totalRequests)
+        const sqliteResponse = await this.database.get(fetchTotalResults, filter ? filter : undefined)
         const totalRequests = sqliteResponse['totalRequests']
-        const totalPages = Math.ceil(totalRequests / 25)
+        const totalPages = Math.ceil(totalRequests / 26)
 
         return [ rows.map(item => { item.poster = item.poster_path; return item }), totalPages ]
         return Promise.all(this.mapToTmdbByType(rows))
