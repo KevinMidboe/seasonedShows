@@ -12,7 +12,7 @@ class RequestRepository {
     this.database = database || establishedDatabase;
     this.queries = {
       add: 'insert into request (id,title,year,type) values(?,?,?,?)',
-      fetchAll: 'select id, type from request',
+      fetchAll: 'select * from requests where status != "downloaded" order by date desc LIMIT 25 OFFSET ?*25-25',
       fetchAllSort: `select id, type from request order by ? ?`,
       fetchAllFilter: `select id, type from request where ? is "?"`,
       fetchAllQuery: `select id, type from request where title like "%?%" or year like "%?%"`,
@@ -104,14 +104,17 @@ class RequestRepository {
    * @param {String} query param to filter result on. Filters on title and year
    * @returns {Promise}
    */
-  fetchAll(sort_by=undefined, sort_direction='asc', filter_param=undefined, query=undefined) {
+  fetchAll(page, sort_by=undefined, sort_direction='asc', filter_param=undefined, query=undefined) {
+    // TODO implemented sort and filter
+    // console.log('hit', sort_by, sort_direction, filter_param, query)
     return Promise.resolve()
-      .then(() => utils.validSort(sort_by, sort_direction))
-      .then(() => utils.validFilter(filter_param))
-      .then(() => this.sortAndFilterToDbQuery(sort_by, sort_direction, filter_param, query))
-      .then((dbQuery) => this.database.all(dbQuery))
-      .then((rows) => Promise.all(this.mapToTmdbByType(rows)))
+      .then((dbQuery) => this.database.all(this.queries.fetchAll, page))
+      .then((rows) => {
+        return rows.map(item => { item.poster = item.poster_path; return item })
+        return Promise.all(this.mapToTmdbByType(rows))
+})
       .then(result => Promise.resolve({results: result, total_results: result.length}))
+      .catch(error => { console.log(error);throw error })
   }
 }
 
