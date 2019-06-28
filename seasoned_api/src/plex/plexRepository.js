@@ -21,7 +21,7 @@ class PlexRepository {
    search(query) {
       console.log('searching:', query)
       const options = {
-         uri: `http://${plexIP}:32400/search?query=${query}`,
+         uri: `http://${this.plexIP}:32400/search?query=${query}`,
          headers: {
             Accept: 'application/json',
          },
@@ -69,7 +69,7 @@ class PlexRepository {
 
    nowPlaying() {
       const options = {
-         uri: `http://${plexIP}:32400/status/sessions`,
+         uri: `http://${this.plexIP}:32400/status/sessions`,
          headers: {
             Accept: 'application/json',
          },
