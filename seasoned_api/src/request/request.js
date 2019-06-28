@@ -11,7 +11,7 @@ class RequestRepository {
   constructor(database) {
     this.database = database || establishedDatabase;
     this.queries = {
-      add: 'insert into request (id,title,year,type) values(?,?,?,?)',
+      add: 'insert into requests (id,title,year,poster_path,background_path,requested_by,ip,user_agent,type) values(?,?,?,?,?,?,?,?,?)',
       fetchAll: 'select * from requests where status != "downloaded" order by date desc LIMIT 25 OFFSET ?*25-25',
       fetchAllSort: `select id, type from request order by ? ?`,
       fetchAllFilter: `select id, type from request where ? is "?"`,
@@ -82,11 +82,11 @@ class RequestRepository {
    * @param {tmdb} tmdb class of movie|show to add
    * @returns {Promise}
    */
-  addTmdb(tmdb) {
+  requestFromTmdb(tmdb, ip, user_agent, user) {
     return Promise.resolve()
     .then(() => this.database.get(this.queries.read, [tmdb.id, tmdb.type]))
     .then(row => assert.equal(row, undefined, 'Id has already been requested'))
-    .then(() => this.database.run(this.queries.add, [tmdb.id, tmdb.title||tmdb.name, tmdb.year, tmdb.type]))
+    .then(() => this.database.run(this.queries.add, [tmdb.id, tmdb.title, tmdb.year, tmdb.poster, tmdb.backdrop, user, ip, user_agent, tmdb.type]))
     .catch((error) => {
       if (error.name === 'AssertionError' || error.message.endsWith('been requested')) {
         throw new Error('This id is already requested', error.message);
