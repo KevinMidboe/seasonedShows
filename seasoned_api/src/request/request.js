@@ -13,6 +13,7 @@ class RequestRepository {
     this.queries = {
       add: 'insert into requests (id,title,year,poster_path,background_path,requested_by,ip,user_agent,type) values(?,?,?,?,?,?,?,?,?)',
       fetchAll: 'select * from requests where status != "downloaded" order by date desc LIMIT 25 OFFSET ?*25-25',
+      totalRequests: 'select count(*) as totalRequests from requests',
       fetchAllSort: `select id, type from request order by ? ?`,
       fetchAllFilter: `select id, type from request where ? is "?"`,
       fetchAllQuery: `select id, type from request where title like "%?%" or year like "%?%"`,
@@ -125,11 +126,17 @@ class RequestRepository {
     // console.log('hit', sort_by, sort_direction, filter_param, query)
     return Promise.resolve()
       .then((dbQuery) => this.database.all(this.queries.fetchAll, page))
-      .then((rows) => {
-        return rows.map(item => { item.poster = item.poster_path; return item })
+      .then(async (rows) => {
+        const sqliteResponse = await this.database.get(this.queries.totalRequests)
+        const totalRequests = sqliteResponse['totalRequests']
+        const totalPages = Math.floor(totalRequests / 25)
+
+        return [ rows.map(item => { item.poster = item.poster_path; return item }), totalPages ]
         return Promise.all(this.mapToTmdbByType(rows))
 })
-      .then(result => Promise.resolve({results: result, total_results: result.length}))
+      .then(([result, totalPages]) => Promise.resolve({
+        results: result, total_results: result.length, page: page, total_pages: totalPages
+      }))
       .catch(error => { console.log(error);throw error })
   }
 }
