@@ -19,9 +19,10 @@ class PlexRepository {
    }
 
    search(query) {
-      console.log('searching:', query)
+     const queryUri = encodeURIComponent(query)
+     const uri = encodeURI(`http://${this.plexIP}:32400/search?query=${queryUri}`)
       const options = {
-         uri: `http://${this.plexIP}:32400/search?query=${query}`,
+         uri: uri,
          headers: {
             Accept: 'application/json',
          },
