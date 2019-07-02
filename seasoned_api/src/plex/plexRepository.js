@@ -31,6 +31,7 @@ class PlexRepository {
 
       return rp(options)
          .catch((error) => {
+            console.log(error)
             throw new Error('Unable to search plex.')
          })
          .then(result => this.mapResults(result))
@@ -44,6 +45,7 @@ class PlexRepository {
                tmdb.matchedInPlex = false
             } 
             else {
+               // console.log('plex and tmdb:', plexResult, '\n',  tmdb)
                plexResult.results.map((plexItem) => {
                   if (tmdb.title === plexItem.title && tmdb.year === plexItem.year)
                      tmdb.matchedInPlex = true;
@@ -57,7 +59,6 @@ class PlexRepository {
    mapResults(response) {
       return Promise.resolve()
          .then(() => {
-            console.log('plexResponse:', response)
             if (!response.MediaContainer.hasOwnProperty('Metadata')) return [[], 0];
 
             const mappedResults = response.MediaContainer.Metadata.filter((element) => {
