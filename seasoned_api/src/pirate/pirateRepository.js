@@ -12,7 +12,7 @@ function getMagnetFromURL(url) {
          resolve(url)
 
       http.get(options, (res) => {
-         if (res.statusCode == 301) {
+         if (res.statusCode == 301 || res.statusCode == 302) {
             resolve(res.headers.location)
          }
       });
