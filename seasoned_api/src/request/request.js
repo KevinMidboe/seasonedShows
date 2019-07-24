@@ -124,6 +124,7 @@ class RequestRepository {
    */
   fetchAll(page=1, sort_by=undefined, sort_direction='asc', filter=undefined, query=undefined) {
     // TODO implemented sort and filter
+    page = parseInt(page)
     let fetchQuery = this.queries.fetchAll
     let fetchTotalResults = this.queries.totalRequests
     let fetchParams = [page]

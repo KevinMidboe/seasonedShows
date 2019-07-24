@@ -21,9 +21,9 @@ function loginController(req, res) {
    userSecurity.login(user, password)
       .then(() => userRepository.checkAdmin(user))
       .then((checkAdmin) => {
-         const token = new Token(user).toString(secret);
-         const admin_state = checkAdmin === 1 ? true : false;
-         res.send({ success: true, token, admin: admin_state });
+         const isAdmin = checkAdmin === 1 ? true : false;
+         const token = new Token(user, isAdmin).toString(secret);
+         res.send({ success: true, token });
       })
       .catch((error) => {
          res.status(401).send({ success: false, error: error.message });
