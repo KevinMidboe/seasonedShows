@@ -1,40 +1,38 @@
-const PlexRepository = require('src/plex/plexRepository');
+const Plex = require('src/plex/plex')
 const configuration = require('src/config/configuration').getInstance();
-const establishedDatabase = require('src/database/database');
-
-const plexRepository = new PlexRepository();
+const plex = new Plex(configuration.get('plex', 'ip'))
+const establishedDatabase = require('src/database/database'); 
 
 class UpdateRequestsInPlex {
-   constructor() {
-      this.database = establishedDatabase;
-      this.queries = {
-         getRequests: `SELECT * FROM requests WHERE status IS 'requested' OR 'downloaded'`,
-         saveNewStatus: `UPDATE requests SET status = ? WHERE id IS ? and type IS ?`,
-      }
-   }
+  constructor() {
+     this.database = establishedDatabase;
+     this.queries = {
+        getMovies: `SELECT * FROM requests WHERE status = 'requested' OR status = 'downloading'`,
+//         getMovies: "select * from requests where status is 'reset'",
+        saveNewStatus: `UPDATE requests SET status = ? WHERE id IS ? and type IS ?`,
+     }
+  }
+  getByStatus() {
+     return this.database.all(this.queries.getMovies);
+  }
+  scrub() {
+     return this.getByStatus()
+        .then((requests) => Promise.all(requests.map(movie => plex.existsInPlex(movie))))
+  }
 
-   getRequests() {
-      return this.database.all(this.queries.getRequests);
-   }
+  commitNewStatus(status, id, type, title) {
+    console.log(type, title, 'updated to:', status)
+    this.database.run(this.queries.saveNewStatus, [status, id, type])
+  }
 
-   scrub() {
-      return this.getRequests()
-         .then((requests) => Promise.all(requests.map(async (movie) => {
-            return plexRepository.inPlex(movie)
-         })))
-         .then((requests_checkInPlex) => requests_checkInPlex.filter((movie) => movie.matchedInPlex))
-   }
-
-   updateStatus(status) {
-     this.scrub().then((newInPlex) => 
-         newInPlex.map((movie) => {
-            console.log('updated', movie.title, 'to', status)
-            // this.database.run(this.queries.saveNewStatus, [status, movie.id, movie.type])
-         })
-      )
-   }
+   
+  updateStatus(status) {
+    this.getByStatus()
+      .then(requests => Promise.all(requests.map(request => plex.existsInPlex(request))))
+      .then(matchedRequests => matchedRequests.filter(request => request.existsInPlex))
+      .then(newMatches => newMatches.map(match => this.commitNewStatus(status, match.id, match.type, match.title)))
+  }
 }
-
 var requestsUpdater = new UpdateRequestsInPlex();
 requestsUpdater.updateStatus('downloaded')
 
