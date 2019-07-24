@@ -13,9 +13,9 @@ class Token {
     * @returns {String}
     */
   toString(secret) {
-    const user = this.user.username;
+    const username = this.user.username;
     const admin = this.admin;
-    let data = { user }
+    let data = { username }
 
     if (admin)
       data = { ...data, admin }
