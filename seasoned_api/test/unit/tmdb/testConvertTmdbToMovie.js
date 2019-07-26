@@ -3,7 +3,7 @@ const convertTmdbToMovie = require('src/tmdb/convertTmdbToMovie');
 const bladeRunnerQuerySuccess = require('test/fixtures/blade_runner_2049-info-success-response.json') 
 
 describe('Convert tmdb movieInfo to movie', () => {
-  beforeEach(() => this.bladeRunnerTmdbMovie = bladeRunnerQuerySuccess);
+  beforeEach(() => [this.bladeRunnerTmdbMovie] = bladeRunnerQuerySuccess);
 
   it('should translate the tmdb release date to movie year', () => {
     const bladeRunner = convertTmdbToMovie(this.bladeRunnerTmdbMovie);
