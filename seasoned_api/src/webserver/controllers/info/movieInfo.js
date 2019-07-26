@@ -20,7 +20,6 @@ async function movieInfoController(req, res) {
   plex.existsInPlex(movie)
   .catch((error) => { console.log('Error when searching plex'); })
   .then(() => {
-    console.log('movie', movie)
     res.send(movie);
   }).catch((error) => {
     res.status(404).send({ success: false, error: error.message });

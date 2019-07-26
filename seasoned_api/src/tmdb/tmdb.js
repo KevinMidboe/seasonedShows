@@ -2,6 +2,7 @@ const moviedb = require('km-moviedb');
 const convertTmdbToMovie = require('src/tmdb/convertTmdbToMovie');
 const convertTmdbToShow = require('src/tmdb/convertTmdbToShow');
 const convertTmdbToPerson = require('src/tmdb/convertTmdbToPerson');
+const { tmdbInfo } = require('src/tmdb/types')
 
 class TMDB {
   constructor(cache, apiKey, tmdbLibrary) {
@@ -86,7 +87,15 @@ class TMDB {
     return Promise.resolve()
       .then(() => this.cache.get(cacheKey))
       .catch(() => Promise.all(requests))
-      .catch((error) => { console.log(error); throw new Error('Could not find a movie with that id.'); })
+      .catch(error => {
+        if (error.status === 401) {
+          throw new Error('Unathorized tmdb request, please check api key.')
+        } else  if (error.status === 404) {
+          throw new Error(`Could not find a movie with id: ${identifier}`)
+        }
+
+        throw new Error('Unexpected error has occured:', error.message)
+      })
       .then(([movies, credits]) => this.cache.set(cacheKey, [movies, credits]))
       .then(([movies, credits]) => convertTmdbToMovie(movies, credits))
   }
@@ -109,8 +118,16 @@ class TMDB {
 
     return Promise.resolve()
     .then(() => this.cache.get(cacheKey))
-      .catch(() => Promise.all(requests))
-    .catch(() => { throw new Error('Could not find a show with that id.'); })
+    .catch(() => Promise.all(requests))
+    .catch(error => {
+        if (error.status === 401) {
+          throw new Error('Unathorized tmdb request, please check api key.')
+        } else  if (error.status === 404) {
+          throw new Error(`Could not find a show with id: ${identifier}`)
+        }
+
+        throw new Error('Unexpected error has occured:', error.message)
+      })
     .then(([shows, credits]) => this.cache.set(cacheKey, [shows, credits]))
     .then(([shows, credits]) => convertTmdbToShow(shows, credits))
   }
