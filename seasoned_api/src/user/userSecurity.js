@@ -21,7 +21,7 @@ class UserSecurity {
       return Promise.resolve()
         .then(() => this.userRepository.create(user))
         .then(() => UserSecurity.hashPassword(clearPassword))
-        .then(hash => this.userRepository.changePassword(user, hash));
+        .then(hash => this.userRepository.changePassword(user, hash))
     }
   }
 
@@ -61,7 +61,7 @@ class UserSecurity {
    */
   static hashPassword(clearPassword) {
     return new Promise((resolve) => {
-      const salatRounds = 10;
+      const saltRounds = 10;
       bcrypt.hash(clearPassword, saltRounds, (error, hash) => {
         resolve(hash);
       });

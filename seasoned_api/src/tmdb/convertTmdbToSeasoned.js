@@ -15,25 +15,7 @@ function convertType(tmdbType) {
 }
 
 function convertTmdbToMovie(tmdb) {
-  const year = 
-  const movie = new Movie();
-  let seasoned = undefined;
-
-  if (tmdb.id && tmdb.title && tmdb.release_date) {
-    const year = tmdb.release_date.getFullYear();
-    seasoned = new Movie(tmdb.id, tmdb.title, year);
-  }
-  else if (tmdb.id && tmdb.name && tmdb.first_air_date) {
-    const year = tmdb.first_air_date.getFullYear();
-    seasoned = new Show(tmdb.id, tmdb.name, year);
-    seasoned.seasons = tmdb.number_of_season;
-    seasoned.episodes = tmdb.episodes;
-    return 
-  }
-}
-  
-  
-  const title = tmdb.title || tmdb.name;
+   const title = tmdb.title || tmdb.name;
    const year = translateYear(tmdb.release_date || tmdb.first_air_date);
    const type = manualType || convertType(tmdb.type) || 'movie';
 

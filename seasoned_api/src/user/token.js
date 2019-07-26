@@ -33,7 +33,7 @@ class Token {
     let username = null;
 
     const token = jwt.verify(jwtToken, secret, { clockTolerance: 10000 })
-    if (token.username === undefined)
+    if (token.username === undefined || token.username === null)
       throw new Error('Malformed token')
 
     username = token.username
