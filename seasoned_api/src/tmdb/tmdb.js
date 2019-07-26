@@ -2,7 +2,7 @@ const moviedb = require('km-moviedb');
 const convertTmdbToMovie = require('src/tmdb/convertTmdbToMovie');
 const convertTmdbToShow = require('src/tmdb/convertTmdbToShow');
 const convertTmdbToPerson = require('src/tmdb/convertTmdbToPerson');
-const { tmdbInfo } = require('src/tmdb/types')
+// const { tmdbInfo } = require('src/tmdb/types')
 
 class TMDB {
   constructor(cache, apiKey, tmdbLibrary) {

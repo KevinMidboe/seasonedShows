@@ -1,4 +1,4 @@
-const Movie = require('src/tmdb/types/movie');
+import { Movie } from './types'
 
 const tmdbSwitcher = (tmdbMovie, property) => tmdbMovie[property]
 

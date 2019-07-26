@@ -1,5 +1,4 @@
 const TMDB = require('src/media_classes/tmdb');
-const Movie = require('src/types/movie');
 
 function translateYear(tmdbReleaseDate) {
    return new Date(tmdbReleaseDate).getFullYear();

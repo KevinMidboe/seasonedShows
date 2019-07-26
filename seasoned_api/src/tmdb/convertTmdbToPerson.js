@@ -1,4 +1,4 @@
-const Person = require('src/tmdb/types/person');
+import { Person } from './types'
 const convertTmdbToMovie = require('src/tmdb/convertTmdbToMovie');
 
 function convertTmdbToPerson(tmdbPerson, cast=undefined) {

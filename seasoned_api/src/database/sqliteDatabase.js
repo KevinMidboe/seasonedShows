@@ -25,7 +25,7 @@ class SqliteDatabase {
    * @param {Array} parameters in the SQL query
    * @returns {Promise}
    */
-   async run(sql, parameters) {
+   run(sql, parameters) {
       return new Promise((resolve, reject) => {
          this.connection.run(sql, parameters, (error, result) => {
             if (error)
@@ -41,7 +41,7 @@ class SqliteDatabase {
    * @param {Array} parameters in the SQL query
    * @returns {Promise}
    */
-   async all(sql, parameters) {
+   all(sql, parameters) {
       return new Promise((resolve, reject) => {
          this.connection.all(sql, parameters, (err, rows) => {
             if (err) {
@@ -58,7 +58,7 @@ class SqliteDatabase {
    * @param {Array} parameters in the SQL query
    * @returns {Promise}
    */
-   async get(sql, parameters) {
+   get(sql, parameters) {
       return new Promise((resolve, reject) => {
          this.connection.get(sql, parameters, (err, rows) => {
             if (err) {
@@ -75,7 +75,7 @@ class SqliteDatabase {
    * @param {Array} parameters in the SQL query
    * @returns {Promise}
    */
-   async execute(sql) {
+   execute(sql) {
       return new Promise(resolve => {
          this.connection.exec(sql, (err, database) => {
              if (err) {

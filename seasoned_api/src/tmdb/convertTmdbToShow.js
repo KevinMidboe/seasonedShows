@@ -1,4 +1,4 @@
-const Show = require('src/tmdb/types/show');
+import { Show } from './types'
 
 function convertTmdbToShow(tmdbShow, credits=undefined) {
   const show = new Show(tmdbShow.id, tmdbShow.name)
