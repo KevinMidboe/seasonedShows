@@ -11,19 +11,19 @@ function convertTmdbToMovie(tmdbMovie, credits=undefined) {
     movie.credits = credits;
   }
 
-  if (tmdbMovie.release_date !== undefined  && tmdbMovie.genres) {
+  if (tmdbMovie.release_date !== undefined  && tmdbMovie.release_date) {
     movie.release_date = new Date(tmdbMovie.release_date);
     movie.year = movie.release_date.getFullYear();
   }
 
-  if (tmdbMovie.poster_path !== undefined  && tmdbMovie.genres) {
+  if (tmdbMovie.poster_path !== undefined  && tmdbMovie.poster_path) {
     movie.poster = tmdbMovie.poster_path;
   }
-  if (tmdbMovie.backdrop_path !== undefined  && tmdbMovie.genres) {
+  if (tmdbMovie.backdrop_path !== undefined  && tmdbMovie.backdrop_path) {
     movie.backdrop = tmdbMovie.backdrop_path;
   }
 
-  if (tmdbMovie.status !== undefined  && tmdbMovie.genres) {
+  if (tmdbMovie.status !== undefined  && tmdbMovie.status) {
     movie.status = tmdbMovie.status;
   }
 
@@ -31,15 +31,15 @@ function convertTmdbToMovie(tmdbMovie, credits=undefined) {
     movie.genres = tmdbMovie.genres.map(genre => genre.name);
   }
 
-  if (tmdbMovie.tagline !== undefined  && tmdbMovie.genres) {
+  if (tmdbMovie.tagline !== undefined  && tmdbMovie.tagline) {
     movie.tagline = tmdbMovie.tagline;
   }
 
-  if (tmdbMovie.runtime !== undefined  && tmdbMovie.genres) {
+  if (tmdbMovie.runtime !== undefined  && tmdbMovie.runtime) {
     movie.runtime = tmdbMovie.runtime;
   }
 
-  if (tmdbMovie.imdb_id !== undefined  && tmdbMovie.genres) {
+  if (tmdbMovie.imdb_id !== undefined  && tmdbMovie.imdb_id) {
     movie.imdb_id = tmdbMovie.imdb_id;
   }
 
