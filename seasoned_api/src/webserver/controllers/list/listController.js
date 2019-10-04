@@ -35,51 +35,68 @@ function getTmdbShowList(res, listname, page) {
   })
 }
 
-exports.nowPlayingMovies = (req, res) => {
+const respondWithUnknownError = (res, error) => {
+  // console.log('Unknown error:', error)
+  res.status(500).send({ success: false, error: 'Unhandled error occured'})
+}
+
+const nowPlayingMovies = (req, res) => {
   const { page } = req.query;
   const listname = 'miscNowPlayingMovies'
 
-  getTmdbMovieList(res, listname, page);
+  return tmdb.movieList(listname, page)
+    .then(nowPlayingMovieList => res.send(nowPlayingMovieList))
+    .catch(error => respondUnknownError(res, error))
 }
 
-exports.popularMovies = (req, res) => {
+const popularMovies = (req, res) => {
   const { page } = req.query;
   const listname = 'miscPopularMovies'
 
   getTmdbMovieList(res, listname, page);
 }
 
-exports.topRatedMovies = (req, res) => {
+const topRatedMovies = (req, res) => {
   const { page } = req.query;
   const listname = 'miscTopRatedMovies'
 
   getTmdbMovieList(res, listname, page);
 }
 
-exports.upcomingMovies = (req, res) => {
+const upcomingMovies = (req, res) => {
   const { page } = req.query;
   const listname = 'miscUpcomingMovies'
 
   getTmdbMovieList(res, listname, page);
 }
 
-exports.nowPlayingShows = (req, res) => {
+const nowPlayingShows = (req, res) => {
   const { page } = req.query;
   const listname = 'tvOnTheAir'
 
   getTmdbShowList(res, listname, page);
 }
 
-exports.popularShows = (req, res) => {
+const popularShows = (req, res) => {
   const { page } = req.query;
   const listname = 'miscPopularTvs'
 
   getTmdbShowList(res, listname, page);
 }
 
-exports.topRatedShows = (req, res) => {
+const topRatedShows = (req, res) => {
   const { page } = req.query;
   const listname = 'miscTopRatedTvs'
 
   getTmdbShowList(res, listname, page);
+}
+
+module.exports = {
+  nowPlayingMovies,
+  popularMovies,
+  topRatedMovies,
+  upcomingMovies,
+  nowPlayingShows,
+  popularShows,
+  topRatedShows
 }
