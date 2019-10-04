@@ -14,8 +14,17 @@ const plex = new Plex(configuration.get('plex', 'ip'));
  */
 async function movieInfoController(req, res) {
   const movieId = req.params.id;
-  const { credits } = req.query;
-  const movie = await tmdb.movieInfo(movieId, credits);
+  const queryCredits = req.query.credits;
+  const queryReleaseDates = req.query.release_dates;
+  let credits = undefined
+  let releaseDates = undefined
+
+  if (queryCredits && queryCredits.toLowerCase() === 'true')
+    credits = true
+  if (queryReleaseDates && queryReleaseDates.toLowerCase() === 'true')
+    releaseDates = true
+
+  const movie = await tmdb.movieInfo(movieId, credits, releaseDates);
 
   plex.existsInPlex(movie)
   .catch((error) => { console.log('Error when searching plex'); })

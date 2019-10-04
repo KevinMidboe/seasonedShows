@@ -74,7 +74,7 @@ class TMDB {
    * @param {String} type filter results by type (default movie).
    * @returns {Promise} succeeds if movie was found
    */
-  movieInfo(identifier, credits=false) {
+  movieInfo(identifier, credits=false, releaseDates=false) {
     const query = { id: identifier };
     const cacheKey = `${this.cacheTags.movieInfo}:${identifier}:${credits}`;
 
@@ -82,6 +82,13 @@ class TMDB {
 
     if (credits) {
       requests.push(this.tmdb('movieCredits', query))
+    } else {
+      // This is because we expect ordered parameters below
+      requests.push(Promise.resolve([]))
+    }
+
+    if (releaseDates) {
+      requests.push(this.tmdb('movieReleaseDates', query))
     }
 
     return Promise.resolve()
@@ -96,8 +103,8 @@ class TMDB {
 
         throw new Error('Unexpected error has occured:', error.message)
       })
-      .then(([movies, credits]) => this.cache.set(cacheKey, [movies, credits]))
-      .then(([movies, credits]) => convertTmdbToMovie(movies, credits))
+      .then(([movies, credits, releaseDates]) => this.cache.set(cacheKey, [movies, credits, releaseDates]))
+      .then(([movies, credits, releaseDates]) => convertTmdbToMovie(movies, credits, releaseDates))
   }
  
   /**
