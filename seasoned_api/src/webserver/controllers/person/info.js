@@ -13,10 +13,11 @@ const tmdb = new TMDB(cache, configuration.get('tmdb', 'apiKey'));
 
 function personInfoController(req, res) {
   const personId = req.params.id;
+
+
   tmdb.personInfo(personId)
-  .then((person) => {
-    res.send(person);
-  }).catch((error) => {
+  .then(person => res.send(person.createJsonResponse()))
+  .catch(error => {
     res.status(404).send({ success: false, error: error.message });
   });
 }

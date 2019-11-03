@@ -68,7 +68,7 @@ class ReleaseDate {
     return {
       certification: this.certification,
       language: this.language,
-      releaseDate: this.releaseDate,
+      release_date: this.releaseDate,
       type: this.type,
       note: this.note
     }

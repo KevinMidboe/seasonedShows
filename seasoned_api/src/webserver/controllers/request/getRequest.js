@@ -11,10 +11,9 @@ function fetchAllRequests(req, res) {
   const id = req.params.id;
   const { type } = req.query;
 
-  Promise.resolve()
-    .then(() => request.getRequestByIdAndType(id, type))
-    .then((result) => res.send(result))
-    .catch((error) => {
+  request.getRequestByIdAndType(id, type)
+    .then(result => res.send(result))
+    .catch(error => {
       res.status(404).send({ success: false, error: error.message });
     });
 }

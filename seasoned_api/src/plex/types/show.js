@@ -6,7 +6,6 @@ class Show {
     this.rating = null;
     this.seasons = null;
     this.episodes = null;
-    this.type = 'show';
   }
 }
 

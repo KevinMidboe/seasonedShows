@@ -1,7 +1,7 @@
 class Show {
-  constructor(id, title, year=null, overview=null, poster=null, backdrop=null,
-              seasons=null, episodes=null, rank=null, genres=null, status=null,
-              runtime=null) { 
+  constructor(id, title, year=undefined, overview=undefined, poster=undefined, backdrop=undefined,
+              seasons=undefined, episodes=undefined, rank=undefined, genres=undefined, status=undefined,
+              runtime=undefined) {
     this.id = id;
     this.title = title;
     this.year = year;
@@ -12,9 +12,20 @@ class Show {
     this.episodes = episodes;
     this.rank = rank;
     this.genres = genres;
-    this.status = status;
+    this.productionStatus = status;
     this.runtime = runtime;
     this.type = 'show';
+  }
+
+  static convertFromTmdbResponse(response) {
+    const { id, name, first_air_date, overview, poster_path, backdrop_path, number_of_seasons, number_of_episodes,
+            rank, genres, status, episode_run_time, popularity } = response;
+
+    const year = new Date(first_air_date).getFullYear()
+    const genreNames = genres ? genres.map(g => g.name) : undefined
+
+    return new Show(id, name, year, overview, poster_path, backdrop_path, number_of_seasons, number_of_episodes,
+                     rank, genreNames, status, episode_run_time, popularity)
   }
 
   createJsonResponse() {
@@ -29,9 +40,8 @@ class Show {
       episodes: this.episodes,
       rank: this.rank,
       genres: this.genres,
-      status: this.status,
+      production_status: this.productionStatus,
       runtime: this.runtime,
-      // imdb_id: this.imdb_id,
       type: this.type
      }
   }

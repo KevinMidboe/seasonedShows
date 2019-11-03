@@ -21,7 +21,7 @@ function getMagnetFromURL(url) {
 
 async function find(searchterm, callback) {
    const options = {
-      pythonPath: '../torrent_search/env/bin/python3.6',
+      pythonPath: '../torrent_search/env/bin/python3',
       scriptPath: '../torrent_search',
       args: [searchterm, '-s', 'jackett', '-f', '--print']
    }
@@ -35,7 +35,7 @@ async function callPythonAddMagnet(url, callback) {
    getMagnetFromURL(url)
    .then((magnet) => {
       const options = {
-        pythonPath: '../delugeClient/env/bin/python3.6',
+        pythonPath: '../delugeClient/env/bin/python3',
         scriptPath: '../delugeClient',
         args: ['add', magnet]
       };
@@ -51,13 +51,10 @@ async function callPythonAddMagnet(url, callback) {
 async function SearchPiratebay(query) {
    return await new Promise((resolve, reject) => find(query, (err, results) => {
       if (err) {
-         /* eslint-disable no-console */
          console.log('THERE WAS A FUCKING ERROR!\n', err);
          reject(Error('There was a error when searching for torrents'));
       }
       if (results) {
-         /* eslint-disable no-console */
-         console.log('result', results);
          resolve(JSON.parse(results, null, '\t'));
       }
    }));

@@ -1,12 +1,23 @@
 class Person { 
-  constructor(id, name, poster=null, birthday=null, deathday=null, known_for=null) {
+  constructor(id, name, poster=undefined, birthday=undefined, deathday=undefined,
+              adult=undefined, knownForDepartment=undefined) {
     this.id = id;
     this.name = name;
     this.poster = poster;
     this.birthday = birthday;
     this.deathday = deathday;
-    this.known_for = known_for;
+    this.adult = adult;
+    this.knownForDepartment = knownForDepartment;
     this.type = 'person';
+  }
+
+  static convertFromTmdbResponse(response) {
+    const { id, name, poster, birthday, deathday, adult, known_for_department } = response;
+
+    const birthDay = new Date(birthday)
+    const deathDay = deathday ? new Date(deathday) : null
+
+    return new Person(id, name, poster, birthDay, deathDay, adult, known_for_department)
   }
 
   createJsonResponse() {
@@ -16,7 +27,8 @@ class Person {
       poster: this.poster,
       birthday: this.birthday,
       deathday: this.deathday,
-      known_for: this.known_for,
+      known_for_department: this.knownForDepartment,
+      adult: this.adult,
       type: this.type
     }
   }

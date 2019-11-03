@@ -26,7 +26,9 @@
     "km-moviedb": "^0.2.12",
     "mongoose": "~5.0.11",
     "node-cache": "^4.1.1",
+    "node-fetch": "^2.6.0",
     "python-shell": "^0.5.0",
+    "raven": "^2.4.2",
     "request": "^2.85.0",
     "request-promise": "^4.2",
     "sqlite3": "^4.0.0"
@@ -36,6 +38,7 @@
     "@babel/node": "^7.5.5",
     "@babel/preset-env": "^7.5.5",
     "@babel/register": "^7.5.5",
+    "@types/node": "^12.6.8",
     "coveralls": "^3.0.5",
     "documentation": "^12.0.3",
     "eslint": "^4.9.0",
@@ -45,8 +48,8 @@
     "mocha": "^6.2.0",
     "mocha-lcov-reporter": "^1.3.0",
     "nyc": "^11.6.0",
-    "raven": "^2.4.2",
     "supertest": "^3.0.0",
-    "supertest-as-promised": "^4.0.1"
+    "supertest-as-promised": "^4.0.1",
+    "typescript": "^3.5.3"
   }
 }

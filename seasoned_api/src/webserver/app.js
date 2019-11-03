@@ -28,8 +28,6 @@ router.use(tokenToUser);
 // TODO: Should have a separate middleware/router for handling headers.
 router.use((req, res, next) => {
    // TODO add logging of all incoming
-   console.log('Request: ', req.originalUrl);
-
   const origin = req.headers.origin;
    if (allowedOrigins.indexOf(origin) > -1) {
        res.setHeader('Access-Control-Allow-Origin', origin);
@@ -81,10 +79,11 @@ router.get('/v2/show/top_rated', listController.topRatedShows);
 
 router.get('/v2/movie/:id/credits', require('./controllers/movie/credits.js'));
 router.get('/v2/movie/:id/release_dates', require('./controllers/movie/releaseDates.js'));
+router.get('/v2/show/:id/credits', require('./controllers/show/credits.js'));
 
-router.get('/v2/movie/:id', require('./controllers/info/movieInfo.js'));
-router.get('/v2/show/:id', require('./controllers/info/showInfo.js'));
-router.get('/v2/person/:id', require('./controllers/info/personInfo.js'));
+router.get('/v2/movie/:id', require('./controllers/movie/info.js'));
+router.get('/v2/show/:id', require('./controllers/show/info.js'));
+router.get('/v2/person/:id', require('./controllers/person/info.js'));
 
 /**
  * Plex
@@ -116,13 +115,6 @@ router.put('/v1/plex/request/:requestId', mustBeAuthenticated, require('./contro
  */
 router.get('/v1/pirate/search', mustBeAuthenticated, require('./controllers/pirate/searchTheBay.js'));
 router.post('/v1/pirate/add', mustBeAuthenticated, require('./controllers/pirate/addMagnet.js'));
-
-/**
- * TMDB
- */
-router.get('/v1/tmdb/search', require('./controllers/tmdb/searchMedia.js'));
-router.get('/v1/tmdb/list/:listname', require('./controllers/tmdb/listSearch.js'));
-router.get('/v1/tmdb/:mediaId', require('./controllers/tmdb/readMedia.js'));
 
 /**
  * git
