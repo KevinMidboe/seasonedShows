@@ -21,7 +21,7 @@ describe('TMDB', function test() {
       it('should return the "Blade Runner 2049" year in the collection of popular movies', () => {
         this.mockMoviedb.response = popularMovieSuccessResponse;
           const cache = new Cache(this.database);
-          const tmdb = new TMDB(cache, 'bogus-api-key', this.mockMoviedb);
+          const tmdb = new TMDB(cache, 'bogus-pi-key', this.mockMoviedb);
           return tmdb.popular()
           .then(movies =>
             assert.equal(movies[0].title, "Blade Runner 2049")

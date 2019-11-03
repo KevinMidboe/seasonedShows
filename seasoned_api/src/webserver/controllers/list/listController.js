@@ -32,11 +32,11 @@ function handleListResponse(response, res) {
     .catch(error => handleError(error, res))
 }
 
-function fetchTmdbList(req, res, listName, type) {
+function fetchTmdbList(req, res, listname, type) {
   const { page } = req.query;
 
   if (type === 'movie') {
-    return tmdb.movieList(listName, page)
+    return tmdb.movieList(listname, page)
       .then(listResponse => res.send(listResponse))
       .catch(error => handleError(error, res))
   } else if (type === 'show') {
