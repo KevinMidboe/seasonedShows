@@ -79,9 +79,13 @@ router.get('/v2/show/now_playing', listController.nowPlayingShows);
 router.get('/v2/show/popular', listController.popularShows);
 router.get('/v2/show/top_rated', listController.topRatedShows);
 
+router.get('/v2/movie/:id/credits', require('./controllers/movie/credits.js'));
+router.get('/v2/movie/:id/release_dates', require('./controllers/movie/releaseDates.js'));
+
 router.get('/v2/movie/:id', require('./controllers/info/movieInfo.js'));
 router.get('/v2/show/:id', require('./controllers/info/showInfo.js'));
 router.get('/v2/person/:id', require('./controllers/info/personInfo.js'));
+
 /**
  * Plex
  */

@@ -3,7 +3,7 @@ const convertTmdbToMovie = require('src/tmdb/convertTmdbToMovie');
 const convertTmdbToShow = require('src/tmdb/convertTmdbToShow');
 const convertTmdbToPerson = require('src/tmdb/convertTmdbToPerson');
 
-const { Credits } = require('src/tmdb/types');
+const { Credits, ReleaseDates} = require('src/tmdb/types');
 // const { tmdbInfo } = require('src/tmdb/types')
 
 class TMDB {
@@ -17,6 +17,7 @@ class TMDB {
       personSearch: 'ps',
       movieInfo: 'mi',
       movieCredits: 'mc',
+      movieReleaseDates: 'mrd',
       showInfo: 'si', 
       personInfo: 'pi',
       miscNowPlayingMovies: 'npm',
@@ -129,6 +130,25 @@ class TMDB {
     }
   }
 
+  tmdbRelaseDatesError(error) {
+    if (error.status === 404) {
+      throw {
+        status: 404,
+        message: error.response.body.status_message
+      }
+    } else if (error.status === 401) {
+      throw {
+        status: 401,
+        message: error.response.body.status_message
+      }
+    }
+
+    throw {
+      status: 500,
+      message: 'An unexpected error occured while fetching release dates from tmdb'
+    }
+  }
+
   movieCredits(identifier) {
     const query = { id: identifier }
     const cacheKey = `${this.cacheTags.movieCredits}:${identifier}`
@@ -138,6 +158,17 @@ class TMDB {
       .catch(tmdbError => this.tmdbCreditsError(tmdbError))
       .then(credits => this.cache.set(cacheKey, credits, 86400))
       .then(credits => Credits.convertFromTmdbResponse(credits))
+  }
+
+  movieReleaseDates(identifier) {
+    const query = { id: identifier }
+    const cacheKey = `${this.cacheTags.movieReleaseDates}:${identifier}`
+
+    return this.cache.get(cacheKey)
+      .catch(() => this.tmdb('movieReleaseDates', query))
+      .catch(tmdbError => this.tmdbRelaseDatesError(tmdbError))
+      .then(releaseDates => this.cache.set(cacheKey, releaseDates, 1))
+      .then(releaseDates => ReleaseDates.convertFromTmdbResponse(releaseDates))
   }
  
   /**
