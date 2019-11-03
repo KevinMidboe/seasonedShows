@@ -7,7 +7,6 @@ class Credits {
   }
 
   static convertFromTmdbResponse(response) {
-    console.log('this is our credits response', response)
     const { id, cast, crew } = response;
 
     const allCast = cast.map(cast => 
