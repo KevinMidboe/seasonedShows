@@ -116,6 +116,11 @@ class TMDB {
         status: 404,
         message: error.response.body.status_message
       }
+    } else if (error.status === 401) {
+      throw {
+        status: 401,
+        message: error.response.body.status_message
+      }
     }
 
     throw {
