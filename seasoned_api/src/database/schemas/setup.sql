@@ -1,8 +1,9 @@
 CREATE TABLE IF NOT EXISTS user (
     user_name varchar(127) UNIQUE,
     password varchar(127),
-    email varchar(127) UNIQUE,
     admin boolean DEFAULT 0,
+    email varchar(127) UNIQUE,
+    plex_userid varchar(127) DEFAULT NULL,
     primary key (user_name)
 );
 
