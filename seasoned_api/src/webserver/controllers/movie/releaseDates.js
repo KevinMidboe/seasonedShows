@@ -9,7 +9,7 @@ const movieReleaseDatesController = (req, res) => {
   const movieId = req.params.id;
 
   tmdb.movieReleaseDates(movieId)
-    .then(releaseDates => res.send(releaseDates))
+    .then(releaseDates => res.send(releaseDates.createJsonResponse()))
     .catch(error => {
       const { status, message } = error;
 
@@ -17,7 +17,7 @@ const movieReleaseDatesController = (req, res) => {
         res.status(error.status).send({ success: false, error: error.message })
       } else {
         // TODO log unhandled errors : here our at tmdbReleaseError ?
-        console.log('error', error)
+        console.log('caugth release dates controller error', error)
         res.status(500).send({ message: 'An unexpected error occured while requesting movie credits' })
       }
     })

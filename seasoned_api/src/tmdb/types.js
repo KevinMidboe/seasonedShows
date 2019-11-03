@@ -4,4 +4,4 @@ import Person from './types/person.js'
 import Credits from './types/credits.js'
 import ReleaseDates from './types/releaseDates.js'
 
-module.exports = { Movie, Show, Person, ReleaseDates }
+module.exports = { Movie, Show, Person, Credits, ReleaseDates }

@@ -3,7 +3,7 @@ const convertTmdbToMovie = require('src/tmdb/convertTmdbToMovie');
 const convertTmdbToShow = require('src/tmdb/convertTmdbToShow');
 const convertTmdbToPerson = require('src/tmdb/convertTmdbToPerson');
 
-const { Credits, ReleaseDates} = require('src/tmdb/types');
+const { Credits, ReleaseDates } = require('src/tmdb/types');
 // const { tmdbInfo } = require('src/tmdb/types')
 
 class TMDB {
@@ -149,6 +149,11 @@ class TMDB {
     }
   }
 
+  /**
+   * Retrieve credits for a movie
+   * @param {Number} identifier of the movie to get credits for
+   * @returns {Promise} movie cast object
+   */
   movieCredits(identifier) {
     const query = { id: identifier }
     const cacheKey = `${this.cacheTags.movieCredits}:${identifier}`
@@ -160,6 +165,11 @@ class TMDB {
       .then(credits => Credits.convertFromTmdbResponse(credits))
   }
 
+  /**
+   * Retrieve release dates for a movie
+   * @param {Number} identifier of the movie to get release dates for
+   * @returns {Promise} movie release dates object
+   */
   movieReleaseDates(identifier) {
     const query = { id: identifier }
     const cacheKey = `${this.cacheTags.movieReleaseDates}:${identifier}`
@@ -167,7 +177,7 @@ class TMDB {
     return this.cache.get(cacheKey)
       .catch(() => this.tmdb('movieReleaseDates', query))
       .catch(tmdbError => this.tmdbRelaseDatesError(tmdbError))
-      .then(releaseDates => this.cache.set(cacheKey, releaseDates, 1))
+      .then(releaseDates => this.cache.set(cacheKey, releaseDates, 86400))
       .then(releaseDates => ReleaseDates.convertFromTmdbResponse(releaseDates))
   }
  

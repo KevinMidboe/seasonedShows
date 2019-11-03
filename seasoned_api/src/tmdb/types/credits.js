@@ -20,8 +20,8 @@ class Credits {
   createJsonResponse() {
     return {
       id: this.id,
-      cast: this.cast,
-      crew: this.crew
+      cast: this.cast.map(cast => cast.createJsonResponse()),
+      crew: this.crew.map(crew => crew.createJsonResponse())
     }
   }
 }

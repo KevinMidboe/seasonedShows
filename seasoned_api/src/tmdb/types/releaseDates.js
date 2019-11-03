@@ -1,3 +1,43 @@
+class ReleaseDates { 
+  constructor(id, releases) {
+    this.id = id;
+    this.releases = releases;
+  }
+
+  static convertFromTmdbResponse(response) {
+    const { id, results } = response;
+
+    const releases = results.map(countryRelease => 
+      new Release(
+        countryRelease.iso_3166_1, 
+        countryRelease.release_dates.map(rd => new ReleaseDate(rd.certification, rd.iso_639_1, rd.release_date, rd.type, rd.note))
+      ))
+
+    return new ReleaseDates(id, releases)
+  }
+
+  createJsonResponse() {
+    return {
+      id: this.id,
+      results: this.releases.map(release => release.createJsonResponse())
+    }
+  }
+}
+
+class Release { 
+  constructor(country, releaseDates) {
+    this.country = country;
+    this.releaseDates = releaseDates;
+  }
+
+  createJsonResponse() {
+    return {
+      country: this.country,
+      release_dates: this.releaseDates.map(releaseDate => releaseDate.createJsonResponse())
+    }
+  }
+}
+
 class ReleaseDate {
   constructor(certification, language, releaseDate, type, note) {
     this.certification = certification;
@@ -23,39 +63,15 @@ class ReleaseDate {
       return null
     }
   }
-}
-
-class Release { 
-  constructor(country, releaseDates) {
-    this.country = country;
-    this.releaseDates = releaseDates;
-  }
-}
-
-class ReleaseDates { 
-  constructor(id, releases) {
-    this.id = id;
-    this.releases = releases;
-  }
-
-  static convertFromTmdbResponse(response) {
-    console.log('this is relese dates response')
-    const { id, results } = response;
-
-    const releases = results.map(countryRelease => 
-      new Release(
-        countryRelease.iso_3166_1, 
-        countryRelease.release_dates.map(rd => new ReleaseDate(rd.certification, rd.iso_639_1, rd.release_date, rd.type, rd.note))
-      ))
-
-    return new ReleaseDates(id, releases)
-  }
 
   createJsonResponse() {
-    return JSON.stringify({
-      id: this.id,
-      release_dates: this.releases
-    })
+    return {
+      certification: this.certification,
+      language: this.language,
+      releaseDate: this.releaseDate,
+      type: this.type,
+      note: this.note
+    }
   }
 }
 
