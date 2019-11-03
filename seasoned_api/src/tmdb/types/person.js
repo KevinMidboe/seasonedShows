@@ -8,6 +8,18 @@ class Person {
     this.known_for = known_for;
     this.type = 'person';
   }
+
+  createJsonResponse() {
+    return {
+      id: this.id,
+      name: this.name,
+      poster: this.poster,
+      birthday: this.birthday,
+      deathday: this.deathday,
+      known_for: this.known_for,
+      type: this.type
+    }
+  }
 }
 
 module.exports = Person;

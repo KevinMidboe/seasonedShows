@@ -1,6 +1,7 @@
 class Movie {
-  constructor(id, title, year=null, overview=null, poster=null, backdrop=null, rank=null, genres=null, status=null,
-              tagline=null, runtime=null, imdb_id=null) {
+  constructor(id, title, year=undefined, overview=undefined, poster=undefined,
+              backdrop=undefined, rank=undefined, genres=undefined, status=undefined,
+              tagline=undefined, runtime=undefined, imdb_id=undefined) {
     this.id = id;
     this.title = title;
     this.year = year;
@@ -14,6 +15,24 @@ class Movie {
     this.runtime = runtime;
     this.imdb_id = imdb_id;
     this.type = 'movie';
+  }
+
+  createJsonResponse() {
+    return {
+      id: this.id,
+      title: this.title,
+      year: this.year,
+      overview: this.overview,
+      poster: this.poster,
+      backdrop: this.backdrop,
+      rank: this.rank,
+      genres: this.genres,
+      status: this.status,
+      tagline: this.tagline,
+      runtime: this.runtime,
+      imdb_id: this.imdb_id,
+      type: this.type
+    }
   }
 }
 
