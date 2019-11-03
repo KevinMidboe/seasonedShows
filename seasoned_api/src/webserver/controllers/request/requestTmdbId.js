@@ -38,15 +38,15 @@ function requestTmdbIdController(req, res) {
   } else if (type === 'show') {
     mediaFunction = tmdbShowInfo
   } else {
-    res.status(422).send({ success: false, error: 'Incorrect type. Allowed types: "movie" or "show"'})
+    res.status(422).send({ success: false, message: 'Incorrect type. Allowed types: "movie" or "show"'})
   }
 
   mediaFunction(id)
     // .catch((error) => { console.error(error); res.status(404).send({ success: false, error: 'Id not found' }) })
-    .then((tmdbMedia) => request.requestFromTmdb(tmdbMedia, ip, user_agent, user))
+    .then(tmdbMedia => request.requestFromTmdb(tmdbMedia, ip, user_agent, user))
     .then(() => res.send({success: true, message: 'Request has been submitted.'}))
-    .catch((error) => {
-      res.send({ success: false, error: error.message });
+    .catch(error => {
+      res.send({ success: false, message: error.message });
     })
 }
 

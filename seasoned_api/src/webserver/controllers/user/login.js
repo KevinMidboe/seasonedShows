@@ -20,13 +20,13 @@ function loginController(req, res) {
 
    userSecurity.login(user, password)
       .then(() => userRepository.checkAdmin(user))
-      .then((checkAdmin) => {
+      .then(checkAdmin => {
          const isAdmin = checkAdmin === 1 ? true : false;
          const token = new Token(user, isAdmin).toString(secret);
          res.send({ success: true, token });
       })
-      .catch((error) => {
-         res.status(401).send({ success: false, error: error.message });
+      .catch(error => {
+         res.status(401).send({ success: false, message: error.message });
       });
 }
 

@@ -20,7 +20,7 @@ function handleError(error, res) {
   const { status, message } = error;
 
   if (status && message) {
-    res.status(error.status).send({ success: false, error: error.message })
+    res.status(status).send({ success: false, message })
   } else {
     console.log('caught list controller error', error)
     res.status(500).send({ message: 'An unexpected error occured while requesting list'})

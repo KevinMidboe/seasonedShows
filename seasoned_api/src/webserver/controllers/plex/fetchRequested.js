@@ -17,7 +17,7 @@ function fetchRequestedController(req, res) {
          res.send({ success: true, results: requestedItems, total_results: requestedItems.length });
       })
       .catch((error) => {
-         res.status(401).send({ success: false, error: error.message });
+         res.status(401).send({ success: false, message: error.message });
       });
 }
 

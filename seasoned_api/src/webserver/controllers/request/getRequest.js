@@ -14,7 +14,7 @@ function fetchAllRequests(req, res) {
   request.getRequestByIdAndType(id, type)
     .then(result => res.send(result))
     .catch(error => {
-      res.status(404).send({ success: false, error: error.message });
+      res.status(404).send({ success: false, message: error.message });
     });
 }
 
