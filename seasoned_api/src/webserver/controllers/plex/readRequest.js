@@ -12,10 +12,10 @@ function readRequestController(req, res) {
    const mediaId = req.params.mediaId;
    const { type } = req.query;
    requestRepository.lookup(mediaId, type)
-      .then((movies) => {
+      .then(movies => {
          res.send(movies);
-      }).catch((error) => {
-         res.status(404).send({ success: false, error: error.message });
+      }).catch(error => {
+         res.status(404).send({ success: false, message: error.message });
       });
 }
 

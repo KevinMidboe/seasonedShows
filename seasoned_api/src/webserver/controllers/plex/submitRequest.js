@@ -37,7 +37,7 @@ function submitRequestController(req, res) {
     console.log('show')
     mediaFunction = tmdbShowInfo
   } else {
-    res.status(422).send({ success: false, error: 'Incorrect type. Allowed types: "movie" or "show"'})
+    res.status(422).send({ success: false, message: 'Incorrect type. Allowed types: "movie" or "show"'})
   }
 
   if (mediaFunction === undefined) { res.status(200); return }
@@ -45,7 +45,7 @@ function submitRequestController(req, res) {
   mediaFunction(id)
     .then(tmdbMedia => request.requestFromTmdb(tmdbMedia, ip, user_agent, user))
     .then(() => res.send({ success: true, message: 'Media item successfully requested' }))
-    .catch(err => res.status(500).send({ success: false, error: err.message }))
+    .catch(err => res.status(500).send({ success: false, message: err.message }))
 }
 
 module.exports = submitRequestController;

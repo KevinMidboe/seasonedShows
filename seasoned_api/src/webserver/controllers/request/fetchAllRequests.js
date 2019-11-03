@@ -18,9 +18,9 @@ function fetchAllRequests(req, res) {
 
   Promise.resolve()
   .then(() => request.fetchAll(page, sort_by, sort_direction, filter, query))
-  .then((result) => res.send(result))
-  .catch((error) => {
-    res.status(404).send({ success: false, error: error.message });
+  .then(result => res.send(result))
+  .catch(error => {
+    res.status(404).send({ success: false, message: error.message });
   });
 }
 

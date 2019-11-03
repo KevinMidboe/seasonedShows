@@ -33,7 +33,7 @@ function multiSearchController(req, res) {
     const { status, message } = error;
 
     if (status && message) {
-      res.status(error.status).send({ success: false, error: error.message })
+      res.status(status).send({ success: false, message })
     } else {
       // TODO log unhandled errors
       console.log('caugth multi search controller error', error)

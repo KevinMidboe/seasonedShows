@@ -10,7 +10,7 @@ function strayByIdController(req, res) {
          res.send(stray);
       })
       .catch((error) => {
-         res.status(500).send({ success: false, error: error.message });
+         res.status(500).send({ success: false, message: error.message });
       });
 }
 

@@ -11,14 +11,14 @@ const plex = new Plex(configuration.get('plex', 'ip'));
 function searchPlexController(req, res) {
    const { query, type } = req.query;
    plex.search(query, type)
-      .then((movies) => {
+      .then(movies => {
          if (movies.length > 0) {
             res.send(movies);
          } else {
-            res.status(404).send({ success: false, error: 'Search query did not give any results from plex.'})
+            res.status(404).send({ success: false, message: 'Search query did not give any results from plex.'})
          }
-      }).catch((error) => {
-         res.status(500).send({ success: false, error: error.message });
+      }).catch(error => {
+         res.status(500).send({ success: false, message: error.message });
       });
 }
 

@@ -12,12 +12,11 @@ function requestsController(req, res) {
    const user = req.loggedInUser;
 
    requestRepository.userRequests(user)
-      .then((requests) => {
+      .then(requests => {
          res.send({ success: true, results: requests, total_results: requests.length });
       })
-      .catch((error) => {
-         console.log(error)
-         res.status(500).send({ success: false, error: error });
+      .catch(error => {
+         res.status(500).send({ success: false, message: error.message });
       });
 }
 

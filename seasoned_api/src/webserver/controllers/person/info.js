@@ -18,7 +18,7 @@ function personInfoController(req, res) {
   tmdb.personInfo(personId)
   .then(person => res.send(person.createJsonResponse()))
   .catch(error => {
-    res.status(404).send({ success: false, error: error.message });
+    res.status(404).send({ success: false, message: error.message });
   });
 }
 

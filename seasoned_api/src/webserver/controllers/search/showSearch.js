@@ -27,8 +27,8 @@ function showSearchController(req, res) {
   .then((shows) => {
     res.send(shows);
   })
-  .catch((error) => {
-    res.status(500).send({ success: false, error: error.message });
+  .catch(error => {
+    res.status(500).send({ success: false, message: error.message });
   });
 }
 
