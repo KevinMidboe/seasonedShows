@@ -136,7 +136,7 @@ class TMDB {
     return this.cache.get(cacheKey)
       .catch(() => this.tmdb('movieCredits', query))
       .catch(tmdbError => this.tmdbCreditsError(tmdbError))
-      .then(credits => this.cache.set(cacheKey, credits, 1))
+      .then(credits => this.cache.set(cacheKey, credits, 86400))
       .then(credits => Credits.convertFromTmdbResponse(credits))
   }
  
