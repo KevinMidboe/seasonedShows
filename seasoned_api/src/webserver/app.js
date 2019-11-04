@@ -53,7 +53,7 @@ app.use(function onError(err, req, res, next) {
  */
 router.post('/v1/user', require('./controllers/user/register.js'));
 router.post('/v1/user/login', require('./controllers/user/login.js'));
-router.get('/v1/user/search_history', mustBeAuthenticated, require('./controllers/user/search_history.js'));
+router.get('/v1/user/search_history', mustBeAuthenticated, require('./controllers/user/searchHistory.js'));
 router.get('/v1/user/requests', mustBeAuthenticated, require('./controllers/user/requests.js'));
 router.post('/v1/user/authenticate', mustBeAuthenticated, require('./controllers/user/authenticatePlexAccount.js'));
 
