@@ -8,6 +8,7 @@ const mustHaveAccountLinkedToPlex = require('./middleware/mustHaveAccountLinkedT
 const configuration = require('src/config/configuration').getInstance();
 
 const listController = require('./controllers/list/listController');
+const tautulli = require('./controllers/user/viewHistory.js');
 
 // TODO: Have our raven router check if there is a value, if not don't enable raven.
 Raven.config(configuration.get('raven', 'DSN')).install();
@@ -57,6 +58,10 @@ router.post('/v1/user/login', require('./controllers/user/login.js'));
 router.get('/v1/user/search_history', mustBeAuthenticated, require('./controllers/user/searchHistory.js'));
 router.get('/v1/user/requests', mustBeAuthenticated, require('./controllers/user/requests.js'));
 router.post('/v1/user/authenticate', mustBeAuthenticated, require('./controllers/user/authenticatePlexAccount.js'));
+
+router.get('/v1/user/view_history', mustHaveAccountLinkedToPlex, tautulli.userViewHistoryController);
+router.get('/v1/user/watch_time', mustHaveAccountLinkedToPlex, tautulli.watchTimeStatsController);
+router.get('/v1/user/plays_by_day', mustHaveAccountLinkedToPlex, tautulli.getPlaysByDaysController);
 
 /**
  * Seasoned
