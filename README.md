@@ -10,8 +10,8 @@
     <img src="https://travis-ci.org/KevinMidboe/seasonedShows.svg?branch=master"
          alt="Travis CI">
   </a>
-  <a href="https://coveralls.io/github/KevinMidboe/seasonedShows?branch=coverage">
-    <img src="https://coveralls.io/repos/github/KevinMidboe/seasonedShows/badge.svg?branch=coverage" alt="">
+  <a href="https://coveralls.io/github/KevinMidboe/seasonedShows?branch=api/v2">
+    <img src="https://coveralls.io/repos/github/KevinMidboe/seasonedShows/badge.svg?branch=api/v2" alt="">
   </a>
   <a href="https://snyk.io/test/github/KevinMidboe/seasonedShows?targetFile=seasoned_api/package.json">
     <img src="https://snyk.io/test/github/KevinMidboe/seasonedShows/badge.svg?targetFile=seasoned_api/package.json" alt="">

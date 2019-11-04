@@ -3,6 +3,10 @@ const convertPlexToStream = require('src/plex/convertPlexToStream');
 const rp = require('request-promise');
 
 class PlexRepository {
+   constructor(plexIP) {
+    this.plexIP = plexIP;
+   }
+
    inPlex(tmdbResult) {
       return Promise.resolve()
          .then(() => this.search(tmdbResult.title))
@@ -15,9 +19,10 @@ class PlexRepository {
    }
 
    search(query) {
-      console.log('searching:', query)
+     const queryUri = encodeURIComponent(query)
+     const uri = encodeURI(`http://${this.plexIP}:32400/search?query=${queryUri}`)
       const options = {
-         uri: `http://10.0.0.44:32400/search?query=${query}`,
+         uri: uri,
          headers: {
             Accept: 'application/json',
          },
@@ -26,6 +31,7 @@ class PlexRepository {
 
       return rp(options)
          .catch((error) => {
+            console.log(error)
             throw new Error('Unable to search plex.')
          })
          .then(result => this.mapResults(result))
@@ -39,6 +45,7 @@ class PlexRepository {
                tmdb.matchedInPlex = false
             } 
             else {
+               // console.log('plex and tmdb:', plexResult, '\n',  tmdb)
                plexResult.results.map((plexItem) => {
                   if (tmdb.title === plexItem.title && tmdb.year === plexItem.year)
                      tmdb.matchedInPlex = true;
@@ -52,7 +59,6 @@ class PlexRepository {
    mapResults(response) {
       return Promise.resolve()
          .then(() => {
-            console.log('plexResponse:', response)
             if (!response.MediaContainer.hasOwnProperty('Metadata')) return [[], 0];
 
             const mappedResults = response.MediaContainer.Metadata.filter((element) => {
@@ -65,7 +71,7 @@ class PlexRepository {
 
    nowPlaying() {
       const options = {
-         uri: 'http://10.0.0.44:32400/status/sessions',
+         uri: `http://${this.plexIP}:32400/status/sessions`,
          headers: {
             Accept: 'application/json',
          },

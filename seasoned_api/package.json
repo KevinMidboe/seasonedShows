@@ -7,37 +7,48 @@
   },
   "main": "webserver/server.js",
   "scripts": {
-    "start": "cross-env SEASONED_CONFIG=conf/development.json PROD=true NODE_PATH=. node src/webserver/server.js",
-    "test": "cross-env SEASONED_CONFIG=conf/test.json NODE_PATH=. mocha --recursive test",
-    "coverage": "cross-env SEASONED_CONFIG=conf/test.json NODE_PATH=. nyc mocha --recursive test && nyc report --reporter=text-lcov | coveralls",
+    "start": "cross-env SEASONED_CONFIG=conf/development.json PROD=true NODE_PATH=. babel-node src/webserver/server.js",
+    "test": "cross-env SEASONED_CONFIG=conf/test.json NODE_PATH=. mocha --require @babel/register --recursive test/unit test/system",
+    "coverage": "cross-env SEASONED_CONFIG=conf/test.json NODE_PATH=. nyc mocha --require @babel/register --recursive test && nyc report --reporter=text-lcov | coveralls",
     "lint": "./node_modules/.bin/eslint src/",
-    "update": "cross-env SEASONED_CONFIG=conf/development.json NODE_PATH=. node src/plex/updateRequestsInPlex.js"
+    "update": "cross-env SEASONED_CONFIG=conf/development.json NODE_PATH=. node src/plex/updateRequestsInPlex.js",
+    "docs": "yarn apiDocs; yarn classDocs",
+    "apiDocs": "",
+    "classDocs": "./script/generate-class-docs.sh"
   },
   "dependencies": {
-    "bcrypt-nodejs": "^0.0.3",
+    "axios": "^0.18.0",
+    "bcrypt": "^3.0.6",
     "body-parser": "~1.18.2",
     "cross-env": "~5.1.4",
     "express": "~4.16.0",
     "jsonwebtoken": "^8.2.0",
-    "mongoose": "~5.2.12",
     "km-moviedb": "^0.2.12",
     "node-cache": "^4.1.1",
+    "node-fetch": "^2.6.0",
     "python-shell": "^0.5.0",
+    "raven": "^2.4.2",
     "request": "^2.87.0",
     "request-promise": "^4.2",
     "sqlite3": "^4.0.0"
   },
   "devDependencies": {
-    "coveralls": "^3.0.0",
+    "@babel/core": "^7.5.5",
+    "@babel/node": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
+    "@babel/register": "^7.5.5",
+    "@types/node": "^12.6.8",
+    "coveralls": "^3.0.5",
+    "documentation": "^12.0.3",
     "eslint": "^4.9.0",
     "eslint-config-airbnb-base": "^12.1.0",
     "eslint-plugin-import": "^2.8.0",
     "istanbul": "^0.4.5",
-    "mocha": "^5.0.4",
+    "mocha": "^6.2.0",
     "mocha-lcov-reporter": "^1.3.0",
     "nyc": "^11.6.0",
-    "raven": "^2.4.2",
     "supertest": "^3.0.0",
-    "supertest-as-promised": "^4.0.1"
+    "supertest-as-promised": "^4.0.1",
+    "typescript": "^3.5.3"
   }
 }

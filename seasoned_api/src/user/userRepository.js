@@ -26,6 +26,7 @@ class UserRepository {
             if (error.name === 'AssertionError' || error.message.endsWith('user_name')) {
                throw new Error('That username is already registered');
             }
+            throw Error(error)
          });
    }
 

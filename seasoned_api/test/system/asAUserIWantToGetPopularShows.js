@@ -7,11 +7,11 @@ const popularShowsSuccess = require('test/fixtures/popular-show-success-response
 
 describe('As a user I want to get popular shows', () => {
   before(() => resetDatabase());
-  before(() => createCacheEntry('p:show:1', popularShowsSuccess));
+  before(() => createCacheEntry('pt:1', popularShowsSuccess));
 
   it('should return 200 with the information', () =>
     request(app)
-    .get('/api/v1/tmdb/list/popular?type=show')
+    .get('/api/v2/show/popular')
     .expect(200)
     .then(response => assert.equal(response.body.results.length, 20))
   );

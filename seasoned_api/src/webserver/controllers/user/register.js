@@ -20,15 +20,15 @@ function registerController(req, res) {
 
    userSecurity.createNewUser(user, password)
       .then(() => userRepository.checkAdmin(user))
-      .then((checkAdmin) => {
-         const token = new Token(user).toString(secret);
-         const admin_state = checkAdmin === 1 ? true : false;
+      .then(checkAdmin => {
+         const isAdmin = checkAdmin === 1 ? true : false;
+         const token = new Token(user, isAdmin).toString(secret);
          res.send({
-            success: true, message: 'Welcome to Seasoned!', token, admin: admin_state,
+            success: true, message: 'Welcome to Seasoned!', token
          });
       })
-      .catch((error) => {
-         res.status(401).send({ success: false, error: error.message });
+      .catch(error => {
+         res.status(401).send({ success: false, message: error.message });
       });
 }
 

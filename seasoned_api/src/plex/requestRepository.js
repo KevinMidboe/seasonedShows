@@ -4,7 +4,7 @@ const configuration = require('src/config/configuration').getInstance();
 const TMDB = require('src/tmdb/tmdb');
 const establishedDatabase = require('src/database/database');
 
-const plexRepository = new PlexRepository();
+const plexRepository = new PlexRepository(configuration.get('plex', 'ip'));
 const cache = new Cache();
 const tmdb = new TMDB(cache, configuration.get('tmdb', 'apiKey'));
 
@@ -86,7 +86,11 @@ class RequestRepository {
             }
             throw new Error('Unable to fetch your requests');
          })
-         .then((result) => { return result; });
+         .then((result) => {
+            // TODO do a correct mapping before sending, not just a dump of the database
+            result.map(item => item.poster = item.poster_path)
+            return result
+         });
    }
 
    updateRequestedById(id, type, status) {

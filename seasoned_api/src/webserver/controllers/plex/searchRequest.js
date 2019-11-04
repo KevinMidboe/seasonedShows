@@ -18,8 +18,8 @@ function searchRequestController(req, res) {
       .then((searchResult) => {
          res.send(searchResult);
       })
-      .catch((error) => {
-         res.status(500).send({ success: false, error: error });
+      .catch(error => {
+         res.status(500).send({ success: false, message: error.message });
       });
 }
 
