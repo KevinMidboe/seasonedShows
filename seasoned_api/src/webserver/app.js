@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const tokenToUser = require('./middleware/tokenToUser');
 const mustBeAuthenticated = require('./middleware/mustBeAuthenticated');
 const mustBeAdmin = require('./middleware/mustBeAdmin');
+const mustHaveAccountLinkedToPlex = require('./middleware/mustHaveAccountLinkedToPlex');
 const configuration = require('src/config/configuration').getInstance();
 
 const listController = require('./controllers/list/listController');
