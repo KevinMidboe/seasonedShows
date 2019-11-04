@@ -36,7 +36,6 @@ create(user) {
 * @returns {Promise}
 */
 retrieveHash(user) {
-  console.log('retrieving hash for user', user)
   return this.database.get(this.queries.retrieveHash, user.username)
     .then(row => {
       assert(row, 'The user does not exist.');
