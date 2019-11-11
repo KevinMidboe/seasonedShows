@@ -28,9 +28,22 @@ function watchTimeStatsController(req, res) {
     })
 }
 
+function getPlaysByDayOfWeekController(req, res) {
+  const user = req.loggedInUser;
+  const { days, y_axis } = req.query;
+
+  tautulli.getPlaysByDayOfWeek(user.plex_userid, days, y_axis)
+    .then(data => res.send({
+      success: true,
+      data: data.response.data,
+      message: 'play by day of week successfully fetched from tautulli'
+    })
+    )
+}
+
 function getPlaysByDaysController(req, res) {
   const user = req.loggedInUser;
-  const days = req.query.days || undefined;
+  const { days, y_axis } = req.query;
 
   if (days === undefined) {
     return res.status(422).send({
@@ -39,7 +52,15 @@ function getPlaysByDaysController(req, res) {
     })
   }
 
-  tautulli.getPlaysByDays(user.plex_userid, days)
+  const allowedYAxisDataType = ['plays', 'duration'];
+  if (!allowedYAxisDataType.includes(y_axis)) {
+    return res.status(422).send({
+      success: false,
+      message: `Y axis parameter must be one of values: [${ allowedYAxisDataType }]`
+    })
+  }
+
+  tautulli.getPlaysByDays(user.plex_userid, days, y_axis)
     .then(data => res.send({
         success: true,
         data: data.response.data
@@ -76,5 +97,6 @@ function userViewHistoryController(req, res) {
 module.exports = {
   watchTimeStatsController,
   getPlaysByDaysController,
+  getPlaysByDayOfWeekController,
   userViewHistoryController
 };

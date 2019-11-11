@@ -16,9 +16,19 @@ class Tautulli {
     return url
   }
 
-  getPlaysByDays(plex_userid, days) {
+  getPlaysByDayOfWeek(plex_userid, days, y_axis) {
+    const url = this.buildUrlWithCmdAndUserid('get_plays_by_dayofweek', plex_userid)
+    url.searchParams.append('time_range', days)
+    url.searchParams.append('y_axis', y_axis)
+
+    return fetch(url.href)
+      .then(resp => resp.json())
+  }
+
+  getPlaysByDays(plex_userid, days, y_axis) {
     const url = this.buildUrlWithCmdAndUserid('get_plays_by_date', plex_userid)
     url.searchParams.append('time_range', days)
+    url.searchParams.append('y_axis', y_axis)
 
     return fetch(url.href)
       .then(resp => resp.json())

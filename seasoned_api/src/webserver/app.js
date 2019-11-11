@@ -62,6 +62,7 @@ router.post('/v1/user/authenticate', mustBeAuthenticated, require('./controllers
 router.get('/v1/user/view_history', mustHaveAccountLinkedToPlex, tautulli.userViewHistoryController);
 router.get('/v1/user/watch_time', mustHaveAccountLinkedToPlex, tautulli.watchTimeStatsController);
 router.get('/v1/user/plays_by_day', mustHaveAccountLinkedToPlex, tautulli.getPlaysByDaysController);
+router.get('/v1/user/plays_by_dayofweek', mustHaveAccountLinkedToPlex, tautulli.getPlaysByDayOfWeekController);
 
 /**
  * Seasoned
