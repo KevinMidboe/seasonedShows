@@ -1,4 +1,5 @@
 const express = require('express');
+// const reload = require('express-reload');
 const Raven = require('raven');
 const bodyParser = require('body-parser');
 const tokenToUser = require('./middleware/tokenToUser');
@@ -47,6 +48,32 @@ app.use(function onError(err, req, res, next) {
    res.statusCode = 500;
    res.end(res.sentry + '\n');
 });
+
+
+
+/**
+ * GraphQL
+ */
+var graphqlHTTP = require('express-graphql');
+var { buildSchema } = require('graphql');
+
+// var schema = buildSchema(`
+//   type Query {
+//     hello: String
+//   }`);
+const schema = require('./graphql/requests.js');
+
+const roots = { hello: () => 'Hello world!' };
+
+app.use('/graphql', graphqlHTTP({
+  schema: schema.schema,
+  graphiql: process.env.NODE_ENV === 'development'
+}))
+
+
+
+
+
 
 /**
  * User
