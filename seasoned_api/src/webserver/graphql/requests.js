@@ -1,5 +1,6 @@
 const graphql = require("graphql");
 const establishedDatabase = require('src/database/database');
+const fetch = require('node-fetch');
 
 
 const TorrentType = new graphql.GraphQLObjectType({
@@ -7,8 +8,7 @@ const TorrentType = new graphql.GraphQLObjectType({
   fields: {
     magnet: { type: graphql.GraphQLString },
     torrent_name: { type: graphql.GraphQLString},
-    tmdb_id: { type: graphql.GraphQLString },
-    date_added: { type: graphql.GraphQLString }
+    tmdb_id: { type: graphql.GraphQLString }
   }
 });
 
@@ -25,16 +25,79 @@ const RequestType = new graphql.GraphQLObjectType({
     date: { type: graphql.GraphQLString },
     status: { type: graphql.GraphQLString },
     user_agent: { type: graphql.GraphQLString },
-    type: { type: graphql.GraphQLString },
+    type: { type: graphql.GraphQLString }
+  }
+});
+
+const RequestsType = new graphql.GraphQLObjectType({
+  name: 'Requests',
+  type: graphql.GraphQLList(RequestType),
+  resolve: (root, args, context, info) => {
+    return establishedDatabase.all("SELECT * FROM requests;")
+      .catch(error => console.error("something went wrong fetching 'all' query. Error:", error))
+  }
+})
+
+const ProgressType = new graphql.GraphQLObjectType({
+  name: 'TorrentProgress',
+  fields: {
+    eta: { type: graphql.GraphQLInt },
+    finished: { type: graphql.GraphQLBoolean },
+    key: { type: graphql.GraphQLString },
+    name: { type: graphql.GraphQLString },
+    progress: { type: graphql.GraphQLFloat },
+    state: { type: graphql.GraphQLString },
     Torrent: {
-      required: true,
       type: TorrentType,
-      resolve(parentValue, args) {
-        return establishedDatabase.get('select * from requested_torrent where tmdb_id = (?);', [parentValue.id])
+      resolve(parent) {
+        console.log('prante: ', parent.name)
+        console.log(parent.name.slice(0,10))
+        return establishedDatabase.get(`select magnet, torrent_name, tmdb_id from requested_torrent where torrent_name like (?);`, [parent.name.slice(0, 10) + '%'])
+      }
+    },
+    Requested: {
+      type: graphql.GraphQLList(RequestType),
+      // resolve: () => fetch('https://api.kevinmidboe.com/api/v2/request?page=1/').then(resp => resp.json())
+      // .then(data => {
+      //   // console.log('data', data)
+      //   return data.results
+      // })
+      resolve: (parent) => {
+        return establishedDatabase.all("SELECT * FROM requests;")
       }
     }
   }
-});
+})
+
+
+const TorrentsRequestedType = new graphql.GraphQLObjectType({
+  name: 'TorrentsRequested',
+  fields: {
+    magnet: { type: graphql.GraphQLString },
+    torrent_name: { type: graphql.GraphQLString },
+    tmdb_id: { type: graphql.GraphQLString },
+    date_added: { type: graphql.GraphQLString },
+    Request: {
+      type: RequestType,
+      // resolve: () => fetch('https://api.kevinmidboe.com/api/v2/request?page=1/').then(resp => resp.json())
+      // .then(data => {
+      //   return data.results
+      // })
+      resolve(parentValue, args) {
+        return establishedDatabase.get('select * from requests where id = (?);', [parentValue.tmdb_id])
+      }
+    },
+    Progress: {
+      type: ProgressType,
+      resolve(parentValue, args) {
+        return fetch('http://localhost:5000/')
+          .then(resp => resp.json())
+          // .then(data => { console.log('data', data); return data.filter(download => download.name === parentValue.torrent_name) })
+      }
+    }
+  }
+})
+
 
 // create a graphql query to select all and by id
 var queryType = new graphql.GraphQLObjectType({
@@ -48,11 +111,25 @@ var queryType = new graphql.GraphQLObjectType({
                   .catch(error => console.error("something went wrong fetching 'all' query. Error:", error))
             }
         },
-        DownloadingRequests: {
-          type: graphql.GraphQLList(RequestType),
+        Progress: {
+          type: graphql.GraphQLList(ProgressType),
           resolve: (root, args, context, info) => {
-            return establishedDatabase.all("SELECT * FROM requests;")
-              .then(data => data.filter(request => { if (request.id === '83666') { console.log('request', request, root);}; return request }))
+            console.log('user', context.loggedInUser)
+            return fetch('http://localhost:5000')
+              .then(resp => resp.json())
+          }
+        },
+        ProgressRequested: {
+          type: graphql.GraphQLList(ProgressType),
+          resolve: (root, args, context, info) => {
+            console.log('root & args', root, args)
+          }
+        },
+        TorrentsRequested: {
+          type: graphql.GraphQLList(TorrentsRequestedType),
+          resolve: (root, args, context, info) => {
+            return establishedDatabase.all("SELECT * FROM requested_torrent;")
+              .then(data => data.filter(request => { if (request.tmdb_id === '83666') { console.log('request', request, root);}; return request }))
               .catch(error => console.error("something went wrong fetching 'all' query. Error:", error))
           }
         },
@@ -84,7 +161,7 @@ var queryType = new graphql.GraphQLObjectType({
         Torrents: {
           type: graphql.GraphQLList(TorrentType),
           resolve: (root, {id}, context, info) => {
-            console.log('parent', parent)
+            // console.log('parent', parent)
             return establishedDatabase.all("SELECT * FROM requested_torrent")
               .catch(error => console.error(`something went wrong fetching all torrents. Error: ${ error }`))
           }
@@ -97,7 +174,7 @@ var queryType = new graphql.GraphQLObjectType({
             }
           },
           resolve: (parent, {id}, context, info) => {
-            console.log('searcing from parent', parent)
+            // console.log('searcing from parent', parent)
             return establishedDatabase.get("SELECT * FROM requested_torrent WHERE tmdb_id = (?);", [id])
           }
         }

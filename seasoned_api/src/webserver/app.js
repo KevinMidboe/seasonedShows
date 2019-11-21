@@ -24,7 +24,7 @@ const allowedOrigins = ['https://kevinmidboe.com', 'http://localhost:8080'];
 app.use(bodyParser.urlencoded({ extended: true }));
 
 /* Decode the Authorization header if provided */
-router.use(tokenToUser);
+app.use(tokenToUser);
 
 // TODO: Should have a separate middleware/router for handling headers.
 router.use((req, res, next) => {
@@ -67,7 +67,7 @@ const roots = { hello: () => 'Hello world!' };
 
 app.use('/graphql', graphqlHTTP({
   schema: schema.schema,
-  graphiql: process.env.NODE_ENV === 'development'
+  graphiql: true
 }))
 
 
