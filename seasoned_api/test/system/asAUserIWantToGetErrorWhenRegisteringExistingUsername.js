@@ -15,6 +15,6 @@ describe('As a user I want error when registering existing username', () => {
     .post('/api/v1/user')
     .send({ username: 'test_user', password: 'password' })
     .expect(401)
-    .then(response => assert.equal(response.text, '{"success":false,"error":"That username is already registered"}'))
+    .then(response => assert.equal(response.text, '{"success":false,"message":"That username is already registered"}'))
   );
 });

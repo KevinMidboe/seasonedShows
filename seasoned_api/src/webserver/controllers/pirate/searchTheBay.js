@@ -21,8 +21,8 @@ function updateRequested(req, res) {
       .then((result) => {
          res.send({ success: true, results: result });
       })
-      .catch((error) => {
-         res.status(401).send({ success: false, error: error.message });
+      .catch(error => {
+         res.status(401).send({ success: false, message: error.message });
       });
 }
 

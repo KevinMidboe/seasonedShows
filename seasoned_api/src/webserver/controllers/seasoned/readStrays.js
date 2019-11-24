@@ -10,7 +10,7 @@ function readStraysController(req, res) {
          res.send(strays);
       })
       .catch((error) => {
-         res.status(500).send({ success: false, error: error.message });
+         res.status(500).send({ success: false, message: error.message });
       });
 }
 

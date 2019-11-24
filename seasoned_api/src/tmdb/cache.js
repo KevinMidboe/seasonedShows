@@ -18,12 +18,12 @@ class Cache {
     * @returns {Object}
     */
    get(key) {
-      return Promise.resolve()
-         .then(() => this.database.get(this.queries.read, [key]))
-         .then((row) => {
-            assert(row, 'Could not find cache enrty with that key.');
-            return JSON.parse(row.value);
-         });
+     return Promise.resolve()
+       .then(() => this.database.get(this.queries.read, [key]))
+       .then(row => {
+         assert(row, 'Could not find cache entry with that key.');
+         return JSON.parse(row.value);
+       })
    }
 
    /**

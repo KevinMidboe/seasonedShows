@@ -8,17 +8,13 @@
 	"tmdb": {
 		"apiKey": ""
 	},
+	"plex": {
+		"ip": ""
+	},
 	"raven": {
 		"DSN": ""
 	},
-	"mail": {
-		"host": "",
-		"user": "",
-		"password": "",
-		"user_pi": "",
-		"password_pi": ""
-	},
 	"authentication": {
-    		"secret": "secret"
-    	}
+    "secret": "secret"
+ 	}
 }

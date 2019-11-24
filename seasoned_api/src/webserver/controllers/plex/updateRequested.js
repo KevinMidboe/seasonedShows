@@ -18,7 +18,7 @@ function updateRequested(req, res) {
          res.send({ success: true });
       })
       .catch((error) => {
-         res.status(401).send({ success: false, error: error.message });
+         res.status(401).send({ success: false, message: error.message });
       });
 }
 

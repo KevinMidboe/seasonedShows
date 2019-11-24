@@ -13,11 +13,11 @@ function historyController(req, res) {
    const username = user === undefined ? undefined : user.username;
 
    searchHistory.read(username)
-      .then((searchQueries) => {
+      .then(searchQueries => {
          res.send({ success: true, searchQueries });
       })
-      .catch((error) => {
-         res.status(404).send({ success: false, error: error });
+      .catch(error => {
+         res.status(404).send({ success: false, message: error.message });
       });
 }
 

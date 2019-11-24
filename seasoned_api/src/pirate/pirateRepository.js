@@ -12,7 +12,7 @@ function getMagnetFromURL(url) {
          resolve(url)
 
       http.get(options, (res) => {
-         if (res.statusCode == 301) {
+         if (res.statusCode == 301 || res.statusCode == 302) {
             resolve(res.headers.location)
          }
       });
@@ -21,12 +21,12 @@ function getMagnetFromURL(url) {
 
 async function find(searchterm, callback) {
    const options = {
-      pythonPath: '/usr/bin/python3',
-      // pythonPath: '/Library/Frameworks/Python.framework/Versions/3.6/bin/python3',
-      args: [searchterm, '-s', 'jackett', '-f', '--print'],
-   };
+      pythonPath: '../torrent_search/env/bin/python3',
+      scriptPath: '../torrent_search',
+      args: [searchterm, '-s', 'jackett', '-f', '--print']
+   }
 
-   PythonShell.run('../torrent_search/torrentSearch/search.py', options, callback);
+   PythonShell.run('torrentSearch/search.py', options, callback);
    // PythonShell does not support return
 }
 
@@ -35,12 +35,12 @@ async function callPythonAddMagnet(url, callback) {
    getMagnetFromURL(url)
    .then((magnet) => {
       const options = {
-         pythonPath: '/usr/bin/python',
-      	 // pythonPath: '/Library/Frameworks/Python.framework/Versions/3.6/bin/python3',
-      	 args: [magnet],
+        pythonPath: '../delugeClient/env/bin/python3',
+        scriptPath: '../delugeClient',
+        args: ['add', magnet]
       };
 
-      PythonShell.run('../app/magnet.py', options, callback);
+      PythonShell.run('deluge_cli.py', options, callback);
    })
    .catch((err) => {
       console.log(err);
@@ -51,19 +51,16 @@ async function callPythonAddMagnet(url, callback) {
 async function SearchPiratebay(query) {
    return await new Promise((resolve, reject) => find(query, (err, results) => {
       if (err) {
-         /* eslint-disable no-console */
          console.log('THERE WAS A FUCKING ERROR!\n', err);
          reject(Error('There was a error when searching for torrents'));
       }
       if (results) {
-         /* eslint-disable no-console */
-         console.log('result', results);
          resolve(JSON.parse(results, null, '\t'));
       }
    }));
 }
 
-async function AddMagnet(magnet) {
+async function AddMagnet(magnet, name, tmdb_id) {
    return await new Promise((resolve, reject) => callPythonAddMagnet(magnet, (err, results) => {
       if (err) {
          /* eslint-disable no-console */

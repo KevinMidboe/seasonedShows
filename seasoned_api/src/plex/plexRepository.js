@@ -3,6 +3,10 @@ const convertPlexToStream = require('src/plex/convertPlexToStream');
 const rp = require('request-promise');
 
 class PlexRepository {
+   constructor(plexIP) {
+    this.plexIP = plexIP;
+   }
+
    inPlex(tmdbResult) {
       return Promise.resolve()
          .then(() => this.search(tmdbResult.title))
@@ -15,11 +19,10 @@ class PlexRepository {
    }
 
    search(query) {
-      console.log(`Searching plex with query ${query}`)
-      let uri_query = encodeURIComponent(query)
-
+     const queryUri = encodeURIComponent(query)
+     const uri = encodeURI(`http://${this.plexIP}:32400/search?query=${queryUri}`)
       const options = {
-         uri: `http://10.0.0.44:32400/search?query=${uri_query}`,
+         uri: uri,
          headers: {
             Accept: 'application/json',
          },
@@ -42,6 +45,7 @@ class PlexRepository {
                tmdb.matchedInPlex = false
             } 
             else {
+               // console.log('plex and tmdb:', plexResult, '\n',  tmdb)
                plexResult.results.map((plexItem) => {
                   if (tmdb.title === plexItem.title && tmdb.year === plexItem.year)
                      tmdb.matchedInPlex = true;
@@ -67,7 +71,7 @@ class PlexRepository {
 
    nowPlaying() {
       const options = {
-         uri: 'http://10.0.0.44:32400/status/sessions',
+         uri: `http://${this.plexIP}:32400/status/sessions`,
          headers: {
             Accept: 'application/json',
          },

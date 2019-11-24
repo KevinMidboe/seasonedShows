@@ -5,8 +5,8 @@ xdescribe('As a developer I want the server to start', () => {
   beforeEach(() =>
     this.server = require('src/webserver/server'));
 
-  it('should listen on port 31459', (done) => {
-    net.createConnection(31459, done);
+  it('should listen on port 31400', (done) => {
+    net.createConnection(31400, done);
   });
 
   afterEach(() =>
