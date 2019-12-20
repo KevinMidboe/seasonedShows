@@ -3,8 +3,15 @@ CREATE TABLE IF NOT EXISTS user (
     password varchar(127),
     admin boolean DEFAULT 0,
     email varchar(127) UNIQUE,
-    plex_userid varchar(127) DEFAULT NULL,
     primary key (user_name)
+);
+
+CREATE TABLE IF NOT EXISTS settings (
+    user_name varchar(127) UNIQUE,
+    dark_mode boolean DEFAULT 0,
+    plex_userid varchar(127) DEFAULT NULL,
+    emoji varchar(16) DEFAULT NULL,
+    foreign key(user_name) REFERENCES user(user_name) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS cache (
