@@ -9,6 +9,8 @@ const configuration = require('src/config/configuration').getInstance();
 
 const listController = require('./controllers/list/listController');
 const tautulli = require('./controllers/user/viewHistory.js');
+const SettingsController = require('./controllers/user/settings');
+const AuthenticatePlexAccountController = require('./controllers/user/AuthenticatePlexAccount');
 
 // TODO: Have our raven router check if there is a value, if not don't enable raven.
 Raven.config(configuration.get('raven', 'DSN')).install();
@@ -55,9 +57,12 @@ app.use(function onError(err, req, res, next) {
  */
 router.post('/v1/user', require('./controllers/user/register.js'));
 router.post('/v1/user/login', require('./controllers/user/login.js'));
+router.get('/v1/user/settings', mustBeAuthenticated, SettingsController.getSettingsController);
+router.put('/v1/user/settings', mustBeAuthenticated, SettingsController.updateSettingsController);
 router.get('/v1/user/search_history', mustBeAuthenticated, require('./controllers/user/searchHistory.js'));
 router.get('/v1/user/requests', mustBeAuthenticated, require('./controllers/user/requests.js'));
-router.post('/v1/user/authenticate', mustBeAuthenticated, require('./controllers/user/authenticatePlexAccount.js'));
+router.post('/v1/user/link_plex', mustBeAuthenticated, AuthenticatePlexAccountController.link);
+router.post('/v1/user/unlink_plex', mustBeAuthenticated, AuthenticatePlexAccountController.unlink);
 
 router.get('/v1/user/view_history', mustHaveAccountLinkedToPlex, tautulli.userViewHistoryController);
 router.get('/v1/user/watch_time', mustHaveAccountLinkedToPlex, tautulli.watchTimeStatsController);

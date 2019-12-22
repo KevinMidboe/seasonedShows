@@ -57,7 +57,7 @@ function plexAuthenticate(username, password) {
     .then(resp => handleResponse(resp))
 }
 
-function authenticatePlexAccountController(req, res) {
+function link(req, res) {
   const user = req.loggedInUser;
   const { username, password } = req.body;
 
@@ -70,4 +70,18 @@ function authenticatePlexAccountController(req, res) {
     .catch(error => handleError(error, res))
 }
 
-module.exports = authenticatePlexAccountController;
+function link(req, res) {
+  const user = req.loggedInUser;
+
+  return userRepository.unlinkPlexUserId(user.username)
+    .then(response => res.send({
+      success: true,
+      message: "Successfully unlinked plex account from seasoned request."
+    }))
+    .catch(error => handleError(error, res))
+}
+
+module.exports = {
+  link,
+  unlink
+};

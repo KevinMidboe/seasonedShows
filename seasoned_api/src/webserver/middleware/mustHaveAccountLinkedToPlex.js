@@ -7,10 +7,10 @@ const mustHaveAccountLinkedToPlex = (req, res, next) => {
    if (loggedInUser === undefined) {
       return res.status(401).send({
          success: false,
-         message: 'You must be logged in.',
+         message: 'You must have your account linked to a plex account.',
       });
    } else {
-      database.get(`SELECT plex_userid FROM user WHERE user_name IS ?`, loggedInUser.username)
+      database.get(`SELECT plex_userid FROM settings WHERE user_name IS ?`, loggedInUser.username)
       .then(row => {
          const plex_userid = row.plex_userid;
 
