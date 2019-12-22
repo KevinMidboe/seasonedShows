@@ -1,6 +1,9 @@
 const configuration = require('src/config/configuration').getInstance();
 const Tautulli = require('src/tautulli/tautulli');
-const tautulli = new Tautulli('', '', );
+const apiKey = configuration.get('tautulli', 'apiKey');
+const ip = configuration.get('tautulli', 'ip');
+const port = configuration.get('tautulli', 'port');
+const tautulli = new Tautulli(apiKey, ip, port);
 
 function handleError(error, res) {
   const { status, message } = error;

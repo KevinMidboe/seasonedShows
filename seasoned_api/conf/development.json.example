@@ -11,6 +11,11 @@
 	"plex": {
 		"ip": ""
 	},
+  "tautulli": {
+    "apiKey": "",
+    "ip": "",
+    "port": ""
+  },
 	"raven": {
 		"DSN": ""
 	},
