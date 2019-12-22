@@ -70,7 +70,7 @@ function link(req, res) {
     .catch(error => handleError(error, res))
 }
 
-function link(req, res) {
+function unlink(req, res) {
   const user = req.loggedInUser;
 
   return userRepository.unlinkPlexUserId(user.username)
