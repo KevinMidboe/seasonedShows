@@ -6,6 +6,7 @@ class SqliteDatabase {
    constructor(host) {
       this.host = host;
       this.connection = new sqlite3.Database(this.host);
+      this.execute('pragma foreign_keys = on;');
       this.schemaDirectory = path.join(__dirname, 'schemas');
    }
 
