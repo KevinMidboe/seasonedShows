@@ -88,7 +88,7 @@ class UserRepository {
   */
   unlinkPlexUserId(username) {
     return new Promise((resolve, reject) => {
-      this.database.run(this.queries.unlink, plexUserID)
+      this.database.run(this.queries.unlink, username)
         .then(row => resolve(row))
         .catch(error => {
           // TODO log this unknown db error
