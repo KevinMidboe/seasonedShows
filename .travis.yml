@@ -7,6 +7,7 @@ script:
    - yarn coverage
 before_install:
    - cd seasoned_api
+   - cp conf/development.json.example conf/development.json
 before_script: 
    - yarn
    - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
