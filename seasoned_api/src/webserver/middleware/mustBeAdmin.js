@@ -6,7 +6,7 @@ const mustBeAdmin = (req, res, next) => {
    if (req.loggedInUser === undefined) {
       return res.status(401).send({
          success: false,
-         error: 'You must be logged in.',
+         message: 'You must be logged in.',
       });
    } else {
       database.get(`SELECT admin FROM user WHERE user_name IS ?`, req.loggedInUser.username)
@@ -15,7 +15,7 @@ const mustBeAdmin = (req, res, next) => {
          if (isAdmin.admin == 0) {
             return res.status(401).send({
                success: false,
-               error: 'You must be logged in as a admin.'
+               message: 'You must be logged in as a admin.'
             })
          }
       })

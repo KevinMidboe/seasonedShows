@@ -24,7 +24,7 @@ function multiSearchController(req, res) {
   const { query, page } = req.query;
 
   if (user) {
-    searchHistory.create(user, query)
+    searchHistory.create(user.username, query)
   }
 
   return tmdb.multiSearch(query, page)

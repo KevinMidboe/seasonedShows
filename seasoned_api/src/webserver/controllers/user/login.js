@@ -8,6 +8,9 @@ const secret = configuration.get('authentication', 'secret');
 const userSecurity = new UserSecurity();
 const userRepository = new UserRepository();
 
+// TODO look to move some of the token generation out of the reach of the final "catch-all"
+// catch including the, maybe sensitive, error message.
+
 /**
  * Controller: Log in a user provided correct credentials.
  * @param {Request} req http request variable

@@ -86,18 +86,18 @@ class RequestRepository {
    * @param {tmdb} tmdb class of movie|show to add
    * @returns {Promise}
    */
-  requestFromTmdb(tmdb, ip, user_agent, user) {
+  requestFromTmdb(tmdb, ip, user_agent, username) {
     return Promise.resolve()
-    .then(() => this.database.get(this.queries.read, [tmdb.id, tmdb.type]))
-    .then(row => assert.equal(row, undefined, 'Id has already been requested'))
-    .then(() => this.database.run(this.queries.add, [tmdb.id, tmdb.title, tmdb.year, tmdb.poster, tmdb.backdrop, user, ip, user_agent, tmdb.type]))
-    .catch((error) => {
-      if (error.name === 'AssertionError' || error.message.endsWith('been requested')) {
-        throw new Error('This id is already requested', error.message);
-      }
-      console.log('Error @ request.addTmdb:', error);
-      throw new Error('Could not add request');
-    });
+      .then(() => this.database.get(this.queries.read, [tmdb.id, tmdb.type]))
+      .then(row => assert.equal(row, undefined, 'Id has already been requested'))
+      .then(() => this.database.run(this.queries.add, [tmdb.id, tmdb.title, tmdb.year, tmdb.poster, tmdb.backdrop, username, ip, user_agent, tmdb.type]))
+      .catch((error) => {
+        if (error.name === 'AssertionError' || error.message.endsWith('been requested')) {
+          throw new Error('This id is already requested', error.message);
+        }
+        console.log('Error @ request.addTmdb:', error);
+        throw new Error('Could not add request');
+      });
   }
 
   /**

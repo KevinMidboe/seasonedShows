@@ -28,16 +28,22 @@ class SearchHistory {
 
    /**
    * Creates a new search entry in the database.
-   * @param {User} user a new user
+   * @param {String} username logged in user doing the search
    * @param {String} searchQuery the query the user searched for
    * @returns {Promise}
    */
-   create(user, searchQuery) {
-      return Promise.resolve()
-         .then(() => this.database.run(this.queries.create, [searchQuery, user]))
-         .catch((error) => {
+   create(username, searchQuery) {
+      return this.database.run(this.queries.create, [searchQuery, username])
+         .catch(error => {
             if (error.message.includes('FOREIGN')) {
                throw new Error('Could not create search history.');
+            }
+
+            throw {
+               success: false,
+               status: 500,
+               message: 'An unexpected error occured',
+               source: 'database'
             }
          });
    }

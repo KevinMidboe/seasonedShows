@@ -1,9 +1,17 @@
 CREATE TABLE IF NOT EXISTS user (
     user_name varchar(127) UNIQUE,
     password varchar(127),
-    email varchar(127) UNIQUE,
     admin boolean DEFAULT 0,
+    email varchar(127) UNIQUE,
     primary key (user_name)
+);
+
+CREATE TABLE IF NOT EXISTS settings (
+    user_name varchar(127) UNIQUE,
+    dark_mode boolean DEFAULT 0,
+    plex_userid varchar(127) DEFAULT NULL,
+    emoji varchar(16) DEFAULT NULL,
+    foreign key(user_name) REFERENCES user(user_name) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS cache (
@@ -28,12 +36,13 @@ CREATE TABLE IF NOT EXISTS requests(
     year NUMBER,
     poster_path TEXT DEFAULT NULL,
     background_path TEXT DEFAULT NULL,
-    requested_by TEXT,
+    requested_by varchar(127) DEFAULT NULL,
     ip TEXT,
     date DATE DEFAULT CURRENT_TIMESTAMP,
     status CHAR(25) DEFAULT 'requested' NOT NULL,
     user_agent CHAR(255) DEFAULT NULL,
-    type CHAR(50) DEFAULT 'movie'
+    type CHAR(50) DEFAULT 'movie',
+    foreign key(requested_by) REFERENCES user(user_name) ON DELETE SET NULL
 );
 
 CREATE TABLE IF NOT EXISTS request(
