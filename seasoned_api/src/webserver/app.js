@@ -10,7 +10,7 @@ const configuration = require('src/config/configuration').getInstance();
 const listController = require('./controllers/list/listController');
 const tautulli = require('./controllers/user/viewHistory.js');
 const SettingsController = require('./controllers/user/settings');
-const AuthenticatePlexAccountController = require('./controllers/user/AuthenticatePlexAccount');
+const AuthenticatePlexAccountController = require('./controllers/user/authenticatePlexAccount');
 
 // TODO: Have our raven router check if there is a value, if not don't enable raven.
 Raven.config(configuration.get('raven', 'DSN')).install();

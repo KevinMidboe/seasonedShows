@@ -22,13 +22,13 @@ class Config {
 
    get(section, option) {
       if (this.fields[section] === undefined || this.fields[section][option] === undefined) {
-         throw new Error(`Filed "${section} => ${option}" does not exist.`);
+         throw new Error(`Field "${section} => ${option}" does not exist.`);
       }
 
       const field = new Field(this.fields[section][option]);
 
       if (field.value === '') {
-         const envField = process.env[['SEASONED', section.toUpperCase(), option.toUpperCase()].join('_')];
+         const envField = process.env[[section.toUpperCase(), option.toUpperCase()].join('_')];
          if (envField !== undefined && envField.length !== 0) { return envField; }
       }
 
