@@ -67,6 +67,7 @@ class Plex {
   }
 
   search(query) {
+    query = encodeURIComponent(query)
     const url = `http://${this.plexIP}:${this.plexPort}/hubs/search?query=${query}`
     const options = {
       timeout: 2000,
