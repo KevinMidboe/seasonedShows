@@ -10,6 +10,19 @@ const { Movie, Show, Person } = require('src/tmdb/types');
 // TODO? import class definitions to compare types ?
 // what would typescript do?
 
+const matchingTitleOrName = (plex, tmdb) => {
+  if (plex['title'] !== undefined && tmdb['title'] !== undefined)
+      return sanitize(plex.title) === sanitize(tmdb.title)
+
+  return false
+}
+
+const matchingYear = (plex, tmdb) => {
+  return plex.year === tmdb.year
+}
+
+const sanitize = (string) => string.toLowerCase()
+
 class Plex {
   constructor(ip, port=32400) {
     this.plexIP = ip
@@ -20,12 +33,22 @@ class Plex {
     if (plex === undefined || tmdb === undefined)
       return false
 
-    const sanitize = (string) => string.toLowerCase()
+    let titleMatches;
+    let yearMatches;
 
-    const matchTitle = sanitize(plex.title) === sanitize(tmdb.title)
-    const matchYear = plex.year === tmdb.year
+    if (plex instanceof Array) {
+      console.log('Plex object to compare is a list.')
+      const plexList = plex
+      console.log('List of plex objects:', plexList)
 
-    return matchTitle && matchYear
+      titleMatches = plexList.map(plexItem => matchingTitleOrName(plexItem, tmdb))
+      yearMatches = plexList.map(plexItem => matchingYear(plexItem, tmdb))
+    } else {
+      titleMatches = matchingTitleOrName(plex, tmdb)
+      yearMatches = matchingYear(plex, tmdb)
+    }
+
+    return titleMatches && yearMatches
   }
 
   existsInPlex(tmdbMovie) {
