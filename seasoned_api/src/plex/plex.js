@@ -87,8 +87,8 @@ class Plex {
   }
 
   mapResults(response) {
-    if (response === undefined || response.MediaContainer === undefined) {
-      console.log('response was not valid to map', response)
+    if (response == null || response.MediaContainer == null || response.MediaContainer.Hub == null) {
+      console.log('No results to map in:', response)
       return []
     }
 
