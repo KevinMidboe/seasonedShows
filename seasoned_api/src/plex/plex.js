@@ -3,8 +3,10 @@ const convertPlexToMovie = require('src/plex/convertPlexToMovie')
 const convertPlexToShow = require('src/plex/convertPlexToShow')
 const convertPlexToEpisode = require('src/plex/convertPlexToEpisode')
 
+const { Movie, Show, Person } = require('src/tmdb/types')
 
-const { Movie, Show, Person } = require('src/tmdb/types');
+const RedisCache = require('src/cache/redis')
+const redisCache = new RedisCache()
 
 // const { Movie, } 
 // TODO? import class definitions to compare types ?
@@ -24,9 +26,14 @@ const matchingYear = (plex, tmdb) => {
 const sanitize = (string) => string.toLowerCase()
 
 class Plex {
-  constructor(ip, port=32400) {
+  constructor(ip, port=32400, cache=null) {
     this.plexIP = ip
     this.plexPort = port
+
+    this.cache = cache || redisCache;
+    this.cacheTags = {
+      search: 's'
+    }
   }
 
   matchTmdbAndPlexMedia(plex, tmdb) {
@@ -37,12 +44,12 @@ class Plex {
     let yearMatches;
 
     if (plex instanceof Array) {
-      console.log('Plex object to compare is a list.')
       const plexList = plex
-      console.log('List of plex objects:', plexList)
 
       titleMatches = plexList.map(plexItem => matchingTitleOrName(plexItem, tmdb))
       yearMatches = plexList.map(plexItem => matchingYear(plexItem, tmdb))
+      titleMatches = titleMatches.includes(true)
+      yearMatches = yearMatches.includes(true)
     } else {
       titleMatches = matchingTitleOrName(plex, tmdb)
       yearMatches = matchingYear(plex, tmdb)
