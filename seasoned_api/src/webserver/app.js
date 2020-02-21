@@ -113,6 +113,8 @@ router.get('/v1/plex/request/:mediaId', require('./controllers/plex/readRequest.
 router.post('/v1/plex/request/:mediaId', require('./controllers/plex/submitRequest.js'));
 router.post('/v1/plex/hook', require('./controllers/plex/hookDump.js'));
 
+router.get('/v1/plex/watch-link', mustBeAuthenticated, require('./controllers/plex/watchDirectLink.js'));
+
 /**
  * Requests
  */
