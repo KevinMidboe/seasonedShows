@@ -93,8 +93,8 @@ class Plex {
     return match 
   }
 
-  existsInPlex(tmdb) {
-    const plexMatch = this.findPlexItemByTitleAndYear(tmdb.title, tmdb.year)
+  async existsInPlex(tmdb) {
+    const plexMatch = await this.findPlexItemByTitleAndYear(tmdb.title, tmdb.year)
     return plexMatch ? true : false
   }
 
