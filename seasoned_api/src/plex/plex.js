@@ -8,17 +8,17 @@ const { Movie, Show, Person } = require('src/tmdb/types')
 const RedisCache = require('src/cache/redis')
 const redisCache = new RedisCache()
 
-// const { Movie, } 
-// TODO? import class definitions to compare types ?
-// what would typescript do?
-
-const sanitize = (string) => string.toLowerCase()
+const sanitize = (string) => string.toLowerCase().replace(/[^\w\s]/gi, '')
 
 const matchingTitleAndYear = (plex, tmdb) => {
   let matchingTitle, matchingYear;
 
-  if (plex['title'] != null && tmdb['title'] != null)
-    matchingTitle = sanitize(plex.title) == sanitize(tmdb.title);
+  if (plex['title'] != null && tmdb['title'] != null) {
+    const plexTitle = sanitize(plex.title)
+    const tmdbTitle = sanitize(tmdb.title)
+    matchingTitle = plexTitle == tmdbTitle;
+    matchingTitle = matchingTitle ? matchingTitle : plexTitle.startsWith(tmdbTitle)
+  }
   else
     matchingTitle = false;
 
