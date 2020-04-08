@@ -1,9 +1,7 @@
 const configuration = require('src/config/configuration').getInstance();
-const Cache = require('src/tmdb/cache');
 const TMDB = require('src/tmdb/tmdb');
 const Plex = require('src/plex/plex');
-const cache = new Cache();
-const tmdb = new TMDB(cache, configuration.get('tmdb', 'apiKey'));
+const tmdb = new TMDB(configuration.get('tmdb', 'apiKey'));
 const plex = new Plex(configuration.get('plex', 'ip'));
 
 function handleError(error, res) {

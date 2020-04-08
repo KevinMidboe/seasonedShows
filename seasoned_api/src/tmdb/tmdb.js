@@ -27,9 +27,10 @@ const tmdbErrorResponse = (error, typeString=undefined) => {
 }
 
 class TMDB {
-  constructor(cache, apiKey, tmdbLibrary) {
-    this.cache = cache || redisCache;
+  constructor(apiKey, cache, tmdbLibrary) {
     this.tmdbLibrary = tmdbLibrary || moviedb(apiKey);
+
+    this.cache = cache || redisCache;
     this.cacheTags = {
       multiSearch: 'mus', 
       movieSearch: 'mos', 
