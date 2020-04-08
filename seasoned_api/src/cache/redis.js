@@ -11,7 +11,7 @@ class Cache {
     return new Promise((resolve, reject) => {
       client.get(key, (error, reply) => {
         if (reply == null) {
-          reject()
+          return reject()
         }
 
         resolve(JSON.parse(reply))
@@ -27,6 +27,9 @@ class Cache {
    * @returns {Object}
    */
   set(key, value, timeToLive = 10800) {
+    if (value == null || key == null)
+      return null
+
     const json = JSON.stringify(value);
     client.set(key, json, (error, reply) => {
       if (reply == 'OK') {
