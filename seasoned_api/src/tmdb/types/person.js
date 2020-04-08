@@ -12,12 +12,12 @@ class Person {
   }
 
   static convertFromTmdbResponse(response) {
-    const { id, name, poster, birthday, deathday, adult, known_for_department } = response;
+    const { id, name, profile_path, birthday, deathday, adult, known_for_department } = response;
 
     const birthDay = new Date(birthday)
     const deathDay = deathday ? new Date(deathday) : null
 
-    return new Person(id, name, poster, birthDay, deathDay, adult, known_for_department)
+    return new Person(id, name, profile_path, birthDay, deathDay, adult, known_for_department)
   }
 
   createJsonResponse() {
