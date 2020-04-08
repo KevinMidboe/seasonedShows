@@ -1,12 +1,10 @@
 const PlexRepository = require('src/plex/plexRepository');
-const Cache = require('src/tmdb/cache');
 const configuration = require('src/config/configuration').getInstance();
 const TMDB = require('src/tmdb/tmdb');
 const establishedDatabase = require('src/database/database');
 
 const plexRepository = new PlexRepository(configuration.get('plex', 'ip'));
-const cache = new Cache();
-const tmdb = new TMDB(cache, configuration.get('tmdb', 'apiKey'));
+const tmdb = new TMDB(configuration.get('tmdb', 'apiKey'));
 
 class RequestRepository {
    constructor(database) {
