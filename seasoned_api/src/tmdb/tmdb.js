@@ -3,7 +3,6 @@ const RedisCache = require('src/cache/redis')
 const redisCache = new RedisCache()
 
 const { Movie, Show, Person, Credits, ReleaseDates } = require('src/tmdb/types');
-// const { tmdbInfo } = require('src/tmdb/types')
 
 const tmdbErrorResponse = (error, typeString=undefined) => {
   if (error.status === 404) {
@@ -225,8 +224,6 @@ class TMDB {
    * @returns {Promise} dict with tmdb results, mapped as movie/show objects.
    */
   mapResults(response, type=undefined) {
-    // console.log(response.results)
-    // response.results.map(te => console.table(te))
 
     let results = response.results.map(result => {
       if (type === 'movie' || result.media_type === 'movie') {

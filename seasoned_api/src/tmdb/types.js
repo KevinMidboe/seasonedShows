@@ -1,7 +1,7 @@
-import Movie from './types/movie.js'
-import Show from './types/show.js'
-import Person from './types/person.js'
-import Credits from './types/credits.js'
-import ReleaseDates from './types/releaseDates.js'
+const Movie = require('./types/movie.js')
+const Show = require('./types/show.js')
+const Person = require('./types/person.js')
+const Credits = require('./types/credits.js')
+const ReleaseDates = require('./types/releaseDates.js')
 
 module.exports = { Movie, Show, Person, Credits, ReleaseDates }

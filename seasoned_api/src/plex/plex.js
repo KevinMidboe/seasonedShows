@@ -139,7 +139,6 @@ class Plex {
     }
 
     return new Promise((resolve, reject) => this.cache.get(cacheKey)
-      .then(resolve)                      // if found in cache resolve
       .catch(() => fetch(url, options))   // else fetch fresh data
       .then(successfullResponse)
       .then(results => this.cache.set(cacheKey, results, 21600))
@@ -157,7 +156,6 @@ class Plex {
 
   mapResults(response) {
     if (response == null || response.MediaContainer == null || response.MediaContainer.Hub == null) {
-      console.log('No results to map in:', response)
       return []
     }
 
@@ -173,7 +171,6 @@ class Plex {
         }
       })
       .filter(result => result !== undefined)
-//      .flat()
   }
 }
 
