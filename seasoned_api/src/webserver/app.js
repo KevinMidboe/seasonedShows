@@ -20,7 +20,7 @@ app.use(Raven.requestHandler());
 app.use(bodyParser.json());
 
 const router = express.Router();
-const allowedOrigins = ['https://kevinmidboe.com', 'http://localhost:8080'];
+const allowedOrigins = configuration.get('webserver', 'origins');
 
 // TODO: All JSON handling in a single router
 // router.use(bodyParser.json());

@@ -1,25 +1,26 @@
 {
-	"database": {
-		"host": "../shows.db"
-	},
-	"webserver": {
-		"port": 31459
-	},
-	"tmdb": {
-		"apiKey": ""
-	},
-	"plex": {
-		"ip": ""
-	},
+  "database": {
+    "host": "../shows.db"
+  },
+  "webserver": {
+    "port": 31459,
+    "origins": []
+  },
+  "tmdb": {
+    "apiKey": ""
+  },
+  "plex": {
+    "ip": ""
+  },
   "tautulli": {
     "apiKey": "",
     "ip": "",
     "port": ""
   },
-	"raven": {
-		"DSN": ""
-	},
-	"authentication": {
+  "raven": {
+    "DSN": ""
+  },
+  "authentication": {
     "secret": "secret"
- 	}
+  }
 }
