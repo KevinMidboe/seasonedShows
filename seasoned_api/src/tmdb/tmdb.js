@@ -205,7 +205,7 @@ class TMDB {
     const cacheKey = `tmdb/${this.cacheTags[listname]}:${page}`;
 
     return this.getFromCacheOrFetchFromTmdb(cacheKey, listname, query)
-      .then(response => this.cache.set(cacheKey, response, 10800))
+      .then(response => this.cache.set(cacheKey, response, this.defaultTTL))
       .then(response => this.mapResults(response, 'movie'))
   }
 
@@ -214,7 +214,7 @@ class TMDB {
     const cacheKey = `tmdb/${this.cacheTags[listname]}:${page}`;
 
      return this.getFromCacheOrFetchFromTmdb(cacheKey, listName, query)
-      .then(response => this.cache.set(cacheKey, response, 10800))
+      .then(response => this.cache.set(cacheKey, response, this.defaultTTL))
       .then(response => this.mapResults(response, 'show'))
   }
 

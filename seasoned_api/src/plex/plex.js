@@ -48,13 +48,13 @@ class Plex {
 
     this.cache = cache || redisCache;
     this.cacheTags = {
-      machineInfo: 'mi',
-      search: 's'
+      machineInfo: 'plex/mi',
+      search: 'plex/s'
     }
   }
 
   fetchMachineIdentifier() {
-    const cacheKey = `plex/${this.cacheTags.machineInfo}`
+    const cacheKey = `${this.cacheTags.machineInfo}`
     const url = `http://${this.plexIP}:${this.plexPort}/`
     const options = {
       timeout: 20000,
@@ -130,8 +130,9 @@ class Plex {
   } 
 
   search(query) {
-    const cacheKey = `plex/${this.cacheTags.search}:${query}`
-    const url = `http://${this.plexIP}:${this.plexPort}/hubs/search?query=${query}`
+    const cacheKey = `${this.cacheTags.search}:${query}`
+
+    const url = `http://${this.plexIP}:${this.plexPort}/hubs/search?query=${encodeURIComponent(query)}`
     const options = {
       timeout: 20000,
       headers: { 'Accept': 'application/json' }
@@ -141,8 +142,8 @@ class Plex {
       .then(resolve)                      // if found in cache resolve
       .catch(() => fetch(url, options))   // else fetch fresh data
       .then(successfullResponse)
+      .then(results => this.cache.set(cacheKey, results, 21600))
       .then(this.mapResults)
-      .then(results => this.cache.set(cacheKey, results, 600))
       .then(resolve)
       .catch(error => {
         if (error != undefined && error.type === 'request-timeout') {
