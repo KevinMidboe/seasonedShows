@@ -19,13 +19,13 @@ function checkAndCreateJsonResponse(result) {
  */
 function multiSearchController(req, res) {
   const user = req.loggedInUser;
-  const { query, page } = req.query;
+  const { query, page, adult } = req.query;
 
   if (user) {
     searchHistory.create(user.username, query)
   }
 
-  return tmdb.multiSearch(query, page)
+  return tmdb.multiSearch(query, page, adult)
   .then(multiSearchResults => res.send(multiSearchResults))
   .catch(error => {
     const { status, message } = error;

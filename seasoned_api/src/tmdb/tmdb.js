@@ -144,9 +144,9 @@ class TMDB {
       .then(person => Person.convertFromTmdbResponse(person))
   }
 
-  multiSearch(search_query, page=1) {
-    const query = { query: search_query, page: page };
-    const cacheKey = `tmdb/${this.cacheTags.multiSearch}:${page}:${search_query}`;
+  multiSearch(search_query, page=1, adult=true) {
+    const query = { query: search_query, page: page, include_adult: adult };
+    const cacheKey = `tmdb/${this.cacheTags.multiSearch}:${page}:${search_query}:${adult}`;
 
     return this.getFromCacheOrFetchFromTmdb(cacheKey, 'searchMulti', query)
       .then(response => this.cache.set(cacheKey, response, this.defaultTTL))
@@ -159,9 +159,9 @@ class TMDB {
    * @param {Number} page representing pagination of results
    * @returns {Promise} dict with query results, current page and total_pages
    */
-  movieSearch(query, page=1) {
-    const tmdbquery = { query: query, page: page };
-    const cacheKey = `tmdb/${this.cacheTags.movieSearch}:${page}:${query}`;
+  movieSearch(query, page=1, adult=true) {
+    const tmdbquery = { query: query, page: page, adult: adult };
+    const cacheKey = `tmdb/${this.cacheTags.movieSearch}:${page}:${query}:${adult}`;
 
     return this.getFromCacheOrFetchFromTmdb(cacheKey, 'searchMovie', query)
       .then(response => this.cache.set(cacheKey, response, this.defaultTTL))
@@ -192,7 +192,7 @@ class TMDB {
   personSearch(query, page=1) {
 
     const tmdbquery = { query: query, page: page, include_adult: true };
-    const cacheKey = `tmdb/${this.cacheTags.personSearch}:${page}:${query}`;
+    const cacheKey = `tmdb/${this.cacheTags.personSearch}:${page}:${query}:${include_adult}`;
 
     return this.getFromCacheOrFetchFromTmdb(cacheKey, 'searchPerson', query)
       .then(response => this.cache.set(cacheKey, response, this.defaultTTL))
