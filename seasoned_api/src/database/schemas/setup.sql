@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS search_history (
 );
 
 CREATE TABLE IF NOT EXISTS requests(
-    id TEXT,
+    id NUMBER,
     title TEXT,
     year NUMBER,
     poster_path TEXT DEFAULT NULL,

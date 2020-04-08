@@ -1,8 +1,6 @@
 const configuration = require('src/config/configuration').getInstance();
-const Cache = require('src/tmdb/cache');
 const TMDB = require('src/tmdb/tmdb');
-const cache = new Cache();
-const tmdb = new TMDB(cache, configuration.get('tmdb', 'apiKey'));
+const tmdb = new TMDB(configuration.get('tmdb', 'apiKey'));
 
 // there should be a translate function from query params to 
 // tmdb list that is valid. Should it be a helper function or does it 

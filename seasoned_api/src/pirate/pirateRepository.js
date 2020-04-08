@@ -5,6 +5,9 @@ const PythonShell = require('python-shell');
 
 const establishedDatabase = require('src/database/database');
 
+const RedisCache = require('src/cache/redis')
+const cache = new RedisCache()
+
 function getMagnetFromURL(url) {
    return new Promise((resolve, reject) => {
       const options = new URL(url);
@@ -49,15 +52,23 @@ async function callPythonAddMagnet(url, callback) {
 }
 
 async function SearchPiratebay(query) {
-   return await new Promise((resolve, reject) => find(query, (err, results) => {
+  const cacheKey = `pirate/${query}`
+
+  return new Promise((resolve, reject) => cache.get(cacheKey)
+    .then(resolve)
+    .catch(() => find(query, (err, results) => {
       if (err) {
-         console.log('THERE WAS A FUCKING ERROR!\n', err);
-         reject(Error('There was a error when searching for torrents'));
+        console.log('THERE WAS A FUCKING ERROR!\n', err);
+        reject(Error('There was a error when searching for torrents'));
       }
+
       if (results) {
-         resolve(JSON.parse(results, null, '\t'));
+        const jsonData = JSON.parse(results, null, '\t')
+        cache.set(cacheKey, jsonData)
+        resolve(jsonData);
       }
-   }));
+    }))
+  );
 }
 
 async function AddMagnet(magnet, name, tmdb_id) {

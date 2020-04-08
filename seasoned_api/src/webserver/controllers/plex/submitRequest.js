@@ -1,10 +1,7 @@
 const configuration = require('src/config/configuration').getInstance()
 const RequestRepository = require('src/request/request');
-const Cache = require('src/tmdb/cache')
 const TMDB = require('src/tmdb/tmdb')
-
-const cache = new Cache()
-const tmdb = new TMDB(cache, configuration.get('tmdb', 'apiKey'))
+const tmdb = new TMDB(configuration.get('tmdb', 'apiKey'))
 const request = new RequestRepository()
 
 const tmdbMovieInfo = (id) => {
