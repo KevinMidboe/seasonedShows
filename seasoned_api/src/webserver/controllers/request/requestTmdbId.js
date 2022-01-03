@@ -28,12 +28,10 @@ function requestTmdbIdController(req, res) {
   let mediaFunction = undefined;
 
   if (id === undefined || type === undefined) {
-    res
-      .status(422)
-      .send({
-        success: false,
-        message: "'Missing parameteres: 'id' and/or 'type'"
-      });
+    res.status(422).send({
+      success: false,
+      message: "'Missing parameteres: 'id' and/or 'type'"
+    });
   }
 
   if (type === "movie") {
@@ -41,12 +39,10 @@ function requestTmdbIdController(req, res) {
   } else if (type === "show") {
     mediaFunction = tmdbShowInfo;
   } else {
-    res
-      .status(422)
-      .send({
-        success: false,
-        message: 'Incorrect type. Allowed types: "movie" or "show"'
-      });
+    res.status(422).send({
+      success: false,
+      message: 'Incorrect type. Allowed types: "movie" or "show"'
+    });
   }
 
   mediaFunction(id)
