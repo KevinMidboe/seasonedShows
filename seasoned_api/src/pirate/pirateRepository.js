@@ -25,7 +25,7 @@ async function find(searchterm, callback) {
   const options = {
     pythonPath: "../torrent_search/env/bin/python3",
     scriptPath: "../torrent_search",
-    args: [searchterm, "-s", "jackett", "-f", "--print"]
+    args: [searchterm, "-s", "jackett", "--print"]
   };
 
   PythonShell.run("torrentSearch/search.py", options, callback);
