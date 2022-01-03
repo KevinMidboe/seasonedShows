@@ -50,6 +50,10 @@ async function callPythonAddMagnet(url, callback) {
 }
 
 async function SearchPiratebay(query) {
+  if (query && query.includes("+")) {
+    query = query.replace("+", "%20");
+  }
+
   const cacheKey = `pirate/${query}`;
 
   return new Promise((resolve, reject) =>
