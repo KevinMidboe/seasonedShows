@@ -8,7 +8,7 @@ const { Movie, Show, Person } = require("src/tmdb/types");
 const RedisCache = require("src/cache/redis");
 const redisCache = new RedisCache();
 
-const sanitize = string => string.toLowerCase().replace(/[^\w\s]/gi, "");
+const sanitize = string => string.toLowerCase().replace(/[^\w]/gi, "");
 
 const matchingTitleAndYear = (plex, tmdb) => {
   let matchingTitle, matchingYear;
