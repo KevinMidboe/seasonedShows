@@ -30,6 +30,16 @@ const matchingTitleAndYear = (plex, tmdb) => {
 };
 
 const successfullResponse = response => {
+  if (response && response["MediaContainer"]) return response;
+
+  if (
+    response == null ||
+    response["status"] == null ||
+    response["statusText"] == null
+  ) {
+    throw Error("Unable to decode response");
+  }
+
   const { status, statusText } = response;
 
   if (status === 200) {
