@@ -68,7 +68,7 @@ async function SearchPiratebay(query) {
           }
 
           if (results) {
-            const jsonData = JSON.parse(results, null, "\t");
+            const jsonData = JSON.parse(results[1], null, "\t");
             cache.set(cacheKey, jsonData);
             resolve(jsonData);
           }
