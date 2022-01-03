@@ -1,7 +1,7 @@
-const configuration = require('src/config/configuration').getInstance();
-const TMDB = require('src/tmdb/tmdb');
-const SearchHistory = require('src/searchHistory/searchHistory');
-const tmdb = new TMDB(configuration.get('tmdb', 'apiKey'));
+const configuration = require("src/config/configuration").getInstance();
+const TMDB = require("src/tmdb/tmdb");
+const SearchHistory = require("src/searchHistory/searchHistory");
+const tmdb = new TMDB(configuration.get("tmdb", "apiKey"));
 const searchHistory = new SearchHistory();
 
 /**
@@ -11,30 +11,31 @@ const searchHistory = new SearchHistory();
  * @returns {Callback}
  */
 function personSearchController(req, res) {
-  const user = req.loggedInUser;
   const { query, page } = req.query;
+  const username = req.loggedInUser ? req.loggedInUser.username : null;
 
-  if (user) {
-    return searchHistory.create(user, query);
+  if (username) {
+    return searchHistory.create(username, query);
   }
-  
-  tmdb.personSearch(query, page)
-    .then((person) => {
+
+  tmdb
+    .personSearch(query, page)
+    .then(person => {
       res.send(person);
     })
     .catch(error => {
       const { status, message } = error;
 
       if (status && message) {
-        res.status(status).send({ success: false, message })
+        res.status(status).send({ success: false, message });
       } else {
         // TODO log unhandled errors
-        console.log('caugth person search controller error', error)
+        console.log("caugth person search controller error", error);
         res.status(500).send({
           message: `An unexpected error occured while searching people with query: ${query}`
-        })
+        });
       }
-    })
+    });
 }
 
 module.exports = personSearchController;

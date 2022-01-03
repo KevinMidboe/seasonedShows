@@ -1,7 +1,7 @@
-const SearchHistory = require('src/searchHistory/searchHistory');
-const configuration = require('src/config/configuration').getInstance();
-const TMDB = require('src/tmdb/tmdb');
-const tmdb = new TMDB(configuration.get('tmdb', 'apiKey'));
+const SearchHistory = require("src/searchHistory/searchHistory");
+const configuration = require("src/config/configuration").getInstance();
+const TMDB = require("src/tmdb/tmdb");
+const tmdb = new TMDB(configuration.get("tmdb", "apiKey"));
 const searchHistory = new SearchHistory();
 
 /**
@@ -11,23 +11,23 @@ const searchHistory = new SearchHistory();
  * @returns {Callback}
  */
 function showSearchController(req, res) {
-  const user = req.loggedInUser;
   const { query, page } = req.query;
+  const username = req.loggedInUser ? req.loggedInUser.username : null;
 
   Promise.resolve()
-  .then(() => {
-    if (user) {
-      return searchHistory.create(user, query);
-    }
-    return null
-  })
-  .then(() => tmdb.showSearch(query, page))
-  .then((shows) => {
-    res.send(shows);
-  })
-  .catch(error => {
-    res.status(500).send({ success: false, message: error.message });
-  });
+    .then(() => {
+      if (username) {
+        return searchHistory.create(username, query);
+      }
+      return null;
+    })
+    .then(() => tmdb.showSearch(query, page))
+    .then(shows => {
+      res.send(shows);
+    })
+    .catch(error => {
+      res.status(500).send({ success: false, message: error.message });
+    });
 }
 
 module.exports = showSearchController;

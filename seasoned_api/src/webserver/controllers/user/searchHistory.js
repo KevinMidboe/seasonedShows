@@ -1,4 +1,4 @@
-const SearchHistory = require('src/searchHistory/searchHistory');
+const SearchHistory = require("src/searchHistory/searchHistory");
 
 const searchHistory = new SearchHistory();
 
@@ -9,16 +9,16 @@ const searchHistory = new SearchHistory();
  * @returns {Callback}
  */
 function historyController(req, res) {
-   const user = req.loggedInUser;
-   const username = user === undefined ? undefined : user.username;
+  const username = req.loggedInUser ? req.loggedInUser.username : null;
 
-   searchHistory.read(username)
-      .then(searchQueries => {
-         res.send({ success: true, searchQueries });
-      })
-      .catch(error => {
-         res.status(404).send({ success: false, message: error.message });
-      });
+  searchHistory
+    .read(username)
+    .then(searchQueries => {
+      res.send({ success: true, searchQueries });
+    })
+    .catch(error => {
+      res.status(404).send({ success: false, message: error.message });
+    });
 }
 
 module.exports = historyController;
