@@ -163,7 +163,7 @@ class Plex {
         .get(cacheKey)
         .catch(() => fetch(url, options)) // else fetch fresh data
         .then(successfullResponse)
-        .then(results => this.cache.set(cacheKey, results, 21600))
+        .then(results => this.cache.set(cacheKey, results, 21600)) // 6 hours
         .then(this.mapResults)
         .then(resolve)
         .catch(error => {
@@ -177,6 +177,28 @@ class Plex {
 
           reject(error);
         })
+    );
+  }
+
+  // this is not guarenteed to work, but if we see a movie or
+  // show has been imported, this function can be helpfull to call
+  // in order to try bust the cache preventing movieInfo and
+  // showInfo from seeing updates through existsInPlex.
+  bustSearchCacheWithTitle(title) {
+    const query = title;
+    const cacheKey = `${this.cacheTags.search}/${query}*`;
+
+    this.cache.del(
+      cacheKey,
+      (error,
+      response => {
+        if (response == 1) return true;
+
+        // TODO improve cache key matching by lowercasing it on the backend.
+        // what do we actually need to check for if the key was deleted or not
+        // it might be an error or another response code.
+        console.log("Unable to delete, key might not exists");
+      })
     );
   }
 
