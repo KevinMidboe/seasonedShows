@@ -156,6 +156,11 @@ router.get("/v2/show/:id/credits", require("./controllers/show/credits.js"));
 
 router.get("/v2/movie/:id", require("./controllers/movie/info.js"));
 router.get("/v2/show/:id", require("./controllers/show/info.js"));
+
+router.get(
+  "/v2/person/:id/credits",
+  require("./controllers/person/credits.js")
+);
 router.get("/v2/person/:id", require("./controllers/person/info.js"));
 
 /**
