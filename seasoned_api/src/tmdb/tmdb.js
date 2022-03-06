@@ -1,29 +1,35 @@
-const moviedb = require('km-moviedb');
-const RedisCache = require('src/cache/redis')
-const redisCache = new RedisCache()
+const moviedb = require("km-moviedb");
+const RedisCache = require("src/cache/redis");
+const redisCache = new RedisCache();
 
-const { Movie, Show, Person, Credits, ReleaseDates } = require('src/tmdb/types');
+const {
+  Movie,
+  Show,
+  Person,
+  Credits,
+  ReleaseDates
+} = require("src/tmdb/types");
 
-const tmdbErrorResponse = (error, typeString=undefined) => {
+const tmdbErrorResponse = (error, typeString = undefined) => {
   if (error.status === 404) {
     let message = error.response.body.status_message;
 
     throw {
       status: 404,
       message: message.slice(0, -1) + " in tmdb."
-    }
+    };
   } else if (error.status === 401) {
     throw {
       status: 401,
       message: error.response.body.status_message
-    }
+    };
   }
 
   throw {
     status: 500,
     message: `An unexpected error occured while fetching ${typeString} from tmdb`
-  }
-}
+  };
+};
 
 class TMDB {
   constructor(apiKey, cache, tmdbLibrary) {
@@ -76,9 +82,9 @@ class TMDB {
     const query = { id: identifier };
     const cacheKey = `tmdb/${this.cacheTags.movieInfo}:${identifier}`;
 
-    return this.getFromCacheOrFetchFromTmdb(cacheKey, 'movieInfo', query)
+    return this.getFromCacheOrFetchFromTmdb(cacheKey, "movieInfo", query)
       .then(movie => this.cache.set(cacheKey, movie, this.defaultTTL))
-      .then(movie => Movie.convertFromTmdbResponse(movie))
+      .then(movie => Movie.convertFromTmdbResponse(movie));
   }
 
   /**
@@ -87,12 +93,12 @@ class TMDB {
    * @returns {Promise} movie cast object
    */
   movieCredits(identifier) {
-    const query = { id: identifier }
-    const cacheKey = `tmdb/${this.cacheTags.movieCredits}:${identifier}`
+    const query = { id: identifier };
+    const cacheKey = `tmdb/${this.cacheTags.movieCredits}:${identifier}`;
 
-    return this.getFromCacheOrFetchFromTmdb(cacheKey, 'movieCredits', query)
+    return this.getFromCacheOrFetchFromTmdb(cacheKey, "movieCredits", query)
       .then(credits => this.cache.set(cacheKey, credits, this.defaultTTL))
-      .then(credits => Credits.convertFromTmdbResponse(credits))
+      .then(credits => Credits.convertFromTmdbResponse(credits));
   }
 
   /**
@@ -119,18 +125,18 @@ class TMDB {
     const query = { id: identifier };
     const cacheKey = `tmdb/${this.cacheTags.showInfo}:${identifier}`;
 
-    return this.getFromCacheOrFetchFromTmdb(cacheKey, 'tvInfo', query)
+    return this.getFromCacheOrFetchFromTmdb(cacheKey, "tvInfo", query)
       .then(show => this.cache.set(cacheKey, show, this.defaultTTL))
-      .then(show => Show.convertFromTmdbResponse(show))
+      .then(show => Show.convertFromTmdbResponse(show));
   }
 
   showCredits(identifier) {
-    const query = { id: identifier }
-    const cacheKey = `tmdb/${this.cacheTags.showCredits}:${identifier}`
+    const query = { id: identifier };
+    const cacheKey = `tmdb/${this.cacheTags.showCredits}:${identifier}`;
 
-    return this.getFromCacheOrFetchFromTmdb(cacheKey, 'tvCredits', query)
+    return this.getFromCacheOrFetchFromTmdb(cacheKey, "tvCredits", query)
       .then(credits => this.cache.set(cacheKey, credits, this.defaultTTL))
-      .then(credits => Credits.convertFromTmdbResponse(credits))
+      .then(credits => Credits.convertFromTmdbResponse(credits));
   }
 
   /**
@@ -143,9 +149,9 @@ class TMDB {
     const query = { id: identifier };
     const cacheKey = `tmdb/${this.cacheTags.personInfo}:${identifier}`;
 
-    return this.getFromCacheOrFetchFromTmdb(cacheKey, 'personInfo', query)
+    return this.getFromCacheOrFetchFromTmdb(cacheKey, "personInfo", query)
       .then(person => this.cache.set(cacheKey, person, this.defaultTTL))
-      .then(person => Person.convertFromTmdbResponse(person))
+      .then(person => Person.convertFromTmdbResponse(person));
   }
 
   personCredits(identifier) {
@@ -221,16 +227,16 @@ class TMDB {
 
     return this.getFromCacheOrFetchFromTmdb(cacheKey, listname, query)
       .then(response => this.cache.set(cacheKey, response, this.defaultTTL))
-      .then(response => this.mapResults(response, 'movie'))
+      .then(response => this.mapResults(response, "movie"));
   }
 
   showList(listname, page = 1) {
     const query = { page: page };
     const cacheKey = `tmdb/${this.cacheTags[listname]}:${page}`;
 
-     return this.getFromCacheOrFetchFromTmdb(cacheKey, listName, query)
+    return this.getFromCacheOrFetchFromTmdb(cacheKey, listName, query)
       .then(response => this.cache.set(cacheKey, response, this.defaultTTL))
-      .then(response => this.mapResults(response, 'show'))
+      .then(response => this.mapResults(response, "show"));
   }
 
   /**
@@ -239,27 +245,26 @@ class TMDB {
    * @param {String} The type declared in listSearch.
    * @returns {Promise} dict with tmdb results, mapped as movie/show objects.
    */
-  mapResults(response, type=undefined) {
-
+  mapResults(response, type = undefined) {
     let results = response.results.map(result => {
-      if (type === 'movie' || result.media_type === 'movie') {
-        const movie = Movie.convertFromTmdbResponse(result)
-        return movie.createJsonResponse()
-      } else if (type === 'show' || result.media_type === 'tv') {
-        const show = Show.convertFromTmdbResponse(result)
-        return show.createJsonResponse()
-      } else if (type === 'person' || result.media_type === 'person') {
-        const person = Person.convertFromTmdbResponse(result)
-        return person.createJsonResponse()
+      if (type === "movie" || result.media_type === "movie") {
+        const movie = Movie.convertFromTmdbResponse(result);
+        return movie.createJsonResponse();
+      } else if (type === "show" || result.media_type === "tv") {
+        const show = Show.convertFromTmdbResponse(result);
+        return show.createJsonResponse();
+      } else if (type === "person" || result.media_type === "person") {
+        const person = Person.convertFromTmdbResponse(result);
+        return person.createJsonResponse();
       }
-    })
+    });
 
     return {
       results: results,
       page: response.page,
       total_results: response.total_results,
       total_pages: response.total_pages
-    }
+    };
   }
 
   /**
@@ -268,25 +273,22 @@ class TMDB {
    * @param {Object} argument argument to function being called
    * @returns {Promise} succeeds if callback succeeds
    */
-   tmdb(method, argument) {
-      return new Promise((resolve, reject) => {
-         const callback = (error, reponse) => {
-            if (error) {
-               return reject(error);
-            }
-            resolve(reponse);
-         };
+  tmdb(method, argument) {
+    return new Promise((resolve, reject) => {
+      const callback = (error, reponse) => {
+        if (error) {
+          return reject(error);
+        }
+        resolve(reponse);
+      };
 
-         if (!argument) {
-            this.tmdbLibrary[method](callback);
-         } else {
-            this.tmdbLibrary[method](argument, callback);
-         }
-      });
-   }
-
+      if (!argument) {
+        this.tmdbLibrary[method](callback);
+      } else {
+        this.tmdbLibrary[method](argument, callback);
+      }
+    });
+  }
 }
-
-
 
 module.exports = TMDB;

@@ -142,19 +142,17 @@ router.get("/v2/movie/now_playing", listController.nowPlayingMovies);
 router.get("/v2/movie/popular", listController.popularMovies);
 router.get("/v2/movie/top_rated", listController.topRatedMovies);
 router.get("/v2/movie/upcoming", listController.upcomingMovies);
-
-router.get("/v2/show/now_playing", listController.nowPlayingShows);
-router.get("/v2/show/popular", listController.popularShows);
-router.get("/v2/show/top_rated", listController.topRatedShows);
-
 router.get("/v2/movie/:id/credits", require("./controllers/movie/credits.js"));
 router.get(
   "/v2/movie/:id/release_dates",
   require("./controllers/movie/releaseDates.js")
 );
-router.get("/v2/show/:id/credits", require("./controllers/show/credits.js"));
-
 router.get("/v2/movie/:id", require("./controllers/movie/info.js"));
+
+router.get("/v2/show/now_playing", listController.nowPlayingShows);
+router.get("/v2/show/popular", listController.popularShows);
+router.get("/v2/show/top_rated", listController.topRatedShows);
+router.get("/v2/show/:id/credits", require("./controllers/show/credits.js"));
 router.get("/v2/show/:id", require("./controllers/show/info.js"));
 
 router.get(
