@@ -11,15 +11,16 @@ const searchHistory = new SearchHistory();
  * @returns {Callback}
  */
 function movieSearchController(req, res) {
-  const { query, page } = req.query;
+  const { query, page, adult } = req.query;
   const username = req.loggedInUser ? req.loggedInUser.username : null;
+  const includeAdult = adult == "true" ? true : false;
 
   if (username) {
-    return searchHistory.create(username, query);
+    searchHistory.create(username, query);
   }
 
-  tmdb
-    .movieSearch(query, page)
+  return tmdb
+    .movieSearch(query, page, includeAdult)
     .then(movieSearchResults => res.send(movieSearchResults))
     .catch(error => {
       const { status, message } = error;

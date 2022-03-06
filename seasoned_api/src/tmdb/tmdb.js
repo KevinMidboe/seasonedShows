@@ -176,13 +176,13 @@ class TMDB {
    * @param {Number} page representing pagination of results
    * @returns {Promise} dict with query results, current page and total_pages
    */
-  movieSearch(query, page=1, adult=true) {
-    const tmdbquery = { query: query, page: page, adult: adult };
-    const cacheKey = `tmdb/${this.cacheTags.movieSearch}:${page}:${query}:${adult}`;
+  movieSearch(search_query, page = 1, include_adult = true) {
+    const tmdbquery = { query: search_query, page, include_adult };
+    const cacheKey = `tmdb/${this.cacheTags.movieSearch}:${page}:${search_query}:${include_adult}`;
 
-    return this.getFromCacheOrFetchFromTmdb(cacheKey, 'searchMovie', query)
+    return this.getFromCacheOrFetchFromTmdb(cacheKey, "searchMovie", tmdbquery)
       .then(response => this.cache.set(cacheKey, response, this.defaultTTL))
-      .then(response => this.mapResults(response, 'movie'))
+      .then(response => this.mapResults(response, "movie"));
   }
 
   /**
@@ -191,13 +191,13 @@ class TMDB {
    * @param {Number} page representing pagination of results
    * @returns {Promise} dict with query results, current page and total_pages
    */
-  showSearch(query, page=1) {
-    const tmdbquery = { query: query, page: page };
-    const cacheKey = `tmdb/${this.cacheTags.showSearch}:${page}:${query}`;
+  showSearch(search_query, page = 1, include_adult = true) {
+    const tmdbquery = { query: search_query, page, include_adult };
+    const cacheKey = `tmdb/${this.cacheTags.showSearch}:${page}:${search_query}:${include_adult}`;
 
-    return this.getFromCacheOrFetchFromTmdb(cacheKey, 'searchTv', query)
+    return this.getFromCacheOrFetchFromTmdb(cacheKey, "searchTv", tmdbquery)
       .then(response => this.cache.set(cacheKey, response, this.defaultTTL))
-      .then(response => this.mapResults(response, 'show'))
+      .then(response => this.mapResults(response, "show"));
   }
 
   /**
@@ -206,14 +206,13 @@ class TMDB {
    * @param {Number} page representing pagination of results
    * @returns {Promise} dict with query results, current page and total_pages
    */
-  personSearch(query, page=1) {
+  personSearch(search_query, page = 1, include_adult = true) {
+    const tmdbquery = { query: search_query, page, include_adult };
+    const cacheKey = `tmdb/${this.cacheTags.personSearch}:${page}:${search_query}:${include_adult}`;
 
-    const tmdbquery = { query: query, page: page, include_adult: true };
-    const cacheKey = `tmdb/${this.cacheTags.personSearch}:${page}:${query}:${include_adult}`;
-
-    return this.getFromCacheOrFetchFromTmdb(cacheKey, 'searchPerson', query)
+    return this.getFromCacheOrFetchFromTmdb(cacheKey, "searchPerson", tmdbquery)
       .then(response => this.cache.set(cacheKey, response, this.defaultTTL))
-      .then(response => this.mapResults(response, 'person'))
+      .then(response => this.mapResults(response, "person"));
   }
 
   movieList(listname, page = 1) {

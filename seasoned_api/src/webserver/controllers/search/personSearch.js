@@ -11,18 +11,17 @@ const searchHistory = new SearchHistory();
  * @returns {Callback}
  */
 function personSearchController(req, res) {
-  const { query, page } = req.query;
+  const { query, page, adult } = req.query;
   const username = req.loggedInUser ? req.loggedInUser.username : null;
+  const includeAdult = adult == "true" ? true : false;
 
   if (username) {
-    return searchHistory.create(username, query);
+    searchHistory.create(username, query);
   }
 
-  tmdb
-    .personSearch(query, page)
-    .then(person => {
-      res.send(person);
-    })
+  return tmdb
+    .personSearch(query, page, includeAdult)
+    .then(persons => res.send(persons))
     .catch(error => {
       const { status, message } = error;
 
