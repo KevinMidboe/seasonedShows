@@ -1,26 +1,25 @@
-const User = require('src/user/user');
-const jwt = require('jsonwebtoken');
+const User = require("src/user/user");
+const jwt = require("jsonwebtoken");
 
 class Token {
-  constructor(user, admin=false) {
+  constructor(user, admin = false, settings = null) {
     this.user = user;
     this.admin = admin;
+    this.settings = settings;
   }
 
   /**
-    * Generate a new token.
-    * @param {String} secret a cipher of the token
-    * @returns {String}
-    */
+   * Generate a new token.
+   * @param {String} secret a cipher of the token
+   * @returns {String}
+   */
   toString(secret) {
-    const username = this.user.username;
-    const admin = this.admin;
-    let data = { username }
+    const { user, admin, settings } = this;
 
-    if (admin)
-      data = { ...data, admin }
+    let data = { username: user.username, settings };
+    if (admin) data["admin"] = admin;
 
-    return jwt.sign(data, secret, { expiresIn: '90d' });
+    return jwt.sign(data, secret, { expiresIn: "90d" });
   }
 
   /**
@@ -30,15 +29,12 @@ class Token {
    * @returns {Token}
    */
   static fromString(jwtToken, secret) {
-    let username = null;
+    const token = jwt.verify(jwtToken, secret, { clockTolerance: 10000 });
+    if (token.username == null) throw new Error("Malformed token");
 
-    const token = jwt.verify(jwtToken, secret, { clockTolerance: 10000 })
-    if (token.username === undefined || token.username === null)
-      throw new Error('Malformed token')
-
-    username = token.username
-    const user = new User(username)
-    return new Token(user)
+    const { username, admin, settings } = token;
+    const user = new User(username);
+    return new Token(user, admin, settings);
   }
 }
 
