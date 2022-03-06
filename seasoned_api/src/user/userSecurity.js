@@ -18,8 +18,8 @@ class UserSecurity {
     } else if (clearPassword.trim() === "") {
       throw new Error("The password is empty.");
     } else {
-      return Promise.resolve()
-        .then(() => this.userRepository.create(user))
+      return this.userRepository
+        .create(user)
         .then(() => UserSecurity.hashPassword(clearPassword))
         .then(hash => this.userRepository.changePassword(user, hash));
     }
@@ -32,8 +32,8 @@ class UserSecurity {
    * @returns {Promise}
    */
   login(user, clearPassword) {
-    return Promise.resolve()
-      .then(() => this.userRepository.retrieveHash(user))
+    return this.userRepository
+      .retrieveHash(user)
       .then(hash => UserSecurity.compareHashes(hash, clearPassword))
       .catch(() => {
         throw new Error("Incorrect username or password.");
@@ -64,6 +64,8 @@ class UserSecurity {
     return new Promise(resolve => {
       const saltRounds = 10;
       bcrypt.hash(clearPassword, saltRounds, (error, hash) => {
+        if (error) reject(error);
+
         resolve(hash);
       });
     });
