@@ -11,15 +11,15 @@ class Cache {
     return new Promise((resolve, reject) => {
       client.get(key, (error, reply) => {
         if (reply == null) {
-          return reject()
+          return reject();
         }
 
-        resolve(JSON.parse(reply))
-      })
-    })
+        resolve(JSON.parse(reply));
+      });
+    });
   }
 
-   /**
+  /**
    * Insert cache entry with key and value.
    * @param {String} key of the cache entry
    * @param {String} value of the cache entry
@@ -27,22 +27,25 @@ class Cache {
    * @returns {Object}
    */
   set(key, value, timeToLive = 10800) {
-    if (value == null || key == null)
-      return null
+    if (value == null || key == null) return null;
 
     const json = JSON.stringify(value);
     client.set(key, json, (error, reply) => {
-      if (reply == 'OK') {
-
+      if (reply == "OK") {
         // successfully set value with key, now set TTL for key
-        client.expire(key, timeToLive, (e) => {
-          if (e) 
-            console.error('Unexpected error while setting expiration for key:', key, '. Error:', error)
-        })
+        client.expire(key, timeToLive, e => {
+          if (e)
+            console.error(
+              "Unexpected error while setting expiration for key:",
+              key,
+              ". Error:",
+              error
+            );
+        });
       }
-    })
+    });
 
-    return value
+    return value;
   }
 }
 
