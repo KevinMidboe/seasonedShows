@@ -1,11 +1,14 @@
 const express = require("express");
 const Raven = require("raven");
+const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
-const tokenToUser = require("./middleware/tokenToUser");
+
+const configuration = require("src/config/configuration").getInstance();
+
+const reqTokenToUser = require("./middleware/reqTokenToUser");
 const mustBeAuthenticated = require("./middleware/mustBeAuthenticated");
 const mustBeAdmin = require("./middleware/mustBeAdmin");
 const mustHaveAccountLinkedToPlex = require("./middleware/mustHaveAccountLinkedToPlex");
-const configuration = require("src/config/configuration").getInstance();
 
 const listController = require("./controllers/list/listController");
 const tautulli = require("./controllers/user/viewHistory.js");
@@ -18,6 +21,7 @@ Raven.config(configuration.get("raven", "DSN")).install();
 const app = express(); // define our app using express
 app.use(Raven.requestHandler());
 app.use(bodyParser.json());
+app.use(cookieParser());
 
 const router = express.Router();
 const allowedOrigins = configuration.get("webserver", "origins");
@@ -26,8 +30,8 @@ const allowedOrigins = configuration.get("webserver", "origins");
 // router.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-/* Decode the Authorization header if provided */
-router.use(tokenToUser);
+/* Check header and cookie for authentication and set req.loggedInUser */
+router.use(reqTokenToUser);
 
 // TODO: Should have a separate middleware/router for handling headers.
 router.use((req, res, next) => {
@@ -60,6 +64,7 @@ app.use(function onError(err, req, res, next) {
  */
 router.post("/v1/user", require("./controllers/user/register.js"));
 router.post("/v1/user/login", require("./controllers/user/login.js"));
+router.post("/v1/user/logout", require("./controllers/user/logout.js"));
 router.get(
   "/v1/user/settings",
   mustBeAuthenticated,
