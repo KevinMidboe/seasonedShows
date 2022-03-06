@@ -31,34 +31,38 @@ class TMDB {
 
     this.cache = cache || redisCache;
     this.cacheTags = {
-      multiSearch: 'mus', 
-      movieSearch: 'mos', 
-      showSearch: 'ss',
-      personSearch: 'ps',
-      movieInfo: 'mi',
-      movieCredits: 'mc',
-      movieReleaseDates: 'mrd',
-      showInfo: 'si',
-      showCredits: 'sc',
-      personInfo: 'pi',
-      miscNowPlayingMovies: 'npm',
-      miscPopularMovies: 'pm',
-      miscTopRatedMovies: 'tpm',
-      miscUpcomingMovies: 'um',
-      tvOnTheAir: 'toa',
-      miscPopularTvs: 'pt',
-      miscTopRatedTvs: 'trt',
+      multiSearch: "mus",
+      movieSearch: "mos",
+      showSearch: "ss",
+      personSearch: "ps",
+      movieInfo: "mi",
+      movieCredits: "mc",
+      movieReleaseDates: "mrd",
+      movieImages: "mimg",
+      showInfo: "si",
+      showCredits: "sc",
+      personInfo: "pi",
+      personCredits: "pc",
+      miscNowPlayingMovies: "npm",
+      miscPopularMovies: "pm",
+      miscTopRatedMovies: "tpm",
+      miscUpcomingMovies: "um",
+      tvOnTheAir: "toa",
+      miscPopularTvs: "pt",
+      miscTopRatedTvs: "trt"
     };
-    this.defaultTTL = 86400
+    this.defaultTTL = 86400;
   }
 
   getFromCacheOrFetchFromTmdb(cacheKey, tmdbMethod, query) {
-    return new Promise((resolve, reject) => this.cache.get(cacheKey)
-      .then(resolve)
-      .catch(() => this.tmdb(tmdbMethod, query))
-      .then(resolve)
-      .catch(error => reject(tmdbErrorResponse(error, tmdbMethod)))
-    )
+    return new Promise((resolve, reject) =>
+      this.cache
+        .get(cacheKey)
+        .then(resolve)
+        .catch(() => this.tmdb(tmdbMethod, query))
+        .then(resolve)
+        .catch(error => reject(tmdbErrorResponse(error, tmdbMethod)))
+    );
   }
 
   /**
@@ -144,11 +148,24 @@ class TMDB {
       .then(person => Person.convertFromTmdbResponse(person))
   }
 
-  multiSearch(search_query, page=1, adult=true) {
-    const query = { query: search_query, page: page, include_adult: adult };
-    const cacheKey = `tmdb/${this.cacheTags.multiSearch}:${page}:${search_query}:${adult}`;
+  personCredits(identifier) {
+    const query = { id: identifier };
+    const cacheKey = `tmdb/${this.cacheTags.personCredits}:${identifier}`;
 
-    return this.getFromCacheOrFetchFromTmdb(cacheKey, 'searchMulti', query)
+    return this.getFromCacheOrFetchFromTmdb(
+      cacheKey,
+      "personCombinedCredits",
+      query
+    )
+      .then(credits => this.cache.set(cacheKey, credits, this.defaultTTL))
+      .then(credits => Credits.convertFromTmdbResponse(credits));
+  }
+
+  multiSearch(search_query, page = 1, include_adult = true) {
+    const query = { query: search_query, page, include_adult };
+    const cacheKey = `tmdb/${this.cacheTags.multiSearch}:${page}:${search_query}:${include_adult}`;
+
+    return this.getFromCacheOrFetchFromTmdb(cacheKey, "searchMulti", query)
       .then(response => this.cache.set(cacheKey, response, this.defaultTTL))
       .then(response => this.mapResults(response));
   }
