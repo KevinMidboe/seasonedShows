@@ -1,5 +1,5 @@
-import Movie from "./Movie";
-import Show from "./Show";
+import Movie from "./movie";
+import Show from "./show";
 
 class Credits {
   constructor(id, cast = [], crew = []) {
