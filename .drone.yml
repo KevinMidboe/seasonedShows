@@ -1,0 +1,112 @@
+---
+kind: pipeline
+type: docker
+name: seasoned api build
+
+platform:
+  os: linux
+  arch: amd64
+
+volumes:
+  - name: cache
+    host:
+      path: /tmp/cache
+
+steps:
+  - name: Load cached packages
+    image: sinlead/drone-cache:1.0.0
+    settings:
+      action: load
+      key: yarn.lock
+      mount: node_modules
+      prefix: yarn-modules-seasoned_api
+    volumes:
+      - name: cache
+        path: /cache
+
+  - name: Install dependencies
+    image: node:18.2.0
+    commands:
+      - node -v
+      - yarn --version
+      - yarn
+
+  - name: Cache packages
+    image: sinlead/drone-cache:1.0.0
+    settings:
+      action: save
+      key: yarn.lock
+      mount: node_modules
+      prefix: yarn-modules-seasoned_api
+    volumes:
+      - name: cache
+        path: /cache
+
+  # - name: Compile typescript
+  #   image: node:18.2.0
+  #   commands:
+  #     - yarn build:ts
+
+  - name: Run test suite
+    image: node:18.2.0
+    commands:
+      - yarn test
+    failure: ignore
+
+  - name: Lint project using eslint
+    image: node:18.2.0
+    commands:
+      - yarn lint
+    failure: ignore
+
+  - name: Build and publish docker image
+    image: plugins/docker
+    settings:
+      registry: ghcr.io
+      repo: ghcr.io/kevinmidboe/seasonedShows
+      dockerfile: Dockerfile
+      username:
+        from_secret: GITHUB_USERNAME
+      password:
+        from_secret: GITHUB_PASSWORD
+      tags: latest
+    environment:
+      TMDB_APIKEY:
+        from_secret: TMDB_APIKEY
+      PLEX_IP:
+        from_secret: PLEX_IP
+      PLEX_TOKEN:
+        from_secret: PLEX_TOKEN
+
+    when:
+      event:
+        - push
+      branch:
+        - master
+
+  # - name: deploy
+  #   image: appleboy/drone-ssh
+  #   pull: true
+  #   secrets:
+  #     - ssh_key
+  #   when:
+  #     event:
+  #       - push
+  #     branch:
+  #       - master
+  #       - drone-test
+  #     status: success
+  #   settings:
+  #     host: 10.0.0.54
+  #     username: root
+  #     key:
+  #       from_secret: ssh_key
+  #     command_timeout: 600s
+  #     script:
+  #       - /home/kevin/deploy/seasoned.sh
+
+trigger:
+  event:
+    include:
+      - push
+      # - pull_request
