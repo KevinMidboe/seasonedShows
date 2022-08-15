@@ -41,8 +41,8 @@ CREATE TABLE IF NOT EXISTS requests(
     date DATE DEFAULT CURRENT_TIMESTAMP,
     status CHAR(25) DEFAULT 'requested' NOT NULL,
     user_agent CHAR(255) DEFAULT NULL,
-    type CHAR(50) DEFAULT 'movie',
-    foreign key(requested_by) REFERENCES user(user_name) ON DELETE SET NULL
+    type CHAR(50) DEFAULT 'movie'
+    -- foreign key(requested_by) REFERENCES user(user_name) ON DELETE SET NULL
 );
 
 CREATE TABLE IF NOT EXISTS request(
