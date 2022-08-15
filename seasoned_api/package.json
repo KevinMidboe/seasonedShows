@@ -7,7 +7,7 @@
   },
   "main": "webserver/server.js",
   "scripts": {
-    "start": "cross-env SEASONED_CONFIG=conf/development.json PROD=true NODE_PATH=. babel-node src/webserver/server.js",
+    "start": "cross-env SEASONED_CONFIG=conf/development.json NODE_ENV=production NODE_PATH=. babel-node src/webserver/server.js",
     "test": "cross-env SEASONED_CONFIG=conf/test.json NODE_PATH=. mocha --require @babel/register --recursive test/unit test/system",
     "coverage": "cross-env SEASONED_CONFIG=conf/test.json NODE_PATH=. nyc mocha --require @babel/register --recursive test && nyc report --reporter=text-lcov | coveralls",
     "lint": "./node_modules/.bin/eslint src/",
@@ -18,7 +18,7 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
-    "bcrypt": "^3.0.6",
+    "bcrypt": "^5.0.1",
     "body-parser": "~1.18.2",
     "cookie-parser": "^1.4.6",
     "cross-env": "~5.1.4",
@@ -33,7 +33,7 @@
     "redis": "^3.0.2",
     "request": "^2.87.0",
     "request-promise": "^4.2",
-    "sqlite3": "^4.0.0"
+    "sqlite3": "^5.0.1"
   },
   "devDependencies": {
     "@babel/core": "^7.5.5",
