@@ -10,6 +10,12 @@ const redisCache = new RedisCache();
 
 const sanitize = string => string.toLowerCase().replace(/[^\w]/gi, "");
 
+function fixedEncodeURIComponent(str) {
+  return encodeURIComponent(str).replace(/[!'()*]/g, function (c) {
+    return "%" + c.charCodeAt(0).toString(16).toUpperCase();
+  });
+}
+
 const matchingTitleAndYear = (plex, tmdb) => {
   let matchingTitle, matchingYear;
 
@@ -121,15 +127,12 @@ class Plex {
   findPlexItemByTitleAndYear(title, year) {
     const query = { title, year };
 
-    return this.search(query.title).then(plexSearchResults => {
-      const matchesInPlex = plexSearchResults.map(plex =>
+    return this.search(title).then(plexResults => {
+      const matchesInPlex = plexResults.map(plex =>
         this.matchTmdbAndPlexMedia(plex, query)
       );
-
-      if (matchesInPlex.includes(true) === false) return false;
-
-      const firstMatchIndex = matchesInPlex.indexOf(true);
-      return plexSearchResults[firstMatchIndex][0];
+      const matchesIndex = matchesInPlex.findIndex(el => el === true);
+      return matchesInPlex != -1 ? plexResults[matchesIndex] : null;
     });
   }
 
@@ -152,7 +155,7 @@ class Plex {
       )
         return false;
 
-      const keyUriComponent = encodeURIComponent(matchingObjectInPlex.key);
+      const keyUriComponent = fixedEncodeURIComponent(matchingObjectInPlex.key);
       return `https://app.plex.tv/desktop#!/server/${machineIdentifier}/details?key=${keyUriComponent}`;
     });
   }
@@ -162,7 +165,7 @@ class Plex {
 
     const url = `http://${this.plexIP}:${
       this.plexPort
-    }/hubs/search?query=${encodeURIComponent(query)}`;
+    }/hubs/search?query=${fixedEncodeURIComponent(query)}`;
     const options = {
       timeout: 20000,
       headers: { Accept: "application/json" }

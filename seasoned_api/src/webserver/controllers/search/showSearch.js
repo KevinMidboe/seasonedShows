@@ -11,17 +11,16 @@ const searchHistory = new SearchHistory();
  * @returns {Callback}
  */
 function showSearchController(req, res) {
-  const { query, page } = req.query;
+  const { query, page, adult } = req.query;
   const username = req.loggedInUser ? req.loggedInUser.username : null;
+  const includeAdult = adult == "true" ? true : false;
 
-  Promise.resolve()
-    .then(() => {
-      if (username) {
-        return searchHistory.create(username, query);
-      }
-      return null;
-    })
-    .then(() => tmdb.showSearch(query, page))
+  if (username) {
+    searchHistory.create(username, query);
+  }
+
+  return tmdb
+    .showSearch(query, page, includeAdult)
     .then(shows => {
       res.send(shows);
     })

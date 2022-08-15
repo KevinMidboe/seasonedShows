@@ -1,11 +1,14 @@
 const express = require("express");
 const Raven = require("raven");
+const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
-const tokenToUser = require("./middleware/tokenToUser");
+
+const configuration = require("src/config/configuration").getInstance();
+
+const reqTokenToUser = require("./middleware/reqTokenToUser");
 const mustBeAuthenticated = require("./middleware/mustBeAuthenticated");
 const mustBeAdmin = require("./middleware/mustBeAdmin");
 const mustHaveAccountLinkedToPlex = require("./middleware/mustHaveAccountLinkedToPlex");
-const configuration = require("src/config/configuration").getInstance();
 
 const listController = require("./controllers/list/listController");
 const tautulli = require("./controllers/user/viewHistory.js");
@@ -18,6 +21,7 @@ Raven.config(configuration.get("raven", "DSN")).install();
 const app = express(); // define our app using express
 app.use(Raven.requestHandler());
 app.use(bodyParser.json());
+app.use(cookieParser());
 
 const router = express.Router();
 const allowedOrigins = configuration.get("webserver", "origins");
@@ -26,31 +30,34 @@ const allowedOrigins = configuration.get("webserver", "origins");
 // router.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-/* Decode the Authorization header if provided */
-router.use(tokenToUser);
+/* Check header and cookie for authentication and set req.loggedInUser */
+router.use(reqTokenToUser);
 
 // TODO: Should have a separate middleware/router for handling headers.
 router.use((req, res, next) => {
   // TODO add logging of all incoming
-  const origin = req.headers.origin;
-  if (allowedOrigins.indexOf(origin) > -1) {
-    res.setHeader("Access-Control-Allow-Origin", origin);
-  }
+  // const origin = req.headers.origin;
+  // if (allowedOrigins.indexOf(origin) > -1) {
+  //   res.setHeader("Access-Control-Allow-Origin", origin);
+  // }
+
   res.header(
     "Access-Control-Allow-Headers",
-    "Content-Type, Authorization, loggedinuser"
+    "Content-Type, Authorization, loggedinuser, set-cookie"
   );
-  res.header("Access-Control-Allow-Methods", "POST, GET, PUT");
+
+  res.header("Access-Control-Allow-Credentials", "true");
+  res.header("Access-Control-Allow-Methods", "POST, GET, PUT, OPTIONS");
 
   next();
 });
 
-router.get("/", function mainHandler(req, res) {
-  throw new Error("Broke!");
+router.get("/", (req, res) => {
+  res.send("welcome to seasoned api");
 });
 
 app.use(Raven.errorHandler());
-app.use(function onError(err, req, res, next) {
+app.use((err, req, res, next) => {
   res.statusCode = 500;
   res.end(res.sentry + "\n");
 });
@@ -60,6 +67,7 @@ app.use(function onError(err, req, res, next) {
  */
 router.post("/v1/user", require("./controllers/user/register.js"));
 router.post("/v1/user/login", require("./controllers/user/login.js"));
+router.post("/v1/user/logout", require("./controllers/user/logout.js"));
 router.get(
   "/v1/user/settings",
   mustBeAuthenticated,
@@ -137,20 +145,23 @@ router.get("/v2/movie/now_playing", listController.nowPlayingMovies);
 router.get("/v2/movie/popular", listController.popularMovies);
 router.get("/v2/movie/top_rated", listController.topRatedMovies);
 router.get("/v2/movie/upcoming", listController.upcomingMovies);
-
-router.get("/v2/show/now_playing", listController.nowPlayingShows);
-router.get("/v2/show/popular", listController.popularShows);
-router.get("/v2/show/top_rated", listController.topRatedShows);
-
 router.get("/v2/movie/:id/credits", require("./controllers/movie/credits.js"));
 router.get(
   "/v2/movie/:id/release_dates",
   require("./controllers/movie/releaseDates.js")
 );
-router.get("/v2/show/:id/credits", require("./controllers/show/credits.js"));
-
 router.get("/v2/movie/:id", require("./controllers/movie/info.js"));
+
+router.get("/v2/show/now_playing", listController.nowPlayingShows);
+router.get("/v2/show/popular", listController.popularShows);
+router.get("/v2/show/top_rated", listController.topRatedShows);
+router.get("/v2/show/:id/credits", require("./controllers/show/credits.js"));
 router.get("/v2/show/:id", require("./controllers/show/info.js"));
+
+router.get(
+  "/v2/person/:id/credits",
+  require("./controllers/person/credits.js")
+);
 router.get("/v2/person/:id", require("./controllers/person/info.js"));
 
 /**

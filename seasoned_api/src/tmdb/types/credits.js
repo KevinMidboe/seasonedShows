@@ -1,20 +1,55 @@
-class Credits { 
-  constructor(id, cast=[], crew=[]) {
+import Movie from "./movie";
+import Show from "./show";
+
+class Credits {
+  constructor(id, cast = [], crew = []) {
     this.id = id;
     this.cast = cast;
     this.crew = crew;
-    this.type = 'credits';
+    this.type = "credits";
   }
 
   static convertFromTmdbResponse(response) {
     const { id, cast, crew } = response;
 
-    const allCast = cast.map(cast => 
-      new CastMember(cast.character, cast.gender, cast.id, cast.name, cast.profile_path))
-    const allCrew = crew.map(crew =>
-      new CrewMember(crew.department, crew.gender, crew.id, crew.job, crew.name, crew.profile_path))
+    const allCast = cast.map(cast => {
+      if (cast["media_type"]) {
+        if (cast.media_type === "movie") {
+          return CreditedMovie.convertFromTmdbResponse(cast);
+        } else if (cast.media_type === "tv") {
+          return CreditedShow.convertFromTmdbResponse(cast);
+        }
+      }
 
-    return new Credits(id, allCast, allCrew)
+      return new CastMember(
+        cast.character,
+        cast.gender,
+        cast.id,
+        cast.name,
+        cast.profile_path
+      );
+    });
+
+    const allCrew = crew.map(crew => {
+      if (cast["media_type"]) {
+        if (cast.media_type === "movie") {
+          return CreditedMovie.convertFromTmdbResponse(cast);
+        } else if (cast.media_type === "tv") {
+          return CreditedShow.convertFromTmdbResponse(cast);
+        }
+      }
+
+      return new CrewMember(
+        crew.department,
+        crew.gender,
+        crew.id,
+        crew.job,
+        crew.name,
+        crew.profile_path
+      );
+    });
+
+    return new Credits(id, allCast, allCrew);
   }
 
   createJsonResponse() {
@@ -22,7 +57,7 @@ class Credits {
       id: this.id,
       cast: this.cast.map(cast => cast.createJsonResponse()),
       crew: this.crew.map(crew => crew.createJsonResponse())
-    }
+    };
   }
 }
 
@@ -33,7 +68,7 @@ class CastMember {
     this.id = id;
     this.name = name;
     this.profile_path = profile_path;
-    this.type = 'cast member';
+    this.type = "person";
   }
 
   createJsonResponse() {
@@ -44,7 +79,7 @@ class CastMember {
       name: this.name,
       profile_path: this.profile_path,
       type: this.type
-    }
+    };
   }
 }
 
@@ -56,7 +91,7 @@ class CrewMember {
     this.job = job;
     this.name = name;
     this.profile_path = profile_path;
-    this.type = 'crew member';
+    this.type = "person";
   }
 
   createJsonResponse() {
@@ -68,8 +103,11 @@ class CrewMember {
       name: this.name,
       profile_path: this.profile_path,
       type: this.type
-    }
+    };
   }
 }
+
+class CreditedMovie extends Movie {}
+class CreditedShow extends Show {}
 
 module.exports = Credits;

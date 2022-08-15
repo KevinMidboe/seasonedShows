@@ -1,10 +1,10 @@
-const bcrypt = require('bcrypt');
-const UserRepository = require('src/user/userRepository');
+const bcrypt = require("bcrypt");
+const UserRepository = require("src/user/userRepository");
 
 class UserSecurity {
   constructor(database) {
-  this.userRepository = new UserRepository(database);
-}
+    this.userRepository = new UserRepository(database);
+  }
 
   /**
    * Create a new user in PlanFlix.
@@ -13,15 +13,15 @@ class UserSecurity {
    * @returns {Promise}
    */
   createNewUser(user, clearPassword) {
-    if (user.username.trim() === '') {
-      throw new Error('The username is empty.');
-    } else if (clearPassword.trim() === '') {
-      throw new Error('The password is empty.');
+    if (user.username.trim() === "") {
+      throw new Error("The username is empty.");
+    } else if (clearPassword.trim() === "") {
+      throw new Error("The password is empty.");
     } else {
-      return Promise.resolve()
-        .then(() => this.userRepository.create(user))
+      return this.userRepository
+        .create(user)
         .then(() => UserSecurity.hashPassword(clearPassword))
-        .then(hash => this.userRepository.changePassword(user, hash))
+        .then(hash => this.userRepository.changePassword(user, hash));
     }
   }
 
@@ -32,24 +32,25 @@ class UserSecurity {
    * @returns {Promise}
    */
   login(user, clearPassword) {
-    return Promise.resolve()
-      .then(() => this.userRepository.retrieveHash(user))
+    return this.userRepository
+      .retrieveHash(user)
       .then(hash => UserSecurity.compareHashes(hash, clearPassword))
-      .catch(() => { throw new Error('Incorrect username or password.'); });
+      .catch(() => {
+        throw new Error("Incorrect username or password.");
+      });
   }
 
-   /**
-    * Compare between a password and a hash password from database.
-    * @param {String} hash the hash password from database
-    * @param {String} clearPassword the user's password
-    * @returns {Promise}
-    */
+  /**
+   * Compare between a password and a hash password from database.
+   * @param {String} hash the hash password from database
+   * @param {String} clearPassword the user's password
+   * @returns {Promise}
+   */
   static compareHashes(hash, clearPassword) {
     return new Promise((resolve, reject) => {
       bcrypt.compare(clearPassword, hash, (error, match) => {
-        if (match)
-          resolve()
-        reject()
+        if (match) resolve(true);
+        reject(false);
       });
     });
   }
@@ -60,9 +61,11 @@ class UserSecurity {
    * @returns {Promise}
    */
   static hashPassword(clearPassword) {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       const saltRounds = 10;
       bcrypt.hash(clearPassword, saltRounds, (error, hash) => {
+        if (error) reject(error);
+
         resolve(hash);
       });
     });

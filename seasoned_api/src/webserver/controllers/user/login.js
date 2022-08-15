@@ -1,15 +1,23 @@
-const User = require('src/user/user');
-const Token = require('src/user/token');
-const UserSecurity = require('src/user/userSecurity');
-const UserRepository = require('src/user/userRepository');
-const configuration = require('src/config/configuration').getInstance();
+const User = require("src/user/user");
+const Token = require("src/user/token");
+const UserSecurity = require("src/user/userSecurity");
+const UserRepository = require("src/user/userRepository");
+const configuration = require("src/config/configuration").getInstance();
 
-const secret = configuration.get('authentication', 'secret');
+const secret = configuration.get("authentication", "secret");
 const userSecurity = new UserSecurity();
 const userRepository = new UserRepository();
 
 // TODO look to move some of the token generation out of the reach of the final "catch-all"
 // catch including the, maybe sensitive, error message.
+
+const isProduction = process.env.NODE_ENV === "production";
+const cookieOptions = {
+  httpOnly: false,
+  secure: isProduction,
+  maxAge: 90 * 24 * 3600000, // 90 days
+  sameSite: isProduction ? "Strict" : "Lax"
+};
 
 /**
  * Controller: Log in a user provided correct credentials.
@@ -17,20 +25,37 @@ const userRepository = new UserRepository();
  * @param {Response} res
  * @returns {Callback}
  */
-function loginController(req, res) {
-   const user = new User(req.body.username);
-   const password = req.body.password;
+async function loginController(req, res) {
+  const user = new User(req.body.username);
+  const password = req.body.password;
 
-   userSecurity.login(user, password)
-      .then(() => userRepository.checkAdmin(user))
-      .then(checkAdmin => {
-         const isAdmin = checkAdmin === 1 ? true : false;
-         const token = new Token(user, isAdmin).toString(secret);
-         res.send({ success: true, token });
-      })
-      .catch(error => {
-         res.status(401).send({ success: false, message: error.message });
+  try {
+    const [loggedIn, isAdmin, settings] = await Promise.all([
+      userSecurity.login(user, password),
+      userRepository.checkAdmin(user),
+      userRepository.getSettings(user.username)
+    ]);
+
+    if (!loggedIn) {
+      return res.status(503).send({
+        success: false,
+        message: "Unexpected error! Unable to create user."
       });
+    }
+
+    const token = new Token(
+      user,
+      isAdmin === 1 ? true : false,
+      settings
+    ).toString(secret);
+
+    return res.cookie("authorization", token, cookieOptions).status(200).send({
+      success: true,
+      message: "Welcome to request.movie!"
+    });
+  } catch (error) {
+    return res.status(401).send({ success: false, message: error.message });
+  }
 }
 
 module.exports = loginController;
