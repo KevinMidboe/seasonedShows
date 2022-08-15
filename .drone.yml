@@ -63,7 +63,7 @@ steps:
     image: plugins/docker
     settings:
       registry: ghcr.io
-      repo: ghcr.io/kevinmidboe/seasonedShows
+      repo: ghcr.io/kevinmidboe/seasoned_shows
       dockerfile: Dockerfile
       username:
         from_secret: GITHUB_USERNAME
