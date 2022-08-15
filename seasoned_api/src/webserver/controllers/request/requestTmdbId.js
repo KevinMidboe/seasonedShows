@@ -3,6 +3,7 @@ const TMDB = require("src/tmdb/tmdb");
 const RequestRepository = require("src/request/request");
 const tmdb = new TMDB(configuration.get("tmdb", "apiKey"));
 const request = new RequestRepository();
+// const { sendSMS } = require("src/notifications/sms");
 
 const tmdbMovieInfo = id => {
   return tmdb.movieInfo(id);
@@ -47,9 +48,14 @@ function requestTmdbIdController(req, res) {
 
   mediaFunction(id)
     // .catch((error) => { console.error(error); res.status(404).send({ success: false, error: 'Id not found' }) })
-    .then(tmdbMedia =>
-      request.requestFromTmdb(tmdbMedia, ip, user_agent, username)
-    )
+    .then(tmdbMedia => {
+      request.requestFromTmdb(tmdbMedia, ip, user_agent, username);
+
+      // TODO enable SMS
+      // const url = `https://request.movie?${tmdbMedia.type}=${tmdbMedia.id}`;
+      // const message = `${tmdbMedia.title} (${tmdbMedia.year}) requested!\n${url}`;
+      // sendSMS(message);
+    })
     .then(() =>
       res.send({ success: true, message: "Request has been submitted." })
     )
