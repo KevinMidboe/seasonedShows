@@ -36,25 +36,28 @@ router.use(reqTokenToUser);
 // TODO: Should have a separate middleware/router for handling headers.
 router.use((req, res, next) => {
   // TODO add logging of all incoming
-  const origin = req.headers.origin;
-  if (allowedOrigins.indexOf(origin) > -1) {
-    res.setHeader("Access-Control-Allow-Origin", origin);
-  }
+  // const origin = req.headers.origin;
+  // if (allowedOrigins.indexOf(origin) > -1) {
+  //   res.setHeader("Access-Control-Allow-Origin", origin);
+  // }
+
   res.header(
     "Access-Control-Allow-Headers",
-    "Content-Type, Authorization, loggedinuser"
+    "Content-Type, Authorization, loggedinuser, set-cookie"
   );
-  res.header("Access-Control-Allow-Methods", "POST, GET, PUT");
+
+  res.header("Access-Control-Allow-Credentials", "true");
+  res.header("Access-Control-Allow-Methods", "POST, GET, PUT, OPTIONS");
 
   next();
 });
 
-router.get("/", function mainHandler(req, res) {
-  throw new Error("Broke!");
+router.get("/", (req, res) => {
+  res.send("welcome to seasoned api");
 });
 
 app.use(Raven.errorHandler());
-app.use(function onError(err, req, res, next) {
+app.use((err, req, res, next) => {
   res.statusCode = 500;
   res.end(res.sentry + "\n");
 });
@@ -142,20 +145,23 @@ router.get("/v2/movie/now_playing", listController.nowPlayingMovies);
 router.get("/v2/movie/popular", listController.popularMovies);
 router.get("/v2/movie/top_rated", listController.topRatedMovies);
 router.get("/v2/movie/upcoming", listController.upcomingMovies);
-
-router.get("/v2/show/now_playing", listController.nowPlayingShows);
-router.get("/v2/show/popular", listController.popularShows);
-router.get("/v2/show/top_rated", listController.topRatedShows);
-
 router.get("/v2/movie/:id/credits", require("./controllers/movie/credits.js"));
 router.get(
   "/v2/movie/:id/release_dates",
   require("./controllers/movie/releaseDates.js")
 );
-router.get("/v2/show/:id/credits", require("./controllers/show/credits.js"));
-
 router.get("/v2/movie/:id", require("./controllers/movie/info.js"));
+
+router.get("/v2/show/now_playing", listController.nowPlayingShows);
+router.get("/v2/show/popular", listController.popularShows);
+router.get("/v2/show/top_rated", listController.topRatedShows);
+router.get("/v2/show/:id/credits", require("./controllers/show/credits.js"));
 router.get("/v2/show/:id", require("./controllers/show/info.js"));
+
+router.get(
+  "/v2/person/:id/credits",
+  require("./controllers/person/credits.js")
+);
 router.get("/v2/person/:id", require("./controllers/person/info.js"));
 
 /**
