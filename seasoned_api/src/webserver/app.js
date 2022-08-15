@@ -36,25 +36,28 @@ router.use(reqTokenToUser);
 // TODO: Should have a separate middleware/router for handling headers.
 router.use((req, res, next) => {
   // TODO add logging of all incoming
-  const origin = req.headers.origin;
-  if (allowedOrigins.indexOf(origin) > -1) {
-    res.setHeader("Access-Control-Allow-Origin", origin);
-  }
+  // const origin = req.headers.origin;
+  // if (allowedOrigins.indexOf(origin) > -1) {
+  //   res.setHeader("Access-Control-Allow-Origin", origin);
+  // }
+
   res.header(
     "Access-Control-Allow-Headers",
-    "Content-Type, Authorization, loggedinuser"
+    "Content-Type, Authorization, loggedinuser, set-cookie"
   );
-  res.header("Access-Control-Allow-Methods", "POST, GET, PUT");
+
+  res.header("Access-Control-Allow-Credentials", "true");
+  res.header("Access-Control-Allow-Methods", "POST, GET, PUT, OPTIONS");
 
   next();
 });
 
-router.get("/", function mainHandler(req, res) {
-  throw new Error("Broke!");
+router.get("/", (req, res) => {
+  res.send("welcome to seasoned api");
 });
 
 app.use(Raven.errorHandler());
-app.use(function onError(err, req, res, next) {
+app.use((err, req, res, next) => {
   res.statusCode = 500;
   res.end(res.sentry + "\n");
 });
