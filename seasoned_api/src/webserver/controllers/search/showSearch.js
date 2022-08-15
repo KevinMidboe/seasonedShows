@@ -1,6 +1,6 @@
-const SearchHistory = require("src/searchHistory/searchHistory");
-const configuration = require("src/config/configuration").getInstance();
-const TMDB = require("src/tmdb/tmdb");
+const SearchHistory = require("../../../searchHistory/searchHistory");
+const configuration = require("../../../config/configuration").getInstance();
+const TMDB = require("../../../tmdb/tmdb");
 const tmdb = new TMDB(configuration.get("tmdb", "apiKey"));
 const searchHistory = new SearchHistory();
 

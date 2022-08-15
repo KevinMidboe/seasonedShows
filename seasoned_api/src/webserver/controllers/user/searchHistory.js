@@ -1,4 +1,4 @@
-const SearchHistory = require("src/searchHistory/searchHistory");
+const SearchHistory = require("../../../searchHistory/searchHistory");
 
 const searchHistory = new SearchHistory();
 

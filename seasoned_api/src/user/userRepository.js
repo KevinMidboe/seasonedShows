@@ -1,5 +1,5 @@
 const assert = require("assert");
-const establishedDatabase = require("src/database/database");
+const establishedDatabase = require("../database/database");
 
 class UserRepository {
   constructor(database) {

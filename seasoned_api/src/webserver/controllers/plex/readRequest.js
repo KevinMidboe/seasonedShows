@@ -1,4 +1,4 @@
-const RequestRepository = require('src/plex/requestRepository');
+const RequestRepository = require("../../../plex/requestRepository");
 
 const requestRepository = new RequestRepository();
 
@@ -9,14 +9,16 @@ const requestRepository = new RequestRepository();
  * @returns {Callback}
  */
 function readRequestController(req, res) {
-   const mediaId = req.params.mediaId;
-   const { type } = req.query;
-   requestRepository.lookup(mediaId, type)
-      .then(movies => {
-         res.send(movies);
-      }).catch(error => {
-         res.status(404).send({ success: false, message: error.message });
-      });
+  const mediaId = req.params.mediaId;
+  const { type } = req.query;
+  requestRepository
+    .lookup(mediaId, type)
+    .then(movies => {
+      res.send(movies);
+    })
+    .catch(error => {
+      res.status(404).send({ success: false, message: error.message });
+    });
 }
 
 module.exports = readRequestController;

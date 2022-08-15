@@ -1,6 +1,6 @@
-const SearchHistory = require("src/searchHistory/searchHistory");
-const Cache = require("src/tmdb/cache");
-const RequestRepository = require("src/plex/requestRepository.js");
+const SearchHistory = require("../../../searchHistory/searchHistory");
+const Cache = require("../../../tmdb/cache");
+const RequestRepository = require("../../../plex/requestRepository.js");
 
 const cache = new Cache();
 const requestRepository = new RequestRepository(cache);

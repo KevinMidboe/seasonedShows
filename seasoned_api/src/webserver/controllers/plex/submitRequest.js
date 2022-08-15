@@ -1,6 +1,6 @@
-const configuration = require("src/config/configuration").getInstance();
-const RequestRepository = require("src/request/request");
-const TMDB = require("src/tmdb/tmdb");
+const configuration = require("../../../config/configuration").getInstance();
+const RequestRepository = require("../../../request/request");
+const TMDB = require("../../../tmdb/tmdb");
 const tmdb = new TMDB(configuration.get("tmdb", "apiKey"));
 const request = new RequestRepository();
 
@@ -35,12 +35,10 @@ function submitRequestController(req, res) {
     console.log("show");
     mediaFunction = tmdbShowInfo;
   } else {
-    res
-      .status(422)
-      .send({
-        success: false,
-        message: 'Incorrect type. Allowed types: "movie" or "show"'
-      });
+    res.status(422).send({
+      success: false,
+      message: 'Incorrect type. Allowed types: "movie" or "show"'
+    });
   }
 
   if (mediaFunction === undefined) {

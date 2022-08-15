@@ -1,6 +1,6 @@
-const configuration = require("src/config/configuration").getInstance();
-const TMDB = require("src/tmdb/tmdb");
-const SearchHistory = require("src/searchHistory/searchHistory");
+const configuration = require("../../..//config/configuration").getInstance();
+const TMDB = require("../../../tmdb/tmdb");
+const SearchHistory = require("../../../searchHistory/searchHistory");
 const tmdb = new TMDB(configuration.get("tmdb", "apiKey"));
 const searchHistory = new SearchHistory();
 
@@ -36,11 +36,9 @@ function multiSearchController(req, res) {
       } else {
         // TODO log unhandled errors
         console.log("caugth multi search controller error", error);
-        res
-          .status(500)
-          .send({
-            message: `An unexpected error occured while searching with query: ${query}`
-          });
+        res.status(500).send({
+          message: `An unexpected error occured while searching with query: ${query}`
+        });
       }
     });
 }

@@ -1,6 +1,6 @@
-const configuration = require('src/config/configuration').getInstance();
-const Plex = require('src/plex/plex');
-const plex = new Plex(configuration.get('plex', 'ip'));
+const configuration = require("../../../config/configuration").getInstance();
+const Plex = require("../../../plex/plex");
+const plex = new Plex(configuration.get("plex", "ip"));
 
 /**
  * Controller: Search plex for movies, shows and episodes by query
@@ -9,18 +9,18 @@ const plex = new Plex(configuration.get('plex', 'ip'));
  * @returns {Callback}
  */
 
-function watchDirectLink (req, res) {
-   const { title, year } = req.query;
+function watchDirectLink(req, res) {
+  const { title, year } = req.query;
 
-  plex.getDirectLinkByTitleAndYear(title, year)
+  plex
+    .getDirectLinkByTitleAndYear(title, year)
     .then(plexDirectLink => {
       if (plexDirectLink == false)
-        res.status(404).send({ success: true, link: null })
-      else
-        res.status(200).send({ success: true, link: plexDirectLink })
+        res.status(404).send({ success: true, link: null });
+      else res.status(200).send({ success: true, link: plexDirectLink });
     })
     .catch(error => {
-       res.status(500).send({ success: false, message: error.message });
+      res.status(500).send({ success: false, message: error.message });
     });
 }
 

@@ -1,5 +1,5 @@
 const bcrypt = require("bcrypt");
-const UserRepository = require("src/user/userRepository");
+const UserRepository = require("./userRepository");
 
 class UserSecurity {
   constructor(database) {

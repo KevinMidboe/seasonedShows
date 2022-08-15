@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS search_history (
     foreign key(user_name) REFERENCES user(user_name) ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS requests(
+CREATE TABLE IF NOT EXISTS requests (
     id NUMBER,
     title TEXT,
     year NUMBER,

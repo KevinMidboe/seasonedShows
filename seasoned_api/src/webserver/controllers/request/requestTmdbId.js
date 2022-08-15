@@ -1,6 +1,6 @@
-const configuration = require("src/config/configuration").getInstance();
-const TMDB = require("src/tmdb/tmdb");
-const RequestRepository = require("src/request/request");
+const configuration = require("../../../config/configuration").getInstance();
+const TMDB = require("../../../tmdb/tmdb");
+const RequestRepository = require("../../../request/request");
 const tmdb = new TMDB(configuration.get("tmdb", "apiKey"));
 const request = new RequestRepository();
 // const { sendSMS } = require("src/notifications/sms");

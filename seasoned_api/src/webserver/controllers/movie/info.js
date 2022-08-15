@@ -1,6 +1,6 @@
-const configuration = require("src/config/configuration").getInstance();
-const TMDB = require("src/tmdb/tmdb");
-const Plex = require("src/plex/plex");
+const configuration = require("../../../config/configuration").getInstance();
+const TMDB = require("../../../tmdb/tmdb");
+const Plex = require("../../../plex/plex");
 const tmdb = new TMDB(configuration.get("tmdb", "apiKey"));
 const plex = new Plex(configuration.get("plex", "ip"));
 
