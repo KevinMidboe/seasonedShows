@@ -127,15 +127,12 @@ class Plex {
   findPlexItemByTitleAndYear(title, year) {
     const query = { title, year };
 
-    return this.search(query.title).then(plexSearchResults => {
-      const matchesInPlex = plexSearchResults.map(plex =>
+    return this.search(title).then(plexResults => {
+      const matchesInPlex = plexResults.map(plex =>
         this.matchTmdbAndPlexMedia(plex, query)
       );
-
-      if (matchesInPlex.includes(true) === false) return false;
-
-      const firstMatchIndex = matchesInPlex.indexOf(true);
-      return plexSearchResults[firstMatchIndex][0];
+      const matchesIndex = matchesInPlex.findIndex(el => el === true);
+      return matchesInPlex != -1 ? plexResults[matchesIndex] : null;
     });
   }
 
