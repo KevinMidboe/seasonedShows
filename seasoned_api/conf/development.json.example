@@ -10,7 +10,8 @@
     "apiKey": ""
   },
   "plex": {
-    "ip": ""
+    "ip": "localhost",
+    "token": ""
   },
   "tautulli": {
     "apiKey": "",
