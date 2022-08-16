@@ -58,7 +58,7 @@ async function movieInfoController(req, res) {
         } else {
           console.log("Unkown error from plex!");
         }
-        console.log(error);
+        console.log(error?.message);
       }
     }
 

@@ -5,16 +5,16 @@
     "type": "MIT",
     "url": "https://www.opensource.org/licenses/mit-license.php"
   },
-  "main": "seasoned_api/webserver/server.js",
+  "main": "webserver/server.js",
   "scripts": {
-    "start": "yarn --cwd seasoned_api cross-env SEASONED_CONFIG=conf/development.json NODE_ENV=production babel-node seasoned_api/src/webserver/server.js",
-    "test": "cross-env SEASONED_CONFIG=seasoned_api/conf/test.json NODE_PATH=. mocha --require @babel/register --recursive seasoned_api/test/unit seasoned_api/test/system",
-    "coverage": "cross-env SEASONED_CONFIG=seasoned_api/conf/test.json NODE_PATH=. nyc mocha --require @babel/register --recursive test && nyc report --reporter=text-lcov | coveralls",
-    "lint": "eslint src/",
-    "update": "cross-env SEASONED_CONFIG=seasoned_api/conf/development.json NODE_PATH=. node seasoned_api/scripts/updateRequestsInPlex.js",
+    "start": "yarn cross-env SEASONED_CONFIG=conf/development.json NODE_ENV=production babel-node seasoned_api/src/webserver/server.js",
+    "test": "cross-env SEASONED_CONFIG=conf/test.json NODE_PATH=. mocha --require @babel/register --recursive seasoned_api/test/unit seasoned_api/test//system",
+    "coverage": "cross-env SEASONED_CONFIG=conf/test.json NODE_PATH=. nyc mocha --require @babel/register --recursive test && nyc report --reporter=text-lcov | coveralls",
+    "lint": "eslint seasoned_api/src",
+    "update": "cross-env SEASONED_CONFIG=conf/development.json NODE_PATH=. node seasoned_api/scripts/updateRequestsInPlex.js",
     "docs": "yarn apiDocs; yarn classDocs",
     "apiDocs": "",
-    "classDocs": "./seasoned_api/script/generate-class-docs.sh"
+    "classDocs": "seasoned_api/script/generate-class-docs.sh"
   },
   "dependencies": {
     "axios": "^0.18.0",
