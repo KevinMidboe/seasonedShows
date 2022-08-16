@@ -30,12 +30,10 @@ class Config {
 
     const field = new Field(this.fields[section][option]);
 
-    if (field.value === "") {
-      const envField =
-        process.env[[section.toUpperCase(), option.toUpperCase()].join("_")];
-      if (envField !== undefined && envField.length !== 0) {
-        return envField;
-      }
+    const envField =
+      process.env[[section.toUpperCase(), option.toUpperCase()].join("_")];
+    if (envField !== undefined && envField.length !== 0) {
+      return envField;
     }
 
     if (field.value === undefined) {
