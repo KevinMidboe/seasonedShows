@@ -5,8 +5,7 @@ const convertPlexToEpisode = require("./convertPlexToEpisode");
 
 const { Movie, Show, Person } = require("../tmdb/types");
 
-const RedisCache = require("../cache/redis");
-const redisCache = new RedisCache();
+const redisCache = require("../cache/redis");
 
 const sanitize = string => string.toLowerCase().replace(/[^\w]/gi, "");
 

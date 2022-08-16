@@ -5,8 +5,7 @@ const PythonShell = require("python-shell");
 
 const establishedDatabase = require("../database/database");
 
-const RedisCache = require("../cache/redis");
-const cache = new RedisCache();
+const cache = require("../cache/redis");
 
 function getMagnetFromURL(url) {
   return new Promise((resolve, reject) => {

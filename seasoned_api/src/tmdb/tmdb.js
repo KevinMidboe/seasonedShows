@@ -1,6 +1,5 @@
 const moviedb = require("km-moviedb");
-const RedisCache = require("../cache/redis");
-const redisCache = new RedisCache();
+const redisCache = require("../cache/redis");
 
 const { Movie, Show, Person, Credits, ReleaseDates } = require("./types");
 
