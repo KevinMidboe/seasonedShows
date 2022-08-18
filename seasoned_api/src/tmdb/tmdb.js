@@ -1,14 +1,7 @@
 const moviedb = require("km-moviedb");
-const RedisCache = require("src/cache/redis");
-const redisCache = new RedisCache();
+const redisCache = require("../cache/redis");
 
-const {
-  Movie,
-  Show,
-  Person,
-  Credits,
-  ReleaseDates
-} = require("src/tmdb/types");
+const { Movie, Show, Person, Credits, ReleaseDates } = require("./types");
 
 const tmdbErrorResponse = (error, typeString = undefined) => {
   if (error.status === 404) {
@@ -107,14 +100,20 @@ class TMDB {
    * @returns {Promise} movie release dates object
    */
   movieReleaseDates(identifier) {
-    const query = { id: identifier }
-    const cacheKey = `tmdb/${this.cacheTags.movieReleaseDates}:${identifier}`
+    const query = { id: identifier };
+    const cacheKey = `tmdb/${this.cacheTags.movieReleaseDates}:${identifier}`;
 
-    return this.getFromCacheOrFetchFromTmdb(cacheKey, 'movieReleaseDates', query)
-      .then(releaseDates => this.cache.set(cacheKey, releaseDates, this.defaultTTL))
-      .then(releaseDates => ReleaseDates.convertFromTmdbResponse(releaseDates))
+    return this.getFromCacheOrFetchFromTmdb(
+      cacheKey,
+      "movieReleaseDates",
+      query
+    )
+      .then(releaseDates =>
+        this.cache.set(cacheKey, releaseDates, this.defaultTTL)
+      )
+      .then(releaseDates => ReleaseDates.convertFromTmdbResponse(releaseDates));
   }
- 
+
   /**
    * Retrieve a specific show by id from TMDB.
    * @param {Number} identifier of the show you want to retrieve

@@ -1,4 +1,4 @@
-const User = require("src/user/user");
+const User = require("./user");
 const jwt = require("jsonwebtoken");
 
 class Token {

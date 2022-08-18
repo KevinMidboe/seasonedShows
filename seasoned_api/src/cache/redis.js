@@ -1,52 +1,73 @@
-const redis = require("redis")
-const client = redis.createClient()
+const { promisify } = require("util");
+const configuration = require("../config/configuration").getInstance();
 
-class Cache {
-  /**
-   * Retrieve an unexpired cache entry by key.
-   * @param {String} key of the cache entry
-   * @returns {Promise}
-   */
-  get(key) {
-    return new Promise((resolve, reject) => {
-      client.get(key, (error, reply) => {
-        if (reply == null) {
-          return reject();
-        }
+let client;
 
-        resolve(JSON.parse(reply));
-      });
-    });
-  }
+try {
+  const redis = require("redis");
+  console.log("Trying to connect with redis..");
+  const host = configuration.get("redis", "host");
+  const port = configuration.get("redis", "port");
 
-  /**
-   * Insert cache entry with key and value.
-   * @param {String} key of the cache entry
-   * @param {String} value of the cache entry
-   * @param {Number} timeToLive the number of seconds before entry expires
-   * @returns {Object}
-   */
-  set(key, value, timeToLive = 10800) {
-    if (value == null || key == null) return null;
+  console.log(`redis://${host}:${port}`);
+  client = redis.createClient({
+    url: `redis://${host}:${port}`
+  });
 
-    const json = JSON.stringify(value);
-    client.set(key, json, (error, reply) => {
-      if (reply == "OK") {
-        // successfully set value with key, now set TTL for key
-        client.expire(key, timeToLive, e => {
-          if (e)
-            console.error(
-              "Unexpected error while setting expiration for key:",
-              key,
-              ". Error:",
-              error
-            );
-        });
+  client.on("connect", () => console.log("Redis connection established!"));
+
+  client.on("error", function (err) {
+    client.quit();
+    console.error("Unable to connect to redis, setting up redis-mock.");
+
+    client = {
+      get: function () {
+        console.log("redis-dummy get", arguments[0]);
+        return Promise.resolve();
+      },
+      set: function () {
+        console.log("redis-dummy set", arguments[0]);
+        return Promise.resolve();
       }
-    });
+    };
+  });
+} catch (e) {}
 
-    return value;
-  }
+function set(key, value, TTL = 10800) {
+  if (value == null || key == null) return null;
+
+  const json = JSON.stringify(value);
+  client.set(key, json, (error, reply) => {
+    if (reply == "OK") {
+      // successfully set value with key, now set TTL for key
+      client.expire(key, TTL, e => {
+        if (e)
+          console.error(
+            "Unexpected error while setting expiration for key:",
+            key,
+            ". Error:",
+            error
+          );
+      });
+    }
+  });
+
+  return value;
 }
 
-module.exports = Cache;
+function get() {
+  return new Promise((resolve, reject) => {
+    client.get(key, (error, reply) => {
+      if (reply == null) {
+        return reject();
+      }
+
+      resolve(JSON.parse(reply));
+    });
+  });
+}
+
+module.exports = {
+  get,
+  set
+};

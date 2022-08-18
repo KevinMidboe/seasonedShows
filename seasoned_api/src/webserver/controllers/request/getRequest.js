@@ -1,4 +1,4 @@
-const RequestRepository = require('src/request/request');
+const RequestRepository = require("../../../request/request");
 const request = new RequestRepository();
 
 /**
@@ -11,7 +11,8 @@ function fetchAllRequests(req, res) {
   const id = req.params.id;
   const { type } = req.query;
 
-  request.getRequestByIdAndType(id, type)
+  request
+    .getRequestByIdAndType(id, type)
     .then(result => res.send(result))
     .catch(error => {
       res.status(404).send({ success: false, message: error.message });

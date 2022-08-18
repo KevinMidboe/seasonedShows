@@ -1,12 +1,11 @@
 const fetch = require("node-fetch");
-const convertPlexToMovie = require("src/plex/convertPlexToMovie");
-const convertPlexToShow = require("src/plex/convertPlexToShow");
-const convertPlexToEpisode = require("src/plex/convertPlexToEpisode");
+const convertPlexToMovie = require("./convertPlexToMovie");
+const convertPlexToShow = require("./convertPlexToShow");
+const convertPlexToEpisode = require("./convertPlexToEpisode");
 
-const { Movie, Show, Person } = require("src/tmdb/types");
+const { Movie, Show, Person } = require("../tmdb/types");
 
-const RedisCache = require("src/cache/redis");
-const redisCache = new RedisCache();
+const redisCache = require("../cache/redis");
 
 const sanitize = string => string.toLowerCase().replace(/[^\w]/gi, "");
 

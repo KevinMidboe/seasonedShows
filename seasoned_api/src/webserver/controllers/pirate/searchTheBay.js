@@ -5,7 +5,7 @@
  * @Last Modified time: 2018-02-26 19:56:32
  */
 
-const PirateRepository = require("src/pirate/pirateRepository");
+const PirateRepository = require("../../../pirate/pirateRepository");
 // const pirateRepository = new PirateRepository();
 
 /**

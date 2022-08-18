@@ -1,5 +1,5 @@
-const configuration = require("src/config/configuration").getInstance();
-const Tautulli = require("src/tautulli/tautulli");
+const configuration = require("../../../config/configuration").getInstance();
+const Tautulli = require("../../../tautulli/tautulli");
 const apiKey = configuration.get("tautulli", "apiKey");
 const ip = configuration.get("tautulli", "ip");
 const port = configuration.get("tautulli", "port");

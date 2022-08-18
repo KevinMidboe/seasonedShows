@@ -1,5 +1,5 @@
-const configuration = require("src/config/configuration").getInstance();
-const TMDB = require("src/tmdb/tmdb");
+const configuration = require("../../../config/configuration").getInstance();
+const TMDB = require("../../../tmdb/tmdb");
 const tmdb = new TMDB(configuration.get("tmdb", "apiKey"));
 
 function handleError(error, res) {

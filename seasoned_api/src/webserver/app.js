@@ -3,7 +3,7 @@ const Raven = require("raven");
 const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
 
-const configuration = require("src/config/configuration").getInstance();
+const configuration = require("../config/configuration").getInstance();
 
 const reqTokenToUser = require("./middleware/reqTokenToUser");
 const mustBeAuthenticated = require("./middleware/mustBeAuthenticated");

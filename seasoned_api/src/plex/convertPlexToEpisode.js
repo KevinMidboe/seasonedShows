@@ -1,7 +1,11 @@
-const Episode = require('src/plex/types/episode');
+const Episode = require("./types/episode");
 
 function convertPlexToEpisode(plexEpisode) {
-  const episode = new Episode(plexEpisode.title, plexEpisode.grandparentTitle, plexEpisode.year);
+  const episode = new Episode(
+    plexEpisode.title,
+    plexEpisode.grandparentTitle,
+    plexEpisode.year
+  );
   episode.season = plexEpisode.parentIndex;
   episode.episode = plexEpisode.index;
   episode.summary = plexEpisode.summary;
@@ -12,7 +16,7 @@ function convertPlexToEpisode(plexEpisode) {
   }
 
   if (plexEpisode.originallyAvailableAt !== undefined) {
-    episode.airdate = new Date(plexEpisode.originallyAvailableAt)
+    episode.airdate = new Date(plexEpisode.originallyAvailableAt);
   }
 
   return episode;

@@ -1,4 +1,4 @@
-const Show = require('src/plex/types/show');
+const Show = require("./types/show");
 
 function convertPlexToShow(plexShow) {
   const show = new Show(plexShow.title, plexShow.year);

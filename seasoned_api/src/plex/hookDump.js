@@ -1,7 +1,7 @@
-const configuration = require('src/config/configuration').getInstance();
+const configuration = require("../config/configuration").getInstance();
 
 function hookDumpController(req, res) {
-   console.log(req);
+  console.log(req);
 }
 
 module.exports = hookDumpController;

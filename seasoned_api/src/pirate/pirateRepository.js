@@ -3,10 +3,9 @@ const http = require("http");
 const { URL } = require("url");
 const PythonShell = require("python-shell");
 
-const establishedDatabase = require("src/database/database");
+const establishedDatabase = require("../database/database");
 
-const RedisCache = require("src/cache/redis");
-const cache = new RedisCache();
+const cache = require("../cache/redis");
 
 function getMagnetFromURL(url) {
   return new Promise((resolve, reject) => {

@@ -1,6 +1,6 @@
 /* eslint-disable no-param-reassign */
-const configuration = require("src/config/configuration").getInstance();
-const Token = require("src/user/token");
+const configuration = require("../../config/configuration").getInstance();
+const Token = require("../../user/token");
 
 const secret = configuration.get("authentication", "secret");
 

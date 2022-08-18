@@ -1,4 +1,4 @@
-const RequestRepository = require('src/plex/requestRepository.js');
+const RequestRepository = require("../../../plex/requestRepository.js");
 
 const requestRepository = new RequestRepository();
 
@@ -9,16 +9,21 @@ const requestRepository = new RequestRepository();
  * @returns {Callback}
  */
 function fetchRequestedController(req, res) {
-   // const user = req.loggedInUser;
-   const { status, page } = req.query;
+  // const user = req.loggedInUser;
+  const { status, page } = req.query;
 
-   requestRepository.fetchRequested(status, page)
-      .then((requestedItems) => {
-         res.send({ success: true, results: requestedItems, total_results: requestedItems.length });
-      })
-      .catch((error) => {
-         res.status(401).send({ success: false, message: error.message });
+  requestRepository
+    .fetchRequested(status, page)
+    .then(requestedItems => {
+      res.send({
+        success: true,
+        results: requestedItems,
+        total_results: requestedItems.length
       });
+    })
+    .catch(error => {
+      res.status(401).send({ success: false, message: error.message });
+    });
 }
 
 module.exports = fetchRequestedController;

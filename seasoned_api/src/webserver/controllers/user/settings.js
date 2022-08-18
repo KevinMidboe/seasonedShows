@@ -1,4 +1,4 @@
-const UserRepository = require("src/user/userRepository");
+const UserRepository = require("../../../user/userRepository");
 const userRepository = new UserRepository();
 /**
  * Controller: Retrieves settings of a logged in user
