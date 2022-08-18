@@ -1,0 +1,14 @@
+{
+	"root": true,
+	"parserOptions": {
+		"sourceType": "module"
+	},
+	"extends": [
+		"eslint-config-airbnb-base",
+		"plugin:prettier/recommended"
+	],
+	"rules": {
+		"no-underscore-dangle": "off",
+		"no-shadow": "off"
+	}
+}
