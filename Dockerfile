@@ -10,7 +10,7 @@ COPY package.json .
 RUN apt update
 RUN apt install node-pre-gyp -y
 RUN yarn
-RUN cp seasoned_api/conf/development.json.example seasoned_api/conf/development.json
+RUN cp configurations/development.json.example configurations/development.json
 
 EXPOSE 31459
 
