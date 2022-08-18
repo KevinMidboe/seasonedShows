@@ -1,0 +1,439 @@
+openapi: 3.1.0
+x-stoplight:
+  id: lu1x37qqzll6m
+info:
+  title: seasoned api
+  version: '1.0'
+  summary: Season your media library with the shows and movies that you and your friends want.
+  description: |
+    This is the backend api for [seasoned request] that allows for uesrs to request movies and shows by fetching movies from themoviedb api and checks them with your plex library to identify if a movie is already present or not. This api allows to search my query, get themoviedb movie lists like popular and now playing, all while checking if the item is already in your plex library. Your friends can create users to see what movies or shows they have requested and searched for.
+
+    The api also uses torrent_search to search for matching torrents and returns results from any site or service available from torrent_search. As a admin of the site you can query torrent_search and return a magnet link that can be added to a autoadd folder of your favorite torrent client.
+servers:
+  - url: 'https://request.movie/api'
+    description: poduction
+  - url: 'https://localhost:31459'
+    description: localhost
+paths:
+  /v2/movie/now_playing:
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        title:
+                          type: string
+                        year:
+                          type: integer
+                        overview:
+                          type: string
+                        poster:
+                          type: string
+                        backdrop:
+                          type: string
+                        release_date:
+                          type: string
+                        rating:
+                          type: number
+                        type:
+                          type: string
+                  page:
+                    type: integer
+                  total_results:
+                    type: integer
+                  total_pages:
+                    type: integer
+                x-examples:
+                  example-1:
+                    results:
+                      - id: 616037
+                        title: 'Thor: Love and Thunder'
+                        year: 2022
+                        overview: 'After his retirement is interrupted by Gorr the God Butcher, a galactic killer who seeks the extinction of the gods, Thor enlists the help of King Valkyrie, Korg, and ex-girlfriend Jane Foster, who now inexplicably wields Mjolnir as the Mighty Thor. Together they embark upon a harrowing cosmic adventure to uncover the mystery of the God Butcher’s vengeance and stop him before it’s too late.'
+                        poster: /pIkRyD18kl4FhoCNQuWxWu5cBLM.jpg
+                        backdrop: /p1F51Lvj3sMopG948F5HsBbl43C.jpg
+                        release_date: '2022-07-06T00:00:00.000Z'
+                        rating: 6.8
+                        type: movie
+                      - id: 507086
+                        title: Jurassic World Dominion
+                        year: 2022
+                        overview: 'Four years after Isla Nublar was destroyed, dinosaurs now live—and hunt—alongside humans all over the world. This fragile balance will reshape the future and determine, once and for all, whether human beings are to remain the apex predators on a planet they now share with history’s most fearsome creatures.'
+                        poster: /kAVRgw7GgK1CfYEJq8ME6EvRIgU.jpg
+                        backdrop: /9eAn20y26wtB3aet7w9lHjuSgZ3.jpg
+                        release_date: '2022-06-01T00:00:00.000Z'
+                        rating: 7.1
+                        type: movie
+                      - id: 438148
+                        title: 'Minions: The Rise of Gru'
+                        year: 2022
+                        overview: 'A fanboy of a supervillain supergroup known as the Vicious 6, Gru hatches a plan to become evil enough to join them, with the backup of his followers, the Minions.'
+                        poster: /wKiOkZTN9lUUUNZLmtnwubZYONg.jpg
+                        backdrop: /nmGWzTLMXy9x7mKd8NKPLmHtWGa.jpg
+                        release_date: '2022-06-29T00:00:00.000Z'
+                        rating: 7.8
+                        type: movie
+                      - id: 585511
+                        title: Luck
+                        year: 2022
+                        overview: 'Suddenly finding herself in the never-before-seen Land of Luck, the unluckiest person in the world must unite with the magical creatures there to turn her luck around.'
+                        poster: /1HOYvwGFioUFL58UVvDRG6beEDm.jpg
+                        backdrop: /3VQj6m0I6gkuRaljmhNZl0XR3by.jpg
+                        release_date: '2022-08-05T00:00:00.000Z'
+                        rating: 8.1
+                        type: movie
+                      - id: 756999
+                        title: The Black Phone
+                        year: 2022
+                        overview: 'Finney Blake, a shy but clever 13-year-old boy, is abducted by a sadistic killer and trapped in a soundproof basement where screaming is of little use. When a disconnected phone on the wall begins to ring, Finney discovers that he can hear the voices of the killer’s previous victims. And they are dead set on making sure that what happened to them doesn’t happen to Finney.'
+                        poster: /lr11mCT85T1JanlgjMuhs9nMht4.jpg
+                        backdrop: /jqVyOIz8jxH0NUlc0QUHmV0uOcn.jpg
+                        release_date: '2022-06-22T00:00:00.000Z'
+                        rating: 8
+                        type: movie
+                      - id: 610150
+                        title: 'Dragon Ball Super: Super Hero'
+                        year: 2022
+                        overview: 'The Red Ribbon Army, an evil organization that was once destroyed by Goku in the past, has been reformed by a group of people who have created new and mightier Androids, Gamma 1 and Gamma 2, and seek vengeance against Goku and his family.'
+                        poster: /rugyJdeoJm7cSJL1q4jBpTNbxyU.jpg
+                        backdrop: /uR0FopHrAjDlG5q6PZB07a1JOva.jpg
+                        release_date: '2022-06-11T00:00:00.000Z'
+                        rating: 7.5
+                        type: movie
+                      - id: 760104
+                        title: X
+                        year: 2022
+                        overview: 'In 1979, a group of young filmmakers set out to make an adult film in rural Texas, but when their reclusive, elderly hosts catch them in the act, the cast find themselves fighting for their lives.'
+                        poster: /woTQx9Q4b8aO13jR9dsj8C9JESy.jpg
+                        backdrop: /2oXQpm0wfOkIL0jBJABbL5AfMs6.jpg
+                        release_date: '2022-03-17T00:00:00.000Z'
+                        rating: 6.7
+                        type: movie
+                      - id: 718789
+                        title: Lightyear
+                        year: 2022
+                        overview: Legendary Space Ranger Buzz Lightyear embarks on an intergalactic adventure alongside a group of ambitious recruits and his robot companion Sox.
+                        poster: /ox4goZd956BxqJH6iLwhWPL9ct4.jpg
+                        backdrop: /nW5fUbldp1DYf2uQ3zJTUdachOu.jpg
+                        release_date: '2022-06-15T00:00:00.000Z'
+                        rating: 7.3
+                        type: movie
+                      - id: 725201
+                        title: The Gray Man
+                        year: 2022
+                        overview: 'When a shadowy CIA agent uncovers damning agency secrets, he''s hunted across the globe by a sociopathic rogue operative who''s put a bounty on his head.'
+                        poster: /8cXbitsS6dWQ5gfMTZdorpAAzEH.jpg
+                        backdrop: /27Mj3rFYP3xqFy7lnz17vEd8Ms.jpg
+                        release_date: '2022-07-13T00:00:00.000Z'
+                        rating: 7
+                        type: movie
+                      - id: 758724
+                        title: The Cellar
+                        year: 2022
+                        overview: 'When Keira Woods'' daughter mysteriously vanishes in the cellar of their new house in the country, she soon discovers there is an ancient and powerful entity controlling their home that she will have to face or risk losing her family''s souls forever.'
+                        poster: /rtfGeS5WMXA6PtikIYUmYTSbVdg.jpg
+                        backdrop: /qViFGWCHaSmW4gP00RGh3xjMjsP.jpg
+                        release_date: '2022-03-25T00:00:00.000Z'
+                        rating: 6.6
+                        type: movie
+                      - id: 961484
+                        title: Last Seen Alive
+                        year: 2022
+                        overview: 'After Will Spann''s wife suddenly vanishes at a gas station, his desperate search to find her leads him down a dark path that forces him to run from authorities and take the law into his own hands.'
+                        poster: /qvqyDj34Uivokf4qIvK4bH0m0qF.jpg
+                        backdrop: /ftGzl2GCyko61Qp161bQElN2Uzd.jpg
+                        release_date: '2022-05-19T00:00:00.000Z'
+                        rating: 6.6
+                        type: movie
+                      - id: 675353
+                        title: Sonic the Hedgehog 2
+                        year: 2022
+                        overview: 'After settling in Green Hills, Sonic is eager to prove he has what it takes to be a true hero. His test comes when Dr. Robotnik returns, this time with a new partner, Knuckles, in search for an emerald that has the power to destroy civilizations. Sonic teams up with his own sidekick, Tails, and together they embark on a globe-trotting journey to find the emerald before it falls into the wrong hands.'
+                        poster: /6DrHO1jr3qVrViUO6s6kFiAGM7.jpg
+                        backdrop: /8wwXPG22aNMpPGuXnfm3galoxbI.jpg
+                        release_date: '2022-03-30T00:00:00.000Z'
+                        rating: 7.7
+                        type: movie
+                      - id: 924482
+                        title: The Ledge
+                        year: 2022
+                        overview: 'A rock climbing adventure between two friends turns into a terrifying nightmare. After Kelly captures the murder of her best friend on camera, she becomes the next target of a tight-knit group of friends who will stop at nothing to destroy the evidence and anyone in their way. Desperate for her safety, she begins a treacherous climb up a mountain cliff and her survival instincts are put to the test when she becomes trapped with the killers just 20 feet away.'
+                        poster: /dHKfsdNcEPw7YIWFPIhqiuWrSAb.jpg
+                        backdrop: /jazlkwXfw4KdF6fVTRsolOvRCmu.jpg
+                        release_date: '2022-02-18T00:00:00.000Z'
+                        rating: 6.3
+                        type: movie
+                      - id: 698948
+                        title: Thirteen Lives
+                        year: 2022
+                        overview: 'Based on the true nail-biting mission that captivated the world. Twelve boys and the coach of a Thai soccer team explore the Tham Luang cave when an unexpected rainstorm traps them in a chamber inside the mountain. Entombed behind a maze of flooded cave tunnels, they face impossible odds. A team of world-class divers navigate through miles of dangerous cave networks to discover that finding the boys is only the beginning.'
+                        poster: /yi5KcJqFxy0D6yP8nCfcF8gJGg5.jpg
+                        backdrop: /tHR34A5n0my4maACNdLpWGd6QYq.jpg
+                        release_date: '2022-07-18T00:00:00.000Z'
+                        rating: 8
+                        type: movie
+                      - id: 614934
+                        title: Elvis
+                        year: 2022
+                        overview: 'The life story of Elvis Presley as seen through the complicated relationship with his enigmatic manager, Colonel Tom Parker.'
+                        poster: /qBOKWqAFbveZ4ryjJJwbie6tXkQ.jpg
+                        backdrop: /rLo9T9jEg67UZPq3midjLnTUYYi.jpg
+                        release_date: '2022-06-22T00:00:00.000Z'
+                        rating: 7.9
+                        type: movie
+                      - id: 639933
+                        title: The Northman
+                        year: 2022
+                        overview: 'Prince Amleth is on the verge of becoming a man when his father is brutally murdered by his uncle, who kidnaps the boy''s mother. Two decades later, Amleth is now a Viking who''s on a mission to save his mother, kill his uncle and avenge his father.'
+                        poster: /8p9zXB7M78nZpm215zHfqpknMeM.jpg
+                        backdrop: /k2G4WqGiT60K9yJnPh4K6VLnl3A.jpg
+                        release_date: '2022-04-07T00:00:00.000Z'
+                        rating: 7.2
+                        type: movie
+                      - id: 894169
+                        title: Vendetta
+                        year: 2022
+                        overview: 'When his daughter is murdered, William Duncan takes the law into his own hands, setting out on a quest for retribution. After killing the street thug responsible for her death, he finds himself in the middle of a war with the thug''s brother, father, and their gang, who are equally hell-bent on getting even. What ensues is a tense back-and-forth game of vengeance. By the end, William comes to find that the quest for revenge never has a winner.'
+                        poster: /7InGE2Sux0o9WGbbn0bl7nZzqEc.jpg
+                        backdrop: /33qGtN2GpGEb94pn25PDPeWQZLk.jpg
+                        release_date: '2022-05-17T00:00:00.000Z'
+                        rating: 6.5
+                        type: movie
+                      - id: 718930
+                        title: Bullet Train
+                        year: 2022
+                        overview: 'Unlucky assassin Ladybug is determined to do his job peacefully after one too many gigs gone off the rails. Fate, however, may have other plans, as Ladybug''s latest mission puts him on a collision course with lethal adversaries from around the globe—all with connected, yet conflicting, objectives—on the world''s fastest train.'
+                        poster: /rTgfp0ZuikSUK8HK8Jgn3PUqteH.jpg
+                        backdrop: /C8FpZfTPEZDjngPlatiFsaDB4A.jpg
+                        release_date: '2022-07-03T00:00:00.000Z'
+                        rating: 7.4
+                        type: movie
+                      - id: 697799
+                        title: WarHunt
+                        year: 2022
+                        overview: '1945. A U.S. military cargo plane loses control and violently crashes behind enemy lines in the middle of the German black forest. Major Johnson sends a squad of his bravest soldiers on a rescue mission to retrieve the top-secret material the plane was carrying, led by Sergeants Brewer and Walsh. They soon discover hanged Nazi soldiers and other dead bodies bearing ancient, magical symbols. Suddenly their compasses fail, their perceptions twist and straying from the group leads to profound horrors as they are attacked by a powerful, supernatural force.'
+                        poster: /9HFFwZOTBB7IPFmn9E0MXdWave3.jpg
+                        backdrop: /mTupUmnuwwAyA0CNqpwaZn5mqjk.jpg
+                        release_date: '2022-01-21T00:00:00.000Z'
+                        rating: 5.1
+                        type: movie
+                      - id: 818397
+                        title: Memory
+                        year: 2022
+                        overview: 'Alex, an assassin-for-hire, finds that he''s become a target after he refuses to complete a job for a dangerous criminal organization. With the crime syndicate and FBI in hot pursuit, Alex has the skills to stay ahead, except for one thing: he is struggling with severe memory loss, affecting his every move. Alex must question his every action and whom he can ultimately trust.'
+                        poster: /4Q1n3TwieoULnuaztu9aFjqHDTI.jpg
+                        backdrop: /vjnLXptqdxnpNJer5fWgj2OIGhL.jpg
+                        release_date: '2022-04-28T00:00:00.000Z'
+                        rating: 7.3
+                        type: movie
+                    page: 1
+                    total_results: 1241
+                    total_pages: 63
+      operationId: get-v2-movie-now_playing
+      description: ''
+      security:
+        - authorization: []
+  '/users/{userId}':
+    parameters:
+      - schema:
+          type: integer
+        name: userId
+        in: path
+        required: true
+        description: Id of an existing user.
+    get:
+      summary: Get User Info by User ID
+      tags: []
+      responses:
+        '200':
+          description: User Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+              examples:
+                Get User Alice Smith:
+                  value:
+                    id: 142
+                    firstName: Alice
+                    lastName: Smith
+                    email: alice.smith@gmail.com
+                    dateOfBirth: '1997-10-31'
+                    emailVerified: true
+                    signUpDate: '2019-08-24'
+        '404':
+          description: User Not Found
+      operationId: get-users-userId
+      description: Retrieve the information of the user with the matching user ID.
+    patch:
+      summary: Update User Information
+      operationId: patch-users-userId
+      responses:
+        '200':
+          description: User Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+              examples:
+                Updated User Rebecca Baker:
+                  value:
+                    id: 13
+                    firstName: Rebecca
+                    lastName: Baker
+                    email: rebecca@gmail.com
+                    dateOfBirth: '1985-10-02'
+                    emailVerified: false
+                    createDate: '2019-08-24'
+        '404':
+          description: User Not Found
+        '409':
+          description: Email Already Taken
+      description: Update the information of an existing user.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                firstName:
+                  type: string
+                lastName:
+                  type: string
+                email:
+                  type: string
+                  description: 'If a new email is given, the user''s email verified property will be set to false.'
+                dateOfBirth:
+                  type: string
+            examples:
+              Update First Name:
+                value:
+                  firstName: Rebecca
+              Update Email:
+                value:
+                  email: rebecca@gmail.com
+              Update Last Name & Date of Birth:
+                value:
+                  lastName: Baker
+                  dateOfBirth: '1985-10-02'
+        description: Patch user properties to update.
+  /user:
+    post:
+      summary: Create New User
+      operationId: post-user
+      responses:
+        '200':
+          description: User Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+              examples:
+                New User Bob Fellow:
+                  value:
+                    id: 12
+                    firstName: Bob
+                    lastName: Fellow
+                    email: bob.fellow@gmail.com
+                    dateOfBirth: '1996-08-24'
+                    emailVerified: false
+                    createDate: '2020-11-18'
+        '400':
+          description: Missing Required Information
+        '409':
+          description: Email Already Taken
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                firstName:
+                  type: string
+                lastName:
+                  type: string
+                email:
+                  type: string
+                dateOfBirth:
+                  type: string
+                  format: date
+              required:
+                - firstName
+                - lastName
+                - email
+                - dateOfBirth
+            examples:
+              Create User Bob Fellow:
+                value:
+                  firstName: Bob
+                  lastName: Fellow
+                  email: bob.fellow@gmail.com
+                  dateOfBirth: '1996-08-24'
+        description: Post the necessary fields for the API to create a new user.
+      description: Create a new user.
+components:
+  schemas:
+    User:
+      title: User
+      type: object
+      description: ''
+      examples:
+        - id: 142
+          firstName: Alice
+          lastName: Smith
+          email: alice.smith@gmail.com
+          dateOfBirth: '1997-10-31'
+          emailVerified: true
+          signUpDate: '2019-08-24'
+      properties:
+        id:
+          type: integer
+          description: Unique identifier for the given user.
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+          format: email
+        dateOfBirth:
+          type: string
+          format: date
+          example: '1997-10-31'
+        emailVerified:
+          type: boolean
+          description: Set to true if the user's email has been verified.
+        createDate:
+          type: string
+          format: date
+          description: The date that the user was created.
+      required:
+        - id
+        - firstName
+        - lastName
+        - email
+        - emailVerified
+  securitySchemes:
+    authorization:
+      name: Authorization token
+      type: apiKey
+      in: header
+      description: |-
+        An authorization token is a token that you provide when making API calls. Include the token in a header parameter called Authorization.
+
+        Example: `Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI`
+security:
+  - authorization: []
