@@ -1,11 +1,13 @@
 FROM node:18
 
-RUN mkdir -p /opt/seasonedShows/seasoned_api
+RUN mkdir -p /opt/seasonedShows/src
 
 WORKDIR /opt/seasonedShows
 
-COPY seasoned_api/ seasoned_api
+COPY src/ src
+COPY configurations/ configurations
 COPY package.json .
+COPY yarn.lock .
 
 RUN apt update
 RUN apt install node-pre-gyp -y
