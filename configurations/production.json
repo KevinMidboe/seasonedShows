@@ -1,0 +1,31 @@
+{
+    "database": {
+        "host": "/Users/kevin/dev/seasonedShows/shows.db"
+    },
+    "webserver": {
+                "port": 31459,
+    "origins": ["https://kevinmidboe.com", "https://seasoned.show", "https://request.movie"]
+        },
+        "tmdb": {
+                "apiKey": "9fa154f5355c37a1b9b57ac06e7d6712"
+  },
+        "plex": {
+                "ip": "blex.schleppe"
+        },
+ "tautulli": {
+    "apiKey": "4e759f7acabf4f1a8893825e6acd522b",
+    "ip": "blex.schleppe",
+    "port": "8181"
+  },
+        "raven": {
+                "DSN": ""
+        },
+        "authentication": {
+    "secret": "secret"
+        },
+  "sms": {
+    "apikey": "qK48YChORZOX4FqAwgzdOrfYT2-bixwshtRe-BogNksBZyUrMHLTh0-XOjsxziPV",
+    "sender": "Seasoned",
+    "recipient": 41498549
+  }
+}
