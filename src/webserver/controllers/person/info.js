@@ -3,18 +3,6 @@ const TMDB = require("../../../tmdb/tmdb");
 
 const tmdb = new TMDB(configuration.get("tmdb", "apiKey"));
 
-function handleError(error, res) {
-  const { status, message } = error;
-
-  if (status && message) {
-    res.status(status).send({ success: false, message });
-  } else {
-    res.status(500).send({
-      message: "An unexpected error occured while requesting person info."
-    });
-  }
-}
-
 /**
  * Controller: Retrieve information for a person
  * @param {Request} req http request variable
@@ -26,7 +14,7 @@ async function personInfoController(req, res) {
   const personId = req.params.id;
   let { credits } = req.query;
 
-  credits = credits.toLowerCase() === "true";
+  credits = credits?.toLowerCase() === "true";
 
   const tmdbQueue = [tmdb.personInfo(personId)];
   if (credits) tmdbQueue.push(tmdb.personCredits(personId));
@@ -39,7 +27,12 @@ async function personInfoController(req, res) {
 
     return res.send(person);
   } catch (error) {
-    return handleError(error, res);
+    return res.status(error?.statusCode || 500).send({
+      success: false,
+      message:
+        error?.message ||
+        `An unexpected error occured while requesting info for person with id: ${personId}`
+    });
   }
 }
 

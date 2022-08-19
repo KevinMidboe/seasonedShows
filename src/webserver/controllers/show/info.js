@@ -5,18 +5,6 @@ const Plex = require("../../../plex/plex");
 const tmdb = new TMDB(configuration.get("tmdb", "apiKey"));
 const plex = new Plex(configuration.get("plex", "ip"));
 
-function handleError(error, res) {
-  const { status, message } = error;
-
-  if (status && message) {
-    res.status(status).send({ success: false, message });
-  } else {
-    res.status(500).send({
-      message: "An unexpected error occured while requesting show info."
-    });
-  }
-}
-
 /**
  * Controller: Retrieve information for a show
  * @param {Request} req http request variable
@@ -48,9 +36,14 @@ async function showInfoController(req, res) {
       } catch {}
     }
 
-    res.send(show);
+    return res.send(show);
   } catch (error) {
-    handleError(error, res);
+    return res.status(error?.statusCode || 500).send({
+      success: false,
+      message:
+        error?.message ||
+        `An unexpected error occured while requesting info for show with id: ${showId}`
+    });
   }
 }
 

@@ -26,7 +26,12 @@ function showSearchController(req, res) {
       res.send(shows);
     })
     .catch(error => {
-      res.status(500).send({ success: false, message: error.message });
+      res.status(error?.statusCode || 500).send({
+        success: false,
+        message:
+          error?.message ||
+          `An unexpected error occured while searching person with query: ${query}`
+      });
     });
 }
 

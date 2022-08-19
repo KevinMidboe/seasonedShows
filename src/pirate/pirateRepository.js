@@ -46,8 +46,10 @@ async function callPythonAddMagnet(url, callback) {
     });
 }
 
-async function SearchPiratebay(query) {
-  if (query && query.includes("+")) {
+async function SearchPiratebay(_query) {
+  let query = String(_query);
+
+  if (query?.includes("+")) {
     query = query.replace("+", "%20");
   }
 
@@ -60,7 +62,7 @@ async function SearchPiratebay(query) {
       .catch(() =>
         find(query, (err, results) => {
           if (err) {
-            console.log("THERE WAS A FUCKING ERROR!\n", err);
+            console.log("THERE WAS A FUCKING ERROR!\n", err); // eslint-disable-line no-console
             reject(Error("There was a error when searching for torrents"));
           }
 
@@ -74,8 +76,8 @@ async function SearchPiratebay(query) {
   );
 }
 
-async function AddMagnet(magnet, name, tmdbId) {
-  return await new Promise((resolve, reject) =>
+function AddMagnet(magnet, name, tmdbId) {
+  return new Promise((resolve, reject) =>
     callPythonAddMagnet(magnet, (err, results) => {
       if (err) {
         /* eslint-disable no-console */
@@ -86,11 +88,10 @@ async function AddMagnet(magnet, name, tmdbId) {
       console.log("result/error:", err, results);
 
       const database = establishedDatabase;
-      const insert_query =
-        "INSERT INTO requested_torrent(magnet,torrent_name,tmdb_id) \
-         VALUES (?,?,?)";
+      const insertQuery =
+        "INSERT INTO requested_torrent(magnet,torrent_name,tmdb_id) VALUES (?,?,?)";
 
-      const response = database.run(insert_query, [magnet, name, tmdbId]);
+      const response = database.run(insertQuery, [magnet, name, tmdbId]);
       console.log(`Response from requsted_torrent insert: ${response}`);
 
       resolve({ success: true });

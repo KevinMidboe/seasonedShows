@@ -46,7 +46,7 @@ class Field {
   }
 
   static base64Decode(string) {
-    return new Buffer(string, "base64").toString("utf-8");
+    return Buffer.from(string, "base64").toString("utf-8");
   }
 }
 

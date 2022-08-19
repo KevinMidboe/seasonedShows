@@ -1,9 +1,17 @@
 const assert = require("assert");
-const configuration = require("../config/configuration").getInstance();
-const TMDB = require("../tmdb/tmdb");
-
-const tmdb = new TMDB(configuration.get("tmdb", "apiKey"));
+// const configuration = require("../config/configuration").getInstance();
+// const TMDB = require("../tmdb/tmdb");
 const establishedDatabase = require("../database/database");
+
+// const tmdb = new TMDB(configuration.get("tmdb", "apiKey"));
+
+// function mapToTmdbByType(rows) {
+//   return rows.map(row => {
+//     if (row.type === "movie") return tmdb.movieInfo(row.id);
+//     if (row.type === "show") return tmdb.showInfo(row.id);
+//     return null;
+//   });
+// }
 
 class RequestRepository {
   constructor(database) {
@@ -28,14 +36,6 @@ class RequestRepository {
       // readWithoutUserData: "select id, title, year, type, status, date from requests where id is ? and type is ?",
       read: "select id, title, year, type, status, requested_by, ip, date, user_agent from requests where id is ? and type is ?"
     };
-  }
-
-  mapToTmdbByType(rows) {
-    return rows.map(row => {
-      if (row.type === "movie") return tmdb.movieInfo(row.id);
-      if (row.type === "show") return tmdb.showInfo(row.id);
-      return null;
-    });
   }
 
   /**
@@ -69,7 +69,6 @@ class RequestRepository {
         ) {
           throw new Error("This id is already requested", error.message);
         }
-        console.log("Error @ request.addTmdb:", error);
         throw new Error("Could not add request");
       });
   }
@@ -104,7 +103,7 @@ class RequestRepository {
    */
   fetchAll(_page = 1, filter = null) {
     // TODO implemented sort and filter
-    const page = parseInt(_page);
+    const page = parseInt(_page, 10);
     let fetchQuery = this.queries.fetchAll;
     let fetchTotalResults = this.queries.totalRequests;
     let fetchParams = [page];
@@ -143,7 +142,7 @@ class RequestRepository {
           totalRequests
         ];
 
-        return this.mapToTmdbByType(rows);
+        // return mapToTmdbByType(rows);
       })
       .then(([result, totalPages, totalRequests]) =>
         Promise.resolve({
@@ -154,7 +153,6 @@ class RequestRepository {
         })
       )
       .catch(error => {
-        console.log(error);
         throw error;
       });
   }

@@ -16,7 +16,12 @@ function fetchAllRequests(req, res) {
     .getRequestByIdAndType(id, type)
     .then(result => res.send(result))
     .catch(error => {
-      res.status(404).send({ success: false, message: error.message });
+      return res.status(error?.statusCode || 500).send({
+        success: false,
+        message:
+          error?.message ||
+          `An unexpected error occured while requesting request with id: ${id}`
+      });
     });
 }
 

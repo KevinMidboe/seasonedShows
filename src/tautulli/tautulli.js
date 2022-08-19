@@ -10,6 +10,10 @@ class TautulliUnexpectedError extends Error {
   }
 }
 
+function logTautulliError(error) {
+  throw new TautulliUnexpectedError(error);
+}
+
 class Tautulli {
   constructor(apiKey, ip, port) {
     this.apiKey = apiKey;
@@ -26,11 +30,6 @@ class Tautulli {
     return url;
   }
 
-  /* eslint-disable-next-line class-methods-use-this */
-  logTautulliError(error) {
-    throw new TautulliUnexpectedError(error);
-  }
-
   getPlaysByDayOfWeek(plexUserId, days, yAxis) {
     const url = this.buildUrlWithCmdAndUserid(
       "get_plays_by_dayofweek",
@@ -41,7 +40,7 @@ class Tautulli {
 
     return fetch(url.href)
       .then(resp => resp.json())
-      .catch(error => this.logTautulliError(error));
+      .catch(error => logTautulliError(error));
   }
 
   getPlaysByDays(plexUserId, days, yAxis) {
@@ -51,7 +50,7 @@ class Tautulli {
 
     return fetch(url.href)
       .then(resp => resp.json())
-      .catch(error => this.logTautulliError(error));
+      .catch(error => logTautulliError(error));
   }
 
   watchTimeStats(plexUserId) {
@@ -63,7 +62,7 @@ class Tautulli {
 
     return fetch(url.href)
       .then(resp => resp.json())
-      .catch(error => this.logTautulliError(error));
+      .catch(error => logTautulliError(error));
   }
 
   viewHistory(plexUserId) {
@@ -74,7 +73,7 @@ class Tautulli {
 
     return fetch(url.href)
       .then(resp => resp.json())
-      .catch(error => this.logTautulliError(error));
+      .catch(error => logTautulliError(error));
   }
 }
 

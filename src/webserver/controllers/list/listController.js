@@ -15,16 +15,13 @@ const tmdb = new TMDB(configuration.get("tmdb", "apiKey"));
 // + newly created (tv/latest).
 // + movie/latest
 //
-function handleError(error, res) {
-  const { status, message } = error;
-
-  if (status && message) {
-    res.status(status).send({ success: false, message });
-  } else {
-    res
-      .status(500)
-      .send({ message: "An unexpected error occured while requesting list" });
-  }
+function handleError(listname, error, res) {
+  return res.status(error?.statusCode || 500).send({
+    success: false,
+    message:
+      error?.message ||
+      `An unexpected error occured while requesting list with id: ${listname}`
+  });
 }
 
 function fetchTmdbList(req, res, listname, type) {
@@ -34,16 +31,17 @@ function fetchTmdbList(req, res, listname, type) {
     return tmdb
       .movieList(listname, page)
       .then(listResponse => res.send(listResponse))
-      .catch(error => handleError(error, res));
+      .catch(error => handleError(listname, error, res));
   }
   if (type === "show") {
     return tmdb
       .showList(listname, page)
       .then(listResponse => res.send(listResponse))
-      .catch(error => handleError(error, res));
+      .catch(error => handleError(listname, error, res));
   }
 
   return handleError(
+    listname,
     {
       status: 400,
       message: `'${type}' is not a valid list type.`

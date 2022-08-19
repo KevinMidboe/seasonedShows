@@ -2,17 +2,54 @@ const rp = require("request-promise");
 const convertPlexToSeasoned = require("./convertPlexToSeasoned");
 const convertPlexToStream = require("./convertPlexToStream");
 
+// eslint-disable-next-line
+function addAttributeIfTmdbInPlex(_tmdb, plexResult) {
+  const tmdb = { ..._tmdb };
+
+  if (plexResult?.results?.length > 0) {
+    plexResult.results.map(plexItem => {
+      tmdb.matchedInPlex =
+        tmdb.title === plexItem.title && tmdb.year === plexItem.year;
+      return tmdb;
+    });
+  } else {
+    tmdb.matchedInPlex = false;
+  }
+
+  return Promise.resolve(tmdb);
+}
+
+function mapResults(response) {
+  return Promise.resolve()
+    .then(() => {
+      if (!response?.MediaContainer?.Metadata) return [[], 0];
+
+      const mappedResults = response.MediaContainer.Metadata.filter(element => {
+        return element.type === "movie" || element.type === "show";
+      }).map(element => convertPlexToSeasoned(element));
+      return [mappedResults, mappedResults.length];
+    })
+    .catch(error => {
+      throw new Error(error);
+    });
+}
+
 class PlexRepository {
   constructor(plexIP) {
     this.plexIP = plexIP;
   }
 
-  inPlex(tmdbResult) {
-    return Promise.resolve()
-      .then(() => this.search(tmdbResult.title))
-      .then(plexResult => this.compareTmdbToPlex(tmdbResult, plexResult))
-      .catch(error => {
-        console.log(error);
+  inPlex(_tmdbResult) {
+    const tmdbResult = { ..._tmdbResult };
+    this.search(tmdbResult.title)
+      .then(plexResult => addAttributeIfTmdbInPlex(tmdbResult, plexResult))
+      .catch(() => {
+        /**
+         * If something crashes with search from this function it probably
+         * fine to set the `matchedInPlex` attribute to false and return
+         * original tmdb object
+         * */
+
         tmdbResult.matchedInPlex = false;
         return tmdbResult;
       });
@@ -32,48 +69,11 @@ class PlexRepository {
     };
 
     return rp(options)
-      .catch(error => {
-        console.log(error);
-        throw new Error("Unable to search plex.");
-      })
-      .then(result => this.mapResults(result))
+      .then(result => mapResults(result))
       .then(([mappedResults, resultCount]) => ({
         results: mappedResults,
         total_results: resultCount
       }));
-  }
-
-  compareTmdbToPlex(tmdb, plexResult) {
-    return Promise.resolve().then(() => {
-      if (plexResult.results.length === 0) {
-        tmdb.matchedInPlex = false;
-      } else {
-        // console.log('plex and tmdb:', plexResult, '\n',  tmdb)
-        plexResult.results.map(plexItem => {
-          if (tmdb.title === plexItem.title && tmdb.year === plexItem.year)
-            tmdb.matchedInPlex = true;
-          return tmdb;
-        });
-      }
-      return tmdb;
-    });
-  }
-
-  mapResults(response) {
-    return Promise.resolve()
-      .then(() => {
-        if (!response.MediaContainer.hasOwnProperty("Metadata")) return [[], 0];
-
-        const mappedResults = response.MediaContainer.Metadata.filter(
-          element => {
-            return element.type === "movie" || element.type === "show";
-          }
-        ).map(element => convertPlexToSeasoned(element));
-        return [mappedResults, mappedResults.length];
-      })
-      .catch(error => {
-        throw new Error(error);
-      });
   }
 
   nowPlaying() {

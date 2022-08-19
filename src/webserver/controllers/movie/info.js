@@ -5,20 +5,6 @@ const Plex = require("../../../plex/plex");
 const tmdb = new TMDB(configuration.get("tmdb", "apiKey"));
 const plex = new Plex(configuration.get("plex", "ip"));
 
-function handleError(error, res) {
-  const { status, message } = error;
-
-  if (status && message) {
-    res.status(status).send({ success: false, message });
-  } else {
-    res.status(500).send({
-      success: false,
-      message: "An unexpected error occured while requesting movie info",
-      errorResponse: error?.message
-    });
-  }
-}
-
 /**
  * Controller: Retrieve information for a movie
  * @param {Request} req http request variable
@@ -32,9 +18,9 @@ async function movieInfoController(req, res) {
   let releaseDates = req.query?.release_dates;
   let checkExistance = req.query?.check_existance;
 
-  credits = credits.toLowerCase() === "true";
-  releaseDates = releaseDates.toLowerCase() === "true";
-  checkExistance = checkExistance.toLowerCase() === "true";
+  credits = credits?.toLowerCase() === "true";
+  releaseDates = releaseDates?.toLowerCase() === "true";
+  checkExistance = checkExistance?.toLowerCase() === "true";
 
   const tmdbQueue = [tmdb.movieInfo(movieId)];
   if (credits) tmdbQueue.push(tmdb.movieCredits(movieId));
@@ -54,9 +40,14 @@ async function movieInfoController(req, res) {
       } catch {}
     }
 
-    res.send(movie);
+    return res.send(movie);
   } catch (error) {
-    handleError(error, res);
+    return res.status(error?.statusCode || 500).send({
+      success: false,
+      message:
+        error?.message ||
+        `An unexpected error occured while requesting info for with id: ${movieId}`
+    });
   }
 }
 

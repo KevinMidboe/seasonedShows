@@ -14,8 +14,8 @@ const sendSMS = message => {
   const apiKey = configuration.get("sms", "apikey");
 
   if (!apiKey) {
-    console.warning("api key for sms not set, cannot send sms.");
-    return null;
+    console.warning("api key for sms not set, cannot send sms."); // eslint-disable-line no-console
+    return Promise.resolve(null);
   }
 
   const sender = configuration.get("sms", "sender");
@@ -32,10 +32,9 @@ const sendSMS = message => {
           recipients: [{ msisdn: `47${recipient}` }]
         }
       },
-      function (err, r, body) {
-        const smsError = new SMSUnexpectedError(err || body);
-        console.error(smsError.message);
-        resolve();
+      (err, r, body) => {
+        if (err) reject(new SMSUnexpectedError(err || body));
+        resolve(body);
       }
     );
   });

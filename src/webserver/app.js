@@ -56,11 +56,11 @@ router.get("/", (req, res) => {
   res.send("welcome to seasoned api");
 });
 
-app.use(Raven.errorHandler());
-app.use((err, req, res) => {
-  res.statusCode = 500;
-  res.end(`${res.sentry}\n`);
-});
+// app.use(Raven.errorHandler());
+// app.use((err, req, res) => {
+//   res.statusCode = 500;
+//   res.end(`${res.sentry}\n`);
+// });
 
 /**
  * User
