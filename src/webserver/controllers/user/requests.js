@@ -1,4 +1,4 @@
-const RequestRepository = require("../../../plex/requestRepository.js");
+const RequestRepository = require("../../../plex/requestRepository");
 
 const requestRepository = new RequestRepository();
 

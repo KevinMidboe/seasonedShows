@@ -9,7 +9,6 @@ function handleError(error, res) {
   if (status && message) {
     res.status(status).send({ success: false, message });
   } else {
-    console.log("caught personinfo controller error", error);
     res.status(500).send({
       message: "An unexpected error occured while requesting person info."
     });
@@ -26,11 +25,8 @@ function handleError(error, res) {
 async function personInfoController(req, res) {
   const personId = req.params.id;
   let { credits } = req.query;
-  arguments;
 
-  credits && credits.toLowerCase() === "true"
-    ? (credits = true)
-    : (credits = false);
+  credits = credits.toLowerCase() === "true";
 
   const tmdbQueue = [tmdb.personInfo(personId)];
   if (credits) tmdbQueue.push(tmdb.personCredits(personId));
@@ -43,7 +39,7 @@ async function personInfoController(req, res) {
 
     return res.send(person);
   } catch (error) {
-    handleError(error, res);
+    return handleError(error, res);
   }
 }
 

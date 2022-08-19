@@ -1,4 +1,3 @@
-const assert = require("assert");
 const http = require("http");
 const { URL } = require("url");
 const PythonShell = require("python-shell");
@@ -8,12 +7,12 @@ const establishedDatabase = require("../database/database");
 const cache = require("../cache/redis");
 
 function getMagnetFromURL(url) {
-  return new Promise((resolve, reject) => {
+  return new Promise(resolve => {
     const options = new URL(url);
     if (options.protocol.includes("magnet")) resolve(url);
 
     http.get(options, res => {
-      if (res.statusCode == 301 || res.statusCode == 302) {
+      if (res.statusCode === 301 || res.statusCode === 302) {
         resolve(res.headers.location);
       }
     });
@@ -43,7 +42,6 @@ async function callPythonAddMagnet(url, callback) {
       PythonShell.run("deluge_cli.py", options, callback);
     })
     .catch(err => {
-      console.log(err);
       throw new Error(err);
     });
 }
@@ -76,7 +74,7 @@ async function SearchPiratebay(query) {
   );
 }
 
-async function AddMagnet(magnet, name, tmdb_id) {
+async function AddMagnet(magnet, name, tmdbId) {
   return await new Promise((resolve, reject) =>
     callPythonAddMagnet(magnet, (err, results) => {
       if (err) {
@@ -87,12 +85,12 @@ async function AddMagnet(magnet, name, tmdb_id) {
       /* eslint-disable no-console */
       console.log("result/error:", err, results);
 
-      database = establishedDatabase;
-      insert_query =
+      const database = establishedDatabase;
+      const insert_query =
         "INSERT INTO requested_torrent(magnet,torrent_name,tmdb_id) \
          VALUES (?,?,?)";
 
-      const response = database.run(insert_query, [magnet, name, tmdb_id]);
+      const response = database.run(insert_query, [magnet, name, tmdbId]);
       console.log(`Response from requsted_torrent insert: ${response}`);
 
       resolve({ success: true });

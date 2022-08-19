@@ -8,14 +8,11 @@
 const PirateRepository = require("../../../pirate/pirateRepository");
 
 function addMagnet(req, res) {
-  const { magnet } = req.body;
-  const { name } = req.body;
-  const { tmdb_id } = req.body;
+  const { magnet, name } = req.body;
+  const tmdbId = req.body?.tmdb_id;
 
-  PirateRepository.AddMagnet(magnet, name, tmdb_id)
-    .then(result => {
-      res.send(result);
-    })
+  PirateRepository.AddMagnet(magnet, name, tmdbId)
+    .then(result => res.send(result))
     .catch(error => {
       res.status(500).send({ success: false, message: error.message });
     });

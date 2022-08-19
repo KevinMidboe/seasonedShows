@@ -1,3 +1,5 @@
+/* eslint-disable camelcase */
+
 class Show {
   constructor(
     id,

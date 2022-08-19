@@ -1,5 +1,15 @@
 const establishedDatabase = require("../database/database");
 
+class SearchHistoryCreateDatabaseError extends Error {
+  constructor(message = "an unexpected error occured", errorResponse = null) {
+    super(message);
+
+    this.source = "database";
+    this.statusCode = 500;
+    this.errorResponse = errorResponse;
+  }
+}
+
 class SearchHistory {
   constructor(database) {
     this.database = database || establishedDatabase;
@@ -16,18 +26,12 @@ class SearchHistory {
    * @returns {Promise}
    */
   read(user) {
-    return new Promise((resolve, reject) =>
-      this.database
-        .all(this.queries.read, user)
-        .then((result, error) => {
-          if (error) throw new Error(error);
-          resolve(result.map(row => row.search_query));
-        })
-        .catch(error => {
-          console.log("Error when fetching history from database:", error);
-          reject("Unable to get history.");
-        })
-    );
+    return this.database
+      .all(this.queries.read, user)
+      .then(result => result.map(row => row.search_query))
+      .catch(error => {
+        throw new Error("Unable to get history.", error);
+      });
   }
 
   /**
@@ -41,15 +45,12 @@ class SearchHistory {
       .run(this.queries.create, [searchQuery, username])
       .catch(error => {
         if (error.message.includes("FOREIGN")) {
-          throw new Error("Could not create search history.");
+          throw new SearchHistoryCreateDatabaseError(
+            "Could not create search history."
+          );
         }
 
-        throw {
-          success: false,
-          status: 500,
-          message: "An unexpected error occured",
-          source: "database"
-        };
+        throw new SearchHistoryCreateDatabaseError();
       });
   }
 }

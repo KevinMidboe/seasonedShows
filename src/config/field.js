@@ -1,5 +1,5 @@
-const Filters = require("./filters.js");
-const EnvironmentVariables = require("./environmentVariables.js");
+const Filters = require("./filters");
+const EnvironmentVariables = require("./environmentVariables");
 
 class Field {
   constructor(rawValue, environmentVariables) {

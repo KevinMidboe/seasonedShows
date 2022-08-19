@@ -15,8 +15,6 @@ const showCreditsController = (req, res) => {
       if (status && message) {
         res.status(status).send({ success: false, message });
       } else {
-        // TODO log unhandled errors
-        console.log("caugth show credits controller error", error);
         res.status(500).send({
           message: "An unexpected error occured while requesting show credits"
         });

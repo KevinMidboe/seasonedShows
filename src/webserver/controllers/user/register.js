@@ -1,12 +1,10 @@
 const User = require("../../../user/user");
 const Token = require("../../../user/token");
 const UserSecurity = require("../../../user/userSecurity");
-const UserRepository = require("../../../user/userRepository");
 const configuration = require("../../../config/configuration").getInstance();
 
 const secret = configuration.get("authentication", "secret");
 const userSecurity = new UserSecurity();
-const userRepository = new UserRepository();
 
 const isProduction = process.env.NODE_ENV === "production";
 const cookieOptions = {

@@ -1,6 +1,15 @@
 const request = require("request");
 const configuration = require("../config/configuration").getInstance();
 
+class SMSUnexpectedError extends Error {
+  constructor(errorMessage) {
+    const message = "Unexpected error from sms provider.";
+    super(message);
+
+    this.errorMessage = errorMessage;
+  }
+}
+
 const sendSMS = message => {
   const apiKey = configuration.get("sms", "apikey");
 
@@ -24,8 +33,8 @@ const sendSMS = message => {
         }
       },
       function (err, r, body) {
-        console.log(err || body);
-        console.log("sms provider response:", body);
+        const smsError = new SMSUnexpectedError(err || body);
+        console.error(smsError.message);
         resolve();
       }
     );

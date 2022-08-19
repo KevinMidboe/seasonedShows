@@ -5,13 +5,6 @@ const SearchHistory = require("../../../searchHistory/searchHistory");
 const tmdb = new TMDB(configuration.get("tmdb", "apiKey"));
 const searchHistory = new SearchHistory();
 
-function checkAndCreateJsonResponse(result) {
-  if (typeof result.createJsonResponse === "function") {
-    return result.createJsonResponse();
-  }
-  return result;
-}
-
 /**
  * Controller: Search for multi (movies, shows and people by query and pagey
  * @param {Request} req http request variable
@@ -21,13 +14,14 @@ function checkAndCreateJsonResponse(result) {
 function multiSearchController(req, res) {
   const { query, page, adult } = req.query;
   const username = req.loggedInUser ? req.loggedInUser.username : null;
+  const includeAdult = adult === "true";
 
   if (username) {
     searchHistory.create(username, query);
   }
 
   return tmdb
-    .multiSearch(query, page, adult)
+    .multiSearch(query, page, includeAdult)
     .then(multiSearchResults => res.send(multiSearchResults))
     .catch(error => {
       const { status, message } = error;
@@ -35,8 +29,6 @@ function multiSearchController(req, res) {
       if (status && message) {
         res.status(status).send({ success: false, message });
       } else {
-        // TODO log unhandled errors
-        console.log("caugth multi search controller error", error);
         res.status(500).send({
           message: `An unexpected error occured while searching with query: ${query}`
         });

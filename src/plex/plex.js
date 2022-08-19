@@ -3,8 +3,6 @@ const convertPlexToMovie = require("./convertPlexToMovie");
 const convertPlexToShow = require("./convertPlexToShow");
 const convertPlexToEpisode = require("./convertPlexToEpisode");
 
-const { Movie, Show, Person } = require("../tmdb/types");
-
 const redisCache = require("../cache/redis");
 
 const sanitize = string => string.toLowerCase().replace(/[^\w]/gi, "");
@@ -19,15 +17,14 @@ const matchingTitleAndYear = (plex, tmdb) => {
   let matchingTitle;
   let matchingYear;
 
-  if (plex.title != null && tmdb.title != null) {
+  if (plex?.title && tmdb?.title) {
     const plexTitle = sanitize(plex.title);
     const tmdbTitle = sanitize(tmdb.title);
-    matchingTitle = plexTitle == tmdbTitle;
+    matchingTitle = plexTitle === tmdbTitle;
     matchingTitle = matchingTitle || plexTitle.startsWith(tmdbTitle);
   } else matchingTitle = false;
 
-  if (plex.year != null && tmdb.year != null)
-    matchingYear = plex.year == tmdb.year;
+  if (plex?.year && tmdb?.year) matchingYear = plex.year === tmdb.year;
   else matchingYear = false;
 
   return matchingTitle && matchingYear;
@@ -37,9 +34,9 @@ const successfullResponse = response => {
   if (response && response.MediaContainer) return response;
 
   if (
-    response == null ||
-    response.status == null ||
-    response.statusText == null
+    response === null ||
+    response.status === null ||
+    response.statusText === null
   ) {
     throw Error("Unable to decode response");
   }
@@ -83,7 +80,7 @@ class Plex {
         )
         .then(machineInfo => resolve(machineInfo.machineIdentifier))
         .catch(error => {
-          if (error != undefined && error.type === "request-timeout") {
+          if (error !== undefined && error.type === "request-timeout") {
             reject({
               message: "Plex did not respond",
               status: 408,
@@ -99,7 +96,7 @@ class Plex {
   matchTmdbAndPlexMedia(plex, tmdb) {
     let match;
 
-    if (plex == null || tmdb == null) return false;
+    if (plex === null || tmdb === null) return false;
 
     if (plex instanceof Array) {
       const possibleMatches = plex.map(plexItem =>
@@ -129,7 +126,7 @@ class Plex {
         this.matchTmdbAndPlexMedia(plex, query)
       );
       const matchesIndex = matchesInPlex.findIndex(el => el === true);
-      return matchesInPlex != -1 ? plexResults[matchesIndex] : null;
+      return matchesInPlex !== -1 ? plexResults[matchesIndex] : null;
     });
   }
 
@@ -145,10 +142,10 @@ class Plex {
       matchingObjectInPlexPromise
     ]).then(([machineIdentifier, matchingObjectInPlex]) => {
       if (
-        matchingObjectInPlex == false ||
-        matchingObjectInPlex == null ||
-        matchingObjectInPlex.key == null ||
-        machineIdentifier == null
+        matchingObjectInPlex === false ||
+        matchingObjectInPlex === null ||
+        matchingObjectInPlex.key === null ||
+        machineIdentifier === null
       )
         return false;
 
@@ -177,7 +174,7 @@ class Plex {
         .then(this.mapResults)
         .then(resolve)
         .catch(error => {
-          if (error != undefined && error.type === "request-timeout") {
+          if (error !== undefined && error.type === "request-timeout") {
             reject({
               message: "Plex did not respond",
               status: 408,
@@ -202,7 +199,7 @@ class Plex {
       cacheKey,
       (error,
       response => {
-        if (response == 1) return true;
+        if (response === 1) return true;
 
         // TODO improve cache key matching by lowercasing it on the backend.
         // what do we actually need to check for if the key was deleted or not
@@ -213,11 +210,7 @@ class Plex {
   }
 
   mapResults(response) {
-    if (
-      response == null ||
-      response.MediaContainer == null ||
-      response.MediaContainer.Hub == null
-    ) {
+    if (response?.MediaContainer?.Hub === null) {
       return [];
     }
 
@@ -232,8 +225,10 @@ class Plex {
         if (category.type === "episode") {
           return category.Metadata.map(convertPlexToEpisode);
         }
+
+        return null;
       })
-      .filter(result => result !== undefined);
+      .filter(result => result !== null);
   }
 }
 

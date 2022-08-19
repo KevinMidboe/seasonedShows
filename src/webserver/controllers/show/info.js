@@ -11,7 +11,6 @@ function handleError(error, res) {
   if (status && message) {
     res.status(status).send({ success: false, message });
   } else {
-    console.log("caught showinfo controller error", error);
     res.status(500).send({
       message: "An unexpected error occured while requesting show info."
     });
@@ -27,14 +26,11 @@ function handleError(error, res) {
 
 async function showInfoController(req, res) {
   const showId = req.params.id;
-  let { credits, check_existance } = req.query;
+  let credits = req.query?.credits;
+  let checkExistance = req.query?.check_existance;
 
-  credits && credits.toLowerCase() === "true"
-    ? (credits = true)
-    : (credits = false);
-  check_existance && check_existance.toLowerCase() === "true"
-    ? (check_existance = true)
-    : (check_existance = false);
+  credits = credits?.toLowerCase() === "true";
+  checkExistance = checkExistance?.toLowerCase() === "true";
 
   const tmdbQueue = [tmdb.showInfo(showId)];
   if (credits) tmdbQueue.push(tmdb.showCredits(showId));
@@ -45,7 +41,12 @@ async function showInfoController(req, res) {
     const show = Show.createJsonResponse();
     if (credits) show.credits = Credits.createJsonResponse();
 
-    if (check_existance) show.exists_in_plex = await plex.existsInPlex(show);
+    if (checkExistance) {
+      /* eslint no-empty: ["error", { "allowEmptyCatch": true }] */
+      try {
+        show.exists_in_plex = await plex.existsInPlex(show);
+      } catch {}
+    }
 
     res.send(show);
   } catch (error) {

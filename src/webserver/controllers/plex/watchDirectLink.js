@@ -16,7 +16,7 @@ function watchDirectLink(req, res) {
   plex
     .getDirectLinkByTitleAndYear(title, year)
     .then(plexDirectLink => {
-      if (plexDirectLink == false)
+      if (plexDirectLink === false)
         res.status(404).send({ success: true, link: null });
       else res.status(200).send({ success: true, link: plexDirectLink });
     })

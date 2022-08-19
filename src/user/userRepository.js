@@ -51,8 +51,7 @@ class UserRepository {
         assert(row, "The user does not exist.");
         return row.password;
       })
-      .catch(err => {
-        console.log(error);
+      .catch(() => {
         throw new Error("Unable to find your user.");
       });
   }
@@ -78,17 +77,14 @@ class UserRepository {
       this.database
         .run(this.queries.link, [plexUserID, username])
         .then(row => resolve(row))
-        .catch(error => {
-          // TODO log this unknown db error
-          console.error("db error", error);
-
+        .catch(error =>
           reject({
             status: 500,
             message:
               "An unexpected error occured while linking plex and seasoned accounts",
             source: "seasoned database"
-          });
-        });
+          })
+        );
     });
   }
 
@@ -102,17 +98,14 @@ class UserRepository {
       this.database
         .run(this.queries.unlink, username)
         .then(row => resolve(row))
-        .catch(error => {
-          // TODO log this unknown db error
-          console.log("db error", error);
-
+        .catch(error =>
           reject({
             status: 500,
             message:
               "An unexpected error occured while unlinking plex and seasoned accounts",
             source: "seasoned database"
-          });
-        });
+          })
+        );
     });
   }
 
@@ -162,18 +155,14 @@ class UserRepository {
 
           resolve(row);
         })
-        .catch(error => {
-          console.error(
-            "Unexpected error occured while fetching settings for your account. Error:",
-            error
-          );
+        .catch(() =>
           reject({
             status: 500,
             message:
               "An unexpected error occured while fetching settings for your account",
             source: "seasoned database"
-          });
-        });
+          })
+        );
     });
   }
 
@@ -184,12 +173,12 @@ class UserRepository {
    * @param {String} emoji
    * @returns {Promsie}
    */
-  updateSettings(username, dark_mode = undefined, emoji = undefined) {
+  updateSettings(username, darkMode = null, emoji = null) {
     const settings = this.getSettings(username);
-    dark_mode = dark_mode !== undefined ? dark_mode : settings.dark_mode;
-    emoji = emoji !== undefined ? emoji : settings.emoji;
+    darkMode = darkMode ? darkMode : settings.darkMode;
+    emoji = emoji ? emoji : settings.emoji;
 
-    return this.dbUpdateSettings(username, dark_mode, emoji).catch(error => {
+    return this.dbUpdateSettings(username, darkMode, emoji).catch(error => {
       if (error.status && error.message) {
         return error;
       }
@@ -225,10 +214,10 @@ class UserRepository {
    * @param {String} username
    * @returns {Promsie}
    */
-  dbUpdateSettings(username, dark_mode, emoji) {
-    return new Promise((resolve, reject) =>
+  dbUpdateSettings(username, darkMode, emoji) {
+    return new Promise(resolve =>
       this.database
-        .run(this.queries.updateSettings, [username, dark_mode, emoji])
+        .run(this.queries.updateSettings, [username, darkMode, emoji])
         .then(row => resolve(row))
     );
   }
@@ -240,7 +229,6 @@ const rejectUnexpectedDatabaseError = (
   error,
   reject = null
 ) => {
-  console.error(error);
   const body = {
     status,
     message,
@@ -248,7 +236,7 @@ const rejectUnexpectedDatabaseError = (
   };
 
   if (reject == null) {
-    return new Promise((resolve, reject) => reject(body));
+    return new Promise((_, reject) => reject(body));
   }
   reject(body);
 };

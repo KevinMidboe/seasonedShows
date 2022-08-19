@@ -61,4 +61,4 @@ interface Genre {
   name: string;
 }
 
-export { Movie, Show, Person, Genre }
+export { Movie, Show, Person, Genre };

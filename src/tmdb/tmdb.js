@@ -3,25 +3,41 @@ const redisCache = require("../cache/redis");
 
 const { Movie, Show, Person, Credits, ReleaseDates } = require("./types");
 
-const tmdbErrorResponse = (error, typeString = undefined) => {
+class TMDBNotFoundError extends Error {
+  constructor(message) {
+    super(message);
+
+    this.statusCode = 404;
+  }
+}
+
+class TMDBUnauthorizedError extends Error {
+  constructor(message = "TMDB returned access denied, requires api token.") {
+    super(message);
+
+    this.statusCode = 401;
+  }
+}
+
+class TMDBUnexpectedError extends Error {
+  constructor(type) {
+    const message = `An unexpected error occured while fetching ${type} from tmdb`;
+    super(message);
+
+    this.statusCode = 500;
+  }
+}
+
+const tmdbErrorResponse = (error, type = null) => {
   if (error.status === 404) {
     const message = error.response.body.status_message;
 
-    throw {
-      status: 404,
-      message: `${message.slice(0, -1)} in tmdb.`
-    };
+    throw new TMDBNotFoundError(`${message.slice(0, -1)} in tmdb.`);
   } else if (error.status === 401) {
-    throw {
-      status: 401,
-      message: error.response.body.status_message
-    };
+    throw new TMDBUnauthorizedError(error?.response?.body?.status_message);
   }
 
-  throw {
-    status: 500,
-    message: `An unexpected error occured while fetching ${typeString} from tmdb`
-  };
+  throw new TMDBUnexpectedError(type);
 };
 
 class TMDB {
@@ -166,9 +182,9 @@ class TMDB {
       .then(credits => Credits.convertFromTmdbResponse(credits));
   }
 
-  multiSearch(search_query, page = 1, include_adult = true) {
-    const query = { query: search_query, page, include_adult };
-    const cacheKey = `tmdb/${this.cacheTags.multiSearch}:${page}:${search_query}:${include_adult}`;
+  multiSearch(searchQuery, page = 1, includeAdult = true) {
+    const query = { query: searchQuery, page, include_adult: includeAdult };
+    const cacheKey = `tmdb/${this.cacheTags.multiSearch}:${page}:${searchQuery}:${includeAdult}`;
 
     return this.getFromCacheOrFetchFromTmdb(cacheKey, "searchMulti", query)
       .then(response => this.cache.set(cacheKey, response, this.defaultTTL))
@@ -181,9 +197,13 @@ class TMDB {
    * @param {Number} page representing pagination of results
    * @returns {Promise} dict with query results, current page and total_pages
    */
-  movieSearch(search_query, page = 1, include_adult = true) {
-    const tmdbquery = { query: search_query, page, include_adult };
-    const cacheKey = `tmdb/${this.cacheTags.movieSearch}:${page}:${search_query}:${include_adult}`;
+  movieSearch(searchQuery, page = 1, includeAdult = true) {
+    const tmdbquery = {
+      query: searchQuery,
+      page,
+      include_adult: includeAdult
+    };
+    const cacheKey = `tmdb/${this.cacheTags.movieSearch}:${page}:${searchQuery}:${includeAdult}`;
 
     return this.getFromCacheOrFetchFromTmdb(cacheKey, "searchMovie", tmdbquery)
       .then(response => this.cache.set(cacheKey, response, this.defaultTTL))
@@ -196,9 +216,13 @@ class TMDB {
    * @param {Number} page representing pagination of results
    * @returns {Promise} dict with query results, current page and total_pages
    */
-  showSearch(search_query, page = 1, include_adult = true) {
-    const tmdbquery = { query: search_query, page, include_adult };
-    const cacheKey = `tmdb/${this.cacheTags.showSearch}:${page}:${search_query}:${include_adult}`;
+  showSearch(searchQuery, page = 1, includeAdult = true) {
+    const tmdbquery = {
+      query: searchQuery,
+      page,
+      include_adult: includeAdult
+    };
+    const cacheKey = `tmdb/${this.cacheTags.showSearch}:${page}:${searchQuery}:${includeAdult}`;
 
     return this.getFromCacheOrFetchFromTmdb(cacheKey, "searchTv", tmdbquery)
       .then(response => this.cache.set(cacheKey, response, this.defaultTTL))
@@ -211,27 +235,31 @@ class TMDB {
    * @param {Number} page representing pagination of results
    * @returns {Promise} dict with query results, current page and total_pages
    */
-  personSearch(search_query, page = 1, include_adult = true) {
-    const tmdbquery = { query: search_query, page, include_adult };
-    const cacheKey = `tmdb/${this.cacheTags.personSearch}:${page}:${search_query}:${include_adult}`;
+  personSearch(searchQuery, page = 1, includeAdult = true) {
+    const tmdbquery = {
+      query: searchQuery,
+      page,
+      include_adult: includeAdult
+    };
+    const cacheKey = `tmdb/${this.cacheTags.personSearch}:${page}:${searchQuery}:${includeAdult}`;
 
     return this.getFromCacheOrFetchFromTmdb(cacheKey, "searchPerson", tmdbquery)
       .then(response => this.cache.set(cacheKey, response, this.defaultTTL))
       .then(response => this.mapResults(response, "person"));
   }
 
-  movieList(listname, page = 1) {
+  movieList(listName, page = 1) {
     const query = { page };
-    const cacheKey = `tmdb/${this.cacheTags[listname]}:${page}`;
+    const cacheKey = `tmdb/${this.cacheTags[listName]}:${page}`;
 
-    return this.getFromCacheOrFetchFromTmdb(cacheKey, listname, query)
+    return this.getFromCacheOrFetchFromTmdb(cacheKey, listName, query)
       .then(response => this.cache.set(cacheKey, response, this.defaultTTL))
       .then(response => this.mapResults(response, "movie"));
   }
 
-  showList(listname, page = 1) {
+  showList(listName, page = 1) {
     const query = { page };
-    const cacheKey = `tmdb/${this.cacheTags[listname]}:${page}`;
+    const cacheKey = `tmdb/${this.cacheTags[listName]}:${page}`;
 
     return this.getFromCacheOrFetchFromTmdb(cacheKey, listName, query)
       .then(response => this.cache.set(cacheKey, response, this.defaultTTL))
@@ -244,8 +272,9 @@ class TMDB {
    * @param {String} The type declared in listSearch.
    * @returns {Promise} dict with tmdb results, mapped as movie/show objects.
    */
+  // eslint-disable-next-line class-methods-use-this
   mapResults(response, type = undefined) {
-    const results = response.results.map(result => {
+    const results = response?.results?.map(result => {
       if (type === "movie" || result.media_type === "movie") {
         const movie = Movie.convertFromTmdbResponse(result);
         return movie.createJsonResponse();
@@ -258,6 +287,8 @@ class TMDB {
         const person = Person.convertFromTmdbResponse(result);
         return person.createJsonResponse();
       }
+
+      return {};
     });
 
     return {
@@ -280,7 +311,7 @@ class TMDB {
         if (error) {
           return reject(error);
         }
-        resolve(reponse);
+        return resolve(reponse);
       };
 
       if (!argument) {

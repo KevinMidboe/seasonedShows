@@ -66,7 +66,7 @@ class RequestRepository {
    * @param {identifier, type} the id of the media object and type of media must be defined
    * @returns {Promise} If nothing has gone wrong.
    */
-  sendRequest(identifier, type, ip, user_agent, user) {
+  sendRequest(identifier, type, ip, userAgent, user) {
     return Promise.resolve()
       .then(() => tmdb.lookup(identifier, type))
       .then(movie => {
@@ -80,7 +80,7 @@ class RequestRepository {
           movie.background_path,
           username,
           ip,
-          user_agent,
+          userAgent,
           movie.type
         ]);
       });

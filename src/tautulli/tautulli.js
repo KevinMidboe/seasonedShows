@@ -1,5 +1,15 @@
 const fetch = require("node-fetch");
 
+class TautulliUnexpectedError extends Error {
+  constructor(errorMessage) {
+    const message = "Unexpected error fetching from tautulli.";
+    super(message);
+
+    this.statusCode = 500;
+    this.errorMessage = errorMessage;
+  }
+}
+
 class Tautulli {
   constructor(apiKey, ip, port) {
     this.apiKey = apiKey;
@@ -7,38 +17,37 @@ class Tautulli {
     this.port = port;
   }
 
-  buildUrlWithCmdAndUserid(cmd, user_id) {
+  buildUrlWithCmdAndUserid(cmd, userId) {
     const url = new URL("api/v2", `http://${this.ip}:${this.port}`);
     url.searchParams.append("apikey", this.apiKey);
     url.searchParams.append("cmd", cmd);
-    url.searchParams.append("user_id", user_id);
+    url.searchParams.append("user_id", userId);
 
     return url;
   }
 
+  /* eslint-disable-next-line class-methods-use-this */
   logTautulliError(error) {
-    console.error("error fetching from tautulli");
-
-    throw error;
+    throw new TautulliUnexpectedError(error);
   }
 
-  getPlaysByDayOfWeek(plexUserId, days, y_axis) {
+  getPlaysByDayOfWeek(plexUserId, days, yAxis) {
     const url = this.buildUrlWithCmdAndUserid(
       "get_plays_by_dayofweek",
       plexUserId
     );
     url.searchParams.append("time_range", days);
-    url.searchParams.append("y_axis", y_axis);
+    url.searchParams.append("y_axis", yAxis);
 
     return fetch(url.href)
       .then(resp => resp.json())
       .catch(error => this.logTautulliError(error));
   }
 
-  getPlaysByDays(plexUserId, days, y_axis) {
+  getPlaysByDays(plexUserId, days, yAxis) {
     const url = this.buildUrlWithCmdAndUserid("get_plays_by_date", plexUserId);
     url.searchParams.append("time_range", days);
-    url.searchParams.append("y_axis", y_axis);
+    url.searchParams.append("y_axis", yAxis);
 
     return fetch(url.href)
       .then(resp => resp.json())
@@ -62,8 +71,6 @@ class Tautulli {
 
     url.searchParams.append("start", 0);
     url.searchParams.append("length", 50);
-
-    console.log("fetching url", url.href);
 
     return fetch(url.href)
       .then(resp => resp.json())

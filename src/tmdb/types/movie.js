@@ -1,3 +1,5 @@
+/* eslint-disable camelcase */
+
 class Movie {
   constructor(
     id,

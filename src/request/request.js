@@ -4,7 +4,6 @@ const TMDB = require("../tmdb/tmdb");
 
 const tmdb = new TMDB(configuration.get("tmdb", "apiKey"));
 const establishedDatabase = require("../database/database");
-const utils = require("./utils");
 
 class RequestRepository {
   constructor(database) {
@@ -19,76 +18,23 @@ class RequestRepository {
         'select count(*) as totalRequests from requests where status != "downloaded"',
       totalRequestsFilteredStatus:
         "select count(*) as totalRequests from requests where status = ?",
-      fetchAllSort: `select id, type from request order by ? ?`,
-      fetchAllFilter: `select id, type from request where ? is "?"`,
-      fetchAllQuery: `select id, type from request where title like "%?%" or year like "%?%"`,
-      fetchAllFilterAndSort: `select id, type from request where ? is "?" order by ? ?`,
-      downloaded:
-        "(select status from requests where id is request.id and type is request.type limit 1)",
+      // fetchAllSort: `select id, type from request order by ? ?`,
+      // fetchAllFilter: `select id, type from request where ? is "?"`,
+      // fetchAllQuery: `select id, type from request where title like "%?%" or year like "%?%"`,
+      // fetchAllFilterAndSort: `select id, type from request where ? is "?" order by ? ?`,
+      // downloaded: "(select status from requests where id is request.id and type is request.type limit 1)",
       // deluge: '(select status from deluge_torrent where id is request.id and type is request.type limit 1)',
       // fetchAllFilterStatus: 'select * from request where '
-      readWithoutUserData:
-        "select id, title, year, type, status, date from requests where id is ? and type is ?",
+      // readWithoutUserData: "select id, title, year, type, status, date from requests where id is ? and type is ?",
       read: "select id, title, year, type, status, requested_by, ip, date, user_agent from requests where id is ? and type is ?"
     };
-  }
-
-  sortAndFilterToDbQuery(by, direction, filter, query) {
-    let dbQuery;
-
-    if (query !== undefined) {
-      const dbParams = [query, query];
-      const dbquery = this.queries.fetchAllQuery;
-
-      dbQuery = dbquery
-        .split("")
-        .map(char => (char === "?" ? dbParams.shift() : char))
-        .join("");
-    } else if (by !== undefined && filter !== undefined) {
-      const paramToColumnAndValue = {
-        movie: ["type", "movie"],
-        show: ["type", "show"]
-      };
-      const dbParams = paramToColumnAndValue[filter].concat([by, direction]);
-      const query = this.queries.fetchAllFilterAndSort;
-
-      dbQuery = query
-        .split("")
-        .map(char => (char === "?" ? dbParams.shift() : char))
-        .join("");
-    } else if (by !== undefined) {
-      const dbParams = [by, direction];
-      const query = this.queries.fetchAllSort;
-
-      dbQuery = query
-        .split("")
-        .map(char => (char === "?" ? dbParams.shift() : char))
-        .join("");
-    } else if (filter !== undefined) {
-      const paramToColumnAndValue = {
-        movie: ["type", "movie"],
-        show: ["type", "show"],
-        downloaded: [this.queries.downloaded, "downloaded"]
-        // downloading: [this.database.delugeStatus, 'downloading']
-      };
-      const dbParams = paramToColumnAndValue[filter];
-      const query = this.queries.fetchAllFilter;
-
-      dbQuery = query
-        .split("")
-        .map(char => (char === "?" ? dbParams.shift() : char))
-        .join("");
-    } else {
-      dbQuery = this.queries.fetchAll;
-    }
-
-    return dbQuery;
   }
 
   mapToTmdbByType(rows) {
     return rows.map(row => {
       if (row.type === "movie") return tmdb.movieInfo(row.id);
       if (row.type === "show") return tmdb.showInfo(row.id);
+      return null;
     });
   }
 
@@ -97,7 +43,7 @@ class RequestRepository {
    * @param {tmdb} tmdb class of movie|show to add
    * @returns {Promise}
    */
-  requestFromTmdb(tmdb, ip, user_agent, username) {
+  requestFromTmdb(tmdb, ip, userAgent, username) {
     return Promise.resolve()
       .then(() => this.database.get(this.queries.read, [tmdb.id, tmdb.type]))
       .then(row =>
@@ -112,7 +58,7 @@ class RequestRepository {
           tmdb.backdrop,
           username,
           ip,
-          user_agent,
+          userAgent,
           tmdb.type
         ])
       )
@@ -153,20 +99,12 @@ class RequestRepository {
   /**
    * Fetch all requests with optional sort and filter params
    * @param {String} what we are sorting by
-   * @param {String} direction that can be either 'asc' or 'desc', default 'asc'.
    * @param {String} params to filter by
-   * @param {String} query param to filter result on. Filters on title and year
    * @returns {Promise}
    */
-  fetchAll(
-    page = 1,
-    sort_by = undefined,
-    sort_direction = "asc",
-    filter = undefined,
-    query = undefined
-  ) {
+  fetchAll(_page = 1, filter = null) {
     // TODO implemented sort and filter
-    page = parseInt(page);
+    const page = parseInt(_page);
     let fetchQuery = this.queries.fetchAll;
     let fetchTotalResults = this.queries.totalRequests;
     let fetchParams = [page];
@@ -177,26 +115,24 @@ class RequestRepository {
         filter === "downloaded" ||
         filter === "requested")
     ) {
-      console.log("tes");
       fetchQuery = this.queries.fetchAllFilteredStatus;
       fetchTotalResults = this.queries.totalRequestsFilteredStatus;
       fetchParams = [filter, page];
-    } else {
-      filter = undefined;
     }
 
-    return Promise.resolve()
-      .then(dbQuery => this.database.all(fetchQuery, fetchParams))
+    return this.database
+      .all(fetchQuery, fetchParams)
       .then(async rows => {
         const sqliteResponse = await this.database.get(
           fetchTotalResults,
-          filter || undefined
+          filter || null
         );
         const { totalRequests } = sqliteResponse;
         const totalPages = Math.ceil(totalRequests / 26);
 
         return [
-          rows.map(item => {
+          rows.map(_item => {
+            const item = _item;
             item.poster = item.poster_path;
             delete item.poster_path;
             item.backdrop = item.background_path;
@@ -206,7 +142,8 @@ class RequestRepository {
           totalPages,
           totalRequests
         ];
-        return Promise.all(this.mapToTmdbByType(rows));
+
+        return this.mapToTmdbByType(rows);
       })
       .then(([result, totalPages, totalRequests]) =>
         Promise.resolve({

@@ -1,4 +1,3 @@
-const { promisify } = require("util");
 const configuration = require("../config/configuration").getInstance();
 
 let client;
@@ -16,7 +15,7 @@ try {
 
   client.on("connect", () => console.log("Redis connection established!"));
 
-  client.on("error", function (err) {
+  client.on("error", () => {
     client.quit();
     console.error("Unable to connect to redis, setting up redis-mock.");
 
@@ -38,7 +37,7 @@ function set(key, value, TTL = 10800) {
 
   const json = JSON.stringify(value);
   client.set(key, json, (error, reply) => {
-    if (reply == "OK") {
+    if (reply === "OK") {
       // successfully set value with key, now set TTL for key
       client.expire(key, TTL, e => {
         if (e)
@@ -55,14 +54,14 @@ function set(key, value, TTL = 10800) {
   return value;
 }
 
-function get() {
+function get(key) {
   return new Promise((resolve, reject) => {
     client.get(key, (error, reply) => {
-      if (reply == null) {
+      if (reply === null) {
         return reject();
       }
 
-      resolve(JSON.parse(reply));
+      return resolve(JSON.parse(reply));
     });
   });
 }

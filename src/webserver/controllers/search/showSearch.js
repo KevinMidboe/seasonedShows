@@ -14,7 +14,7 @@ const searchHistory = new SearchHistory();
 function showSearchController(req, res) {
   const { query, page, adult } = req.query;
   const username = req.loggedInUser ? req.loggedInUser.username : null;
-  const includeAdult = adult == "true";
+  const includeAdult = adult === "true";
 
   if (username) {
     searchHistory.create(username, query);

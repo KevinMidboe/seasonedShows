@@ -12,7 +12,7 @@ function handleError(error, res) {
   if (status && message) {
     return res.status(status).send({ success: false, message });
   }
-  console.log("caught view history controller error", error);
+
   return res.status(500).send({
     message: "An unexpected error occured while fetching view history"
   });
@@ -35,10 +35,11 @@ function watchTimeStatsController(req, res) {
 
 function getPlaysByDayOfWeekController(req, res) {
   const user = req.loggedInUser;
-  const { days, y_axis } = req.query;
+  const days = req.query?.days;
+  const yAxis = req.query?.y_axis;
 
   return tautulli
-    .getPlaysByDayOfWeek(user.plexUserId, days, y_axis)
+    .getPlaysByDayOfWeek(user.plexUserId, days, yAxis)
     .then(data =>
       res.send({
         success: true,
@@ -51,7 +52,8 @@ function getPlaysByDayOfWeekController(req, res) {
 
 function getPlaysByDaysController(req, res) {
   const user = req.loggedInUser;
-  const { days, y_axis } = req.query;
+  const days = req.query?.days;
+  const yAxis = req.query?.y_axis;
 
   if (days === undefined) {
     return res.status(422).send({
@@ -61,7 +63,7 @@ function getPlaysByDaysController(req, res) {
   }
 
   const allowedYAxisDataType = ["plays", "duration"];
-  if (!allowedYAxisDataType.includes(y_axis)) {
+  if (!allowedYAxisDataType.includes(yAxis)) {
     return res.status(422).send({
       success: false,
       message: `Y axis parameter must be one of values: [${allowedYAxisDataType}]`
@@ -69,7 +71,7 @@ function getPlaysByDaysController(req, res) {
   }
 
   return tautulli
-    .getPlaysByDays(user.plexUserId, days, y_axis)
+    .getPlaysByDays(user.plexUserId, days, yAxis)
     .then(data =>
       res.send({
         success: true,

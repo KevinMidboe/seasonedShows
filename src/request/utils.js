@@ -29,13 +29,13 @@ function validSort(by, direction) {
   });
 }
 
-function validFilter(filter_param) {
+function validFilter(filterParam) {
   return new Promise((resolve, reject) => {
-    if (filter_param === undefined) {
+    if (filterParam === undefined) {
       resolve();
     }
 
-    if (filter_param && validFilterParams.includes(filter_param)) {
+    if (filterParam && validFilterParams.includes(filterParam)) {
       resolve();
     } else {
       reject(

@@ -21,15 +21,10 @@ function handleError(error, res) {
   if (status && message) {
     res.status(status).send({ success: false, message });
   } else {
-    console.log("caught list controller error", error);
     res
       .status(500)
       .send({ message: "An unexpected error occured while requesting list" });
   }
-}
-
-function handleListResponse(response, res) {
-  return res.send(response).catch(error => handleError(error, res));
 }
 
 function fetchTmdbList(req, res, listname, type) {
@@ -48,7 +43,7 @@ function fetchTmdbList(req, res, listname, type) {
       .catch(error => handleError(error, res));
   }
 
-  handleError(
+  return handleError(
     {
       status: 400,
       message: `'${type}' is not a valid list type.`

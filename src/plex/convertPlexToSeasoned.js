@@ -1,3 +1,5 @@
+/* eslint-disable camelcase */
+
 const Plex = require("../media_classes/plex");
 
 function translateAdded(date_string) {
@@ -27,7 +29,6 @@ function convertPlexToSeasoned(plex) {
     seasons,
     episodes
   );
-  // seasoned.print();
   return seasoned;
 }
 

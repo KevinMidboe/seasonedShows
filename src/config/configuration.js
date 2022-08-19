@@ -1,5 +1,5 @@
 const path = require("path");
-const Field = require("./field.js");
+const Field = require("./field");
 
 let instance = null;
 

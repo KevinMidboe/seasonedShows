@@ -1,5 +1,55 @@
-import Movie from "./movie";
-import Show from "./show";
+/* eslint-disable camelcase */
+const Movie = require("./movie");
+const Show = require("./show");
+
+class CreditedMovie extends Movie {}
+class CreditedShow extends Show {}
+
+class CastMember {
+  constructor(character, gender, id, name, profile_path) {
+    this.character = character;
+    this.gender = gender;
+    this.id = id;
+    this.name = name;
+    this.profile_path = profile_path;
+    this.type = "person";
+  }
+
+  createJsonResponse() {
+    return {
+      character: this.character,
+      gender: this.gender,
+      id: this.id,
+      name: this.name,
+      profile_path: this.profile_path,
+      type: this.type
+    };
+  }
+}
+
+class CrewMember {
+  constructor(department, gender, id, job, name, profile_path) {
+    this.department = department;
+    this.gender = gender;
+    this.id = id;
+    this.job = job;
+    this.name = name;
+    this.profile_path = profile_path;
+    this.type = "person";
+  }
+
+  createJsonResponse() {
+    return {
+      department: this.department,
+      gender: this.gender,
+      id: this.id,
+      job: this.job,
+      name: this.name,
+      profile_path: this.profile_path,
+      type: this.type
+    };
+  }
+}
 
 class Credits {
   constructor(id, cast = [], crew = []) {
@@ -62,54 +112,5 @@ class Credits {
     };
   }
 }
-
-class CastMember {
-  constructor(character, gender, id, name, profile_path) {
-    this.character = character;
-    this.gender = gender;
-    this.id = id;
-    this.name = name;
-    this.profile_path = profile_path;
-    this.type = "person";
-  }
-
-  createJsonResponse() {
-    return {
-      character: this.character,
-      gender: this.gender,
-      id: this.id,
-      name: this.name,
-      profile_path: this.profile_path,
-      type: this.type
-    };
-  }
-}
-
-class CrewMember {
-  constructor(department, gender, id, job, name, profile_path) {
-    this.department = department;
-    this.gender = gender;
-    this.id = id;
-    this.job = job;
-    this.name = name;
-    this.profile_path = profile_path;
-    this.type = "person";
-  }
-
-  createJsonResponse() {
-    return {
-      department: this.department,
-      gender: this.gender,
-      id: this.id,
-      job: this.job,
-      name: this.name,
-      profile_path: this.profile_path,
-      type: this.type
-    };
-  }
-}
-
-class CreditedMovie extends Movie {}
-class CreditedShow extends Show {}
 
 module.exports = Credits;

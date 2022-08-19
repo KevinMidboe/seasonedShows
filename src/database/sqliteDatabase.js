@@ -72,12 +72,11 @@ class SqliteDatabase {
   /**
    * Run a SQL query against the database and retrieve the status.
    * @param {String} sql SQL query
-   * @param {Array} parameters in the SQL query
    * @returns {Promise}
    */
   execute(sql) {
-    return new Promise(resolve => {
-      this.connection.exec(sql, (err, database) => {
+    return new Promise((resolve, reject) => {
+      this.connection.exec(sql, err => {
         if (err) {
           console.log("ERROR: ", err);
           reject(err);

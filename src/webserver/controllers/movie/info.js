@@ -1,6 +1,7 @@
 const configuration = require("../../../config/configuration").getInstance();
 const TMDB = require("../../../tmdb/tmdb");
 const Plex = require("../../../plex/plex");
+
 const tmdb = new TMDB(configuration.get("tmdb", "apiKey"));
 const plex = new Plex(configuration.get("plex", "ip"));
 
@@ -10,9 +11,10 @@ function handleError(error, res) {
   if (status && message) {
     res.status(status).send({ success: false, message });
   } else {
-    console.log("caught movieinfo controller error", error);
     res.status(500).send({
-      message: "An unexpected error occured while requesting movie info"
+      success: false,
+      message: "An unexpected error occured while requesting movie info",
+      errorResponse: error?.message
     });
   }
 }
@@ -25,21 +27,18 @@ function handleError(error, res) {
  */
 async function movieInfoController(req, res) {
   const movieId = req.params.id;
-  let { credits, release_dates, check_existance } = req.query;
 
-  credits && credits.toLowerCase() === "true"
-    ? (credits = true)
-    : (credits = false);
-  release_dates && release_dates.toLowerCase() === "true"
-    ? (release_dates = true)
-    : (release_dates = false);
-  check_existance && check_existance.toLowerCase() === "true"
-    ? (check_existance = true)
-    : (check_existance = false);
+  let credits = req.query?.credits;
+  let releaseDates = req.query?.release_dates;
+  let checkExistance = req.query?.check_existance;
 
-  let tmdbQueue = [tmdb.movieInfo(movieId)];
+  credits = credits.toLowerCase() === "true";
+  releaseDates = releaseDates.toLowerCase() === "true";
+  checkExistance = checkExistance.toLowerCase() === "true";
+
+  const tmdbQueue = [tmdb.movieInfo(movieId)];
   if (credits) tmdbQueue.push(tmdb.movieCredits(movieId));
-  if (release_dates) tmdbQueue.push(tmdb.movieReleaseDates(movieId));
+  if (releaseDates) tmdbQueue.push(tmdb.movieReleaseDates(movieId));
 
   try {
     const [Movie, Credits, ReleaseDates] = await Promise.all(tmdbQueue);
@@ -47,19 +46,12 @@ async function movieInfoController(req, res) {
     const movie = Movie.createJsonResponse();
     if (Credits) movie.credits = Credits.createJsonResponse();
     if (ReleaseDates)
-      movie.release_dates = ReleaseDates.createJsonResponse().results;
+      movie.releaseDates = ReleaseDates.createJsonResponse().results;
 
-    if (check_existance) {
+    if (checkExistance) {
       try {
         movie.exists_in_plex = await plex.existsInPlex(movie);
-      } catch (error) {
-        if (error.status === 401) {
-          console.log("Unathorized request, check plex server LAN settings");
-        } else {
-          console.log("Unkown error from plex!");
-        }
-        console.log(error?.message);
-      }
+      } catch {}
     }
 
     res.send(movie);

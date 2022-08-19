@@ -14,7 +14,7 @@ const searchHistory = new SearchHistory();
 function movieSearchController(req, res) {
   const { query, page, adult } = req.query;
   const username = req.loggedInUser ? req.loggedInUser.username : null;
-  const includeAdult = adult == "true";
+  const includeAdult = adult === "true";
 
   if (username) {
     searchHistory.create(username, query);
@@ -29,8 +29,6 @@ function movieSearchController(req, res) {
       if (status && message) {
         res.status(status).send({ success: false, message });
       } else {
-        // TODO log unhandled errors
-        console.log("caugth movie search controller error", error);
         res.status(500).send({
           message: `An unexpected error occured while searching movies with query: ${query}`
         });
