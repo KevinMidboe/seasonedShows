@@ -1,5 +1,6 @@
 const configuration = require("../../../config/configuration").getInstance();
 const TMDB = require("../../../tmdb/tmdb");
+
 const tmdb = new TMDB(configuration.get("tmdb", "apiKey"));
 
 // there should be a translate function from query params to
@@ -39,7 +40,8 @@ function fetchTmdbList(req, res, listname, type) {
       .movieList(listname, page)
       .then(listResponse => res.send(listResponse))
       .catch(error => handleError(error, res));
-  } else if (type === "show") {
+  }
+  if (type === "show") {
     return tmdb
       .showList(listname, page)
       .then(listResponse => res.send(listResponse))

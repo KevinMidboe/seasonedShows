@@ -1,6 +1,7 @@
 const configuration = require("../../../config/configuration").getInstance();
 const RequestRepository = require("../../../request/request");
 const TMDB = require("../../../tmdb/tmdb");
+
 const tmdb = new TMDB(configuration.get("tmdb", "apiKey"));
 const request = new RequestRepository();
 
@@ -26,7 +27,7 @@ function submitRequestController(req, res) {
   const user_agent = req.headers["user-agent"];
   const username = req.loggedInUser ? req.loggedInUser.username : null;
 
-  let mediaFunction = undefined;
+  let mediaFunction;
 
   if (type === "movie") {
     console.log("movie");

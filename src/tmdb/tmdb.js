@@ -5,11 +5,11 @@ const { Movie, Show, Person, Credits, ReleaseDates } = require("./types");
 
 const tmdbErrorResponse = (error, typeString = undefined) => {
   if (error.status === 404) {
-    let message = error.response.body.status_message;
+    const message = error.response.body.status_message;
 
     throw {
       status: 404,
-      message: message.slice(0, -1) + " in tmdb."
+      message: `${message.slice(0, -1)} in tmdb.`
     };
   } else if (error.status === 401) {
     throw {
@@ -221,7 +221,7 @@ class TMDB {
   }
 
   movieList(listname, page = 1) {
-    const query = { page: page };
+    const query = { page };
     const cacheKey = `tmdb/${this.cacheTags[listname]}:${page}`;
 
     return this.getFromCacheOrFetchFromTmdb(cacheKey, listname, query)
@@ -230,7 +230,7 @@ class TMDB {
   }
 
   showList(listname, page = 1) {
-    const query = { page: page };
+    const query = { page };
     const cacheKey = `tmdb/${this.cacheTags[listname]}:${page}`;
 
     return this.getFromCacheOrFetchFromTmdb(cacheKey, listName, query)
@@ -245,21 +245,23 @@ class TMDB {
    * @returns {Promise} dict with tmdb results, mapped as movie/show objects.
    */
   mapResults(response, type = undefined) {
-    let results = response.results.map(result => {
+    const results = response.results.map(result => {
       if (type === "movie" || result.media_type === "movie") {
         const movie = Movie.convertFromTmdbResponse(result);
         return movie.createJsonResponse();
-      } else if (type === "show" || result.media_type === "tv") {
+      }
+      if (type === "show" || result.media_type === "tv") {
         const show = Show.convertFromTmdbResponse(result);
         return show.createJsonResponse();
-      } else if (type === "person" || result.media_type === "person") {
+      }
+      if (type === "person" || result.media_type === "person") {
         const person = Person.convertFromTmdbResponse(result);
         return person.createJsonResponse();
       }
     });
 
     return {
-      results: results,
+      results,
       page: response.page,
       total_results: response.total_results,
       total_pages: response.total_pages

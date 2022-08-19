@@ -24,7 +24,7 @@ const sendSMS = message => {
         }
       },
       function (err, r, body) {
-        console.log(err ? err : body);
+        console.log(err || body);
         console.log("sms provider response:", body);
         resolve();
       }

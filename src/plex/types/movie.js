@@ -5,7 +5,7 @@ class Movie {
     this.summary = null;
     this.rating = null;
     this.tagline = null;
-    this.type = 'movie';
+    this.type = "movie";
   }
 }
 

@@ -21,11 +21,11 @@ try {
     console.error("Unable to connect to redis, setting up redis-mock.");
 
     client = {
-      get: function () {
+      get() {
         console.log("redis-dummy get", arguments[0]);
         return Promise.resolve();
       },
-      set: function () {
+      set() {
         console.log("redis-dummy set", arguments[0]);
         return Promise.resolve();
       }

@@ -9,7 +9,7 @@ const requestRepository = new RequestRepository();
  * @returns {Callback}
  */
 function readRequestController(req, res) {
-  const mediaId = req.params.mediaId;
+  const { mediaId } = req.params;
   const { type } = req.query;
   requestRepository
     .lookup(mediaId, type)

@@ -1,11 +1,12 @@
-const configuration = require("../../..//config/configuration").getInstance();
+const configuration = require("../../../config/configuration").getInstance();
 const TMDB = require("../../../tmdb/tmdb");
 const SearchHistory = require("../../../searchHistory/searchHistory");
+
 const tmdb = new TMDB(configuration.get("tmdb", "apiKey"));
 const searchHistory = new SearchHistory();
 
 function checkAndCreateJsonResponse(result) {
-  if (typeof result["createJsonResponse"] === "function") {
+  if (typeof result.createJsonResponse === "function") {
     return result.createJsonResponse();
   }
   return result;

@@ -13,10 +13,11 @@ class Credits {
     const { id, cast, crew } = response;
 
     const allCast = cast.map(cast => {
-      if (cast["media_type"]) {
+      if (cast.media_type) {
         if (cast.media_type === "movie") {
           return CreditedMovie.convertFromTmdbResponse(cast);
-        } else if (cast.media_type === "tv") {
+        }
+        if (cast.media_type === "tv") {
           return CreditedShow.convertFromTmdbResponse(cast);
         }
       }
@@ -31,10 +32,11 @@ class Credits {
     });
 
     const allCrew = crew.map(crew => {
-      if (cast["media_type"]) {
+      if (cast.media_type) {
         if (cast.media_type === "movie") {
           return CreditedMovie.convertFromTmdbResponse(cast);
-        } else if (cast.media_type === "tv") {
+        }
+        if (cast.media_type === "tv") {
           return CreditedShow.convertFromTmdbResponse(cast);
         }
       }

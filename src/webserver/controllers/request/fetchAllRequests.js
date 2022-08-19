@@ -1,4 +1,5 @@
 const RequestRepository = require("../../../request/request");
+
 const request = new RequestRepository();
 
 /**
@@ -8,9 +9,9 @@ const request = new RequestRepository();
  * @returns {Callback}
  */
 function fetchAllRequests(req, res) {
-  let { page, filter, sort, query } = req.query;
+  const { page, filter, sort, query } = req.query;
   let sort_by = sort;
-  let sort_direction = undefined;
+  let sort_direction;
 
   if (sort !== undefined && sort.includes(":")) {
     [sort_by, sort_direction] = sort.split(":");

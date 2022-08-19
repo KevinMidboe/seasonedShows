@@ -24,7 +24,7 @@ const cookieOptions = {
  */
 function registerController(req, res) {
   const user = new User(req.body.username, req.body.email);
-  const password = req.body.password;
+  const { password } = req.body;
 
   userSecurity
     .createNewUser(user, password)

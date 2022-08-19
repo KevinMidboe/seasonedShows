@@ -11,23 +11,22 @@ const sanitize = string => string.toLowerCase().replace(/[^\w]/gi, "");
 
 function fixedEncodeURIComponent(str) {
   return encodeURIComponent(str).replace(/[!'()*]/g, function (c) {
-    return "%" + c.charCodeAt(0).toString(16).toUpperCase();
+    return `%${c.charCodeAt(0).toString(16).toUpperCase()}`;
   });
 }
 
 const matchingTitleAndYear = (plex, tmdb) => {
-  let matchingTitle, matchingYear;
+  let matchingTitle;
+  let matchingYear;
 
-  if (plex["title"] != null && tmdb["title"] != null) {
+  if (plex.title != null && tmdb.title != null) {
     const plexTitle = sanitize(plex.title);
     const tmdbTitle = sanitize(tmdb.title);
     matchingTitle = plexTitle == tmdbTitle;
-    matchingTitle = matchingTitle
-      ? matchingTitle
-      : plexTitle.startsWith(tmdbTitle);
+    matchingTitle = matchingTitle || plexTitle.startsWith(tmdbTitle);
   } else matchingTitle = false;
 
-  if (plex["year"] != null && tmdb["year"] != null)
+  if (plex.year != null && tmdb.year != null)
     matchingYear = plex.year == tmdb.year;
   else matchingYear = false;
 
@@ -35,12 +34,12 @@ const matchingTitleAndYear = (plex, tmdb) => {
 };
 
 const successfullResponse = response => {
-  if (response && response["MediaContainer"]) return response;
+  if (response && response.MediaContainer) return response;
 
   if (
     response == null ||
-    response["status"] == null ||
-    response["statusText"] == null
+    response.status == null ||
+    response.statusText == null
   ) {
     throw Error("Unable to decode response");
   }
@@ -49,9 +48,8 @@ const successfullResponse = response => {
 
   if (status === 200) {
     return response.json();
-  } else {
-    throw { message: statusText, status: status };
   }
+  throw { message: statusText, status };
 };
 
 class Plex {
@@ -77,13 +75,13 @@ class Plex {
     return new Promise((resolve, reject) =>
       this.cache
         .get(cacheKey)
-        .then(machineInfo => resolve(machineInfo["machineIdentifier"]))
+        .then(machineInfo => resolve(machineInfo.machineIdentifier))
         .catch(() => fetch(url, options))
         .then(response => response.json())
         .then(machineInfo =>
-          this.cache.set(cacheKey, machineInfo["MediaContainer"], 2628000)
+          this.cache.set(cacheKey, machineInfo.MediaContainer, 2628000)
         )
-        .then(machineInfo => resolve(machineInfo["machineIdentifier"]))
+        .then(machineInfo => resolve(machineInfo.machineIdentifier))
         .catch(error => {
           if (error != undefined && error.type === "request-timeout") {
             reject({
@@ -104,7 +102,7 @@ class Plex {
     if (plex == null || tmdb == null) return false;
 
     if (plex instanceof Array) {
-      let possibleMatches = plex.map(plexItem =>
+      const possibleMatches = plex.map(plexItem =>
         matchingTitleAndYear(plexItem, tmdb)
       );
       match = possibleMatches.includes(true);
@@ -120,7 +118,7 @@ class Plex {
       tmdb.title,
       tmdb.year
     );
-    return plexMatch ? true : false;
+    return !!plexMatch;
   }
 
   findPlexItemByTitleAndYear(title, year) {
@@ -149,7 +147,7 @@ class Plex {
       if (
         matchingObjectInPlex == false ||
         matchingObjectInPlex == null ||
-        matchingObjectInPlex["key"] == null ||
+        matchingObjectInPlex.key == null ||
         machineIdentifier == null
       )
         return false;
@@ -227,9 +225,11 @@ class Plex {
       .map(category => {
         if (category.type === "movie") {
           return category.Metadata;
-        } else if (category.type === "show") {
+        }
+        if (category.type === "show") {
           return category.Metadata.map(convertPlexToShow);
-        } else if (category.type === "episode") {
+        }
+        if (category.type === "episode") {
           return category.Metadata.map(convertPlexToEpisode);
         }
       })

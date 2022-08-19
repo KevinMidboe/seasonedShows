@@ -1,5 +1,6 @@
 const configuration = require("../../../config/configuration").getInstance();
 const Tautulli = require("../../../tautulli/tautulli");
+
 const apiKey = configuration.get("tautulli", "apiKey");
 const ip = configuration.get("tautulli", "ip");
 const port = configuration.get("tautulli", "port");
@@ -10,12 +11,11 @@ function handleError(error, res) {
 
   if (status && message) {
     return res.status(status).send({ success: false, message });
-  } else {
-    console.log("caught view history controller error", error);
-    return res.status(500).send({
-      message: "An unexpected error occured while fetching view history"
-    });
   }
+  console.log("caught view history controller error", error);
+  return res.status(500).send({
+    message: "An unexpected error occured while fetching view history"
+  });
 }
 
 function watchTimeStatsController(req, res) {

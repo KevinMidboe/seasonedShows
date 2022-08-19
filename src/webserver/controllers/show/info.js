@@ -1,6 +1,7 @@
 const configuration = require("../../../config/configuration").getInstance();
 const TMDB = require("../../../tmdb/tmdb");
 const Plex = require("../../../plex/plex");
+
 const tmdb = new TMDB(configuration.get("tmdb", "apiKey"));
 const plex = new Plex(configuration.get("plex", "ip"));
 
@@ -35,7 +36,7 @@ async function showInfoController(req, res) {
     ? (check_existance = true)
     : (check_existance = false);
 
-  let tmdbQueue = [tmdb.showInfo(showId)];
+  const tmdbQueue = [tmdb.showInfo(showId)];
   if (credits) tmdbQueue.push(tmdb.showCredits(showId));
 
   try {

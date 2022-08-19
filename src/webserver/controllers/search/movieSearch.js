@@ -1,6 +1,7 @@
 const configuration = require("../../../config/configuration").getInstance();
 const TMDB = require("../../../tmdb/tmdb");
 const SearchHistory = require("../../../searchHistory/searchHistory");
+
 const tmdb = new TMDB(configuration.get("tmdb", "apiKey"));
 const searchHistory = new SearchHistory();
 
@@ -13,7 +14,7 @@ const searchHistory = new SearchHistory();
 function movieSearchController(req, res) {
   const { query, page, adult } = req.query;
   const username = req.loggedInUser ? req.loggedInUser.username : null;
-  const includeAdult = adult == "true" ? true : false;
+  const includeAdult = adult == "true";
 
   if (username) {
     searchHistory.create(username, query);

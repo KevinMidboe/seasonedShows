@@ -8,9 +8,9 @@
 const PirateRepository = require("../../../pirate/pirateRepository");
 
 function addMagnet(req, res) {
-  const magnet = req.body.magnet;
-  const name = req.body.name;
-  const tmdb_id = req.body.tmdb_id;
+  const { magnet } = req.body;
+  const { name } = req.body;
+  const { tmdb_id } = req.body;
 
   PirateRepository.AddMagnet(magnet, name, tmdb_id)
     .then(result => {

@@ -92,8 +92,8 @@ async function AddMagnet(magnet, name, tmdb_id) {
         "INSERT INTO requested_torrent(magnet,torrent_name,tmdb_id) \
          VALUES (?,?,?)";
 
-      let response = database.run(insert_query, [magnet, name, tmdb_id]);
-      console.log("Response from requsted_torrent insert: " + response);
+      const response = database.run(insert_query, [magnet, name, tmdb_id]);
+      console.log(`Response from requsted_torrent insert: ${response}`);
 
       resolve({ success: true });
     })

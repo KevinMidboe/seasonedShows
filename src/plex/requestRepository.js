@@ -56,7 +56,7 @@ class RequestRepository {
         if (error) {
           throw new Error(error);
         }
-        tmdbMovie.requested = result ? true : false;
+        tmdbMovie.requested = !!result;
         return tmdbMovie;
       });
   }
@@ -98,7 +98,7 @@ class RequestRepository {
           type,
           page
         ]);
-      else return this.database.all(this.queries.fetchRequestedItems, page);
+      return this.database.all(this.queries.fetchRequestedItems, page);
     });
   }
 

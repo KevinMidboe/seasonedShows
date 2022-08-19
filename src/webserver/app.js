@@ -59,7 +59,7 @@ router.get("/", (req, res) => {
 app.use(Raven.errorHandler());
 app.use((err, req, res, next) => {
   res.statusCode = 500;
-  res.end(res.sentry + "\n");
+  res.end(`${res.sentry}\n`);
 });
 
 /**
@@ -68,6 +68,7 @@ app.use((err, req, res, next) => {
 router.post("/v1/user", require("./controllers/user/register.js"));
 router.post("/v1/user/login", require("./controllers/user/login.js"));
 router.post("/v1/user/logout", require("./controllers/user/logout.js"));
+
 router.get(
   "/v1/user/settings",
   mustBeAuthenticated,
@@ -88,6 +89,7 @@ router.get(
   mustBeAuthenticated,
   require("./controllers/user/requests.js")
 );
+
 router.post(
   "/v1/user/link_plex",
   mustBeAuthenticated,

@@ -1,5 +1,6 @@
 const configuration = require("../../../config/configuration").getInstance();
 const Plex = require("../../../plex/plex");
+
 const plex = new Plex(configuration.get("plex", "ip"));
 
 /**

@@ -1,5 +1,6 @@
 const configuration = require("../../../config/configuration").getInstance();
 const TMDB = require("../../../tmdb/tmdb");
+
 const tmdb = new TMDB(configuration.get("tmdb", "apiKey"));
 
 function handleError(error, res) {
@@ -31,7 +32,7 @@ async function personInfoController(req, res) {
     ? (credits = true)
     : (credits = false);
 
-  let tmdbQueue = [tmdb.personInfo(personId)];
+  const tmdbQueue = [tmdb.personInfo(personId)];
   if (credits) tmdbQueue.push(tmdb.personCredits(personId));
 
   try {

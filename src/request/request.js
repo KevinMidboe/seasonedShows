@@ -1,6 +1,7 @@
 const assert = require("assert");
 const configuration = require("../config/configuration").getInstance();
 const TMDB = require("../tmdb/tmdb");
+
 const tmdb = new TMDB(configuration.get("tmdb", "apiKey"));
 const establishedDatabase = require("../database/database");
 const utils = require("./utils");
@@ -33,7 +34,7 @@ class RequestRepository {
   }
 
   sortAndFilterToDbQuery(by, direction, filter, query) {
-    let dbQuery = undefined;
+    let dbQuery;
 
     if (query !== undefined) {
       const dbParams = [query, query];
@@ -87,7 +88,7 @@ class RequestRepository {
   mapToTmdbByType(rows) {
     return rows.map(row => {
       if (row.type === "movie") return tmdb.movieInfo(row.id);
-      else if (row.type === "show") return tmdb.showInfo(row.id);
+      if (row.type === "show") return tmdb.showInfo(row.id);
     });
   }
 
@@ -189,9 +190,9 @@ class RequestRepository {
       .then(async rows => {
         const sqliteResponse = await this.database.get(
           fetchTotalResults,
-          filter ? filter : undefined
+          filter || undefined
         );
-        const totalRequests = sqliteResponse["totalRequests"];
+        const { totalRequests } = sqliteResponse;
         const totalPages = Math.ceil(totalRequests / 26);
 
         return [
@@ -211,7 +212,7 @@ class RequestRepository {
         Promise.resolve({
           results: result,
           total_results: totalRequests,
-          page: page,
+          page,
           total_pages: totalPages
         })
       )

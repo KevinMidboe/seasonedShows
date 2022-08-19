@@ -1,4 +1,5 @@
 const RequestRepository = require("../../../request/request");
+
 const request = new RequestRepository();
 
 /**
@@ -8,7 +9,7 @@ const request = new RequestRepository();
  * @returns {Callback}
  */
 function fetchAllRequests(req, res) {
-  const id = req.params.id;
+  const { id } = req.params;
   const { type } = req.query;
 
   request

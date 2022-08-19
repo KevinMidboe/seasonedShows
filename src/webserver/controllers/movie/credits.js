@@ -17,12 +17,9 @@ const movieCreditsController = (req, res) => {
       } else {
         // TODO log unhandled errors
         console.log("caugth movie credits controller error", error);
-        res
-          .status(500)
-          .send({
-            message:
-              "An unexpected error occured while requesting movie credits"
-          });
+        res.status(500).send({
+          message: "An unexpected error occured while requesting movie credits"
+        });
       }
     });
 };

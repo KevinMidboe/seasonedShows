@@ -1,5 +1,6 @@
 const configuration = require("../../../config/configuration").getInstance();
 const Plex = require("../../../plex/plex");
+
 const plex = new Plex(configuration.get("plex", "ip"));
 
 /**
@@ -16,12 +17,10 @@ function searchPlexController(req, res) {
       if (movies.length > 0) {
         res.send(movies);
       } else {
-        res
-          .status(404)
-          .send({
-            success: false,
-            message: "Search query did not give any results from plex."
-          });
+        res.status(404).send({
+          success: false,
+          message: "Search query did not give any results from plex."
+        });
       }
     })
     .catch(error => {

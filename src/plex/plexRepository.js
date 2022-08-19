@@ -1,6 +1,6 @@
+const rp = require("request-promise");
 const convertPlexToSeasoned = require("./convertPlexToSeasoned");
 const convertPlexToStream = require("./convertPlexToStream");
-const rp = require("request-promise");
 
 class PlexRepository {
   constructor(plexIP) {
@@ -24,7 +24,7 @@ class PlexRepository {
       `http://${this.plexIP}:32400/search?query=${queryUri}`
     );
     const options = {
-      uri: uri,
+      uri,
       headers: {
         Accept: "application/json"
       },

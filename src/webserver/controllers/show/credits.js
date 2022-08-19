@@ -1,5 +1,6 @@
 const configuration = require("../../../config/configuration").getInstance();
 const TMDB = require("../../../tmdb/tmdb");
+
 const tmdb = new TMDB(configuration.get("tmdb", "apiKey"));
 
 const showCreditsController = (req, res) => {
@@ -16,11 +17,9 @@ const showCreditsController = (req, res) => {
       } else {
         // TODO log unhandled errors
         console.log("caugth show credits controller error", error);
-        res
-          .status(500)
-          .send({
-            message: "An unexpected error occured while requesting show credits"
-          });
+        res.status(500).send({
+          message: "An unexpected error occured while requesting show credits"
+        });
       }
     });
 };

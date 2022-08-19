@@ -1,6 +1,7 @@
 const configuration = require("../../../config/configuration").getInstance();
 const TMDB = require("../../../tmdb/tmdb");
 const RequestRepository = require("../../../request/request");
+
 const tmdb = new TMDB(configuration.get("tmdb", "apiKey"));
 const request = new RequestRepository();
 // const { sendSMS } = require("src/notifications/sms");
@@ -26,7 +27,7 @@ function requestTmdbIdController(req, res) {
   const user_agent = req.headers["user-agent"];
   const username = req.loggedInUser ? req.loggedInUser.username : null;
 
-  let mediaFunction = undefined;
+  let mediaFunction;
 
   if (id === undefined || type === undefined) {
     res.status(422).send({
