@@ -22,10 +22,10 @@ class Tautulli {
     throw error;
   }
 
-  getPlaysByDayOfWeek(plex_userid, days, y_axis) {
+  getPlaysByDayOfWeek(plexUserId, days, y_axis) {
     const url = this.buildUrlWithCmdAndUserid(
       "get_plays_by_dayofweek",
-      plex_userid
+      plexUserId
     );
     url.searchParams.append("time_range", days);
     url.searchParams.append("y_axis", y_axis);
@@ -35,8 +35,8 @@ class Tautulli {
       .catch(error => this.logTautulliError(error));
   }
 
-  getPlaysByDays(plex_userid, days, y_axis) {
-    const url = this.buildUrlWithCmdAndUserid("get_plays_by_date", plex_userid);
+  getPlaysByDays(plexUserId, days, y_axis) {
+    const url = this.buildUrlWithCmdAndUserid("get_plays_by_date", plexUserId);
     url.searchParams.append("time_range", days);
     url.searchParams.append("y_axis", y_axis);
 
@@ -45,10 +45,10 @@ class Tautulli {
       .catch(error => this.logTautulliError(error));
   }
 
-  watchTimeStats(plex_userid) {
+  watchTimeStats(plexUserId) {
     const url = this.buildUrlWithCmdAndUserid(
       "get_user_watch_time_stats",
-      plex_userid
+      plexUserId
     );
     url.searchParams.append("grouping", 0);
 
@@ -57,8 +57,8 @@ class Tautulli {
       .catch(error => this.logTautulliError(error));
   }
 
-  viewHistory(plex_userid) {
-    const url = this.buildUrlWithCmdAndUserid("get_history", plex_userid);
+  viewHistory(plexUserId) {
+    const url = this.buildUrlWithCmdAndUserid("get_history", plexUserId);
 
     url.searchParams.append("start", 0);
     url.searchParams.append("length", 50);

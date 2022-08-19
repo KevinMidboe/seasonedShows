@@ -16,16 +16,16 @@ const mustHaveAccountLinkedToPlex = (req, res, next) => {
       loggedInUser.username
     )
     .then(row => {
-      const { plex_userid } = row;
+      const plexUserId = row?.plex_userid;
 
-      if (plex_userid === null || plex_userid === undefined) {
+      if (plexUserId === null || plexUserId === undefined) {
         return res.status(403).send({
           success: false,
           message:
             "No plex account user id found for your user. Please authenticate your plex account at /user/authenticate."
         });
       }
-      req.loggedInUser.plex_userid = plex_userid;
+      req.loggedInUser.plexUserId = plexUserId;
       return next();
     });
 };

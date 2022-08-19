@@ -22,7 +22,7 @@ function watchTimeStatsController(req, res) {
   const user = req.loggedInUser;
 
   return tautulli
-    .watchTimeStats(user.plex_userid)
+    .watchTimeStats(user.plexUserId)
     .then(data => {
       return res.send({
         success: true,
@@ -38,7 +38,7 @@ function getPlaysByDayOfWeekController(req, res) {
   const { days, y_axis } = req.query;
 
   return tautulli
-    .getPlaysByDayOfWeek(user.plex_userid, days, y_axis)
+    .getPlaysByDayOfWeek(user.plexUserId, days, y_axis)
     .then(data =>
       res.send({
         success: true,
@@ -69,7 +69,7 @@ function getPlaysByDaysController(req, res) {
   }
 
   return tautulli
-    .getPlaysByDays(user.plex_userid, days, y_axis)
+    .getPlaysByDays(user.plexUserId, days, y_axis)
     .then(data =>
       res.send({
         success: true,
@@ -86,7 +86,7 @@ function userViewHistoryController(req, res) {
   // and then return 501 Not implemented
 
   return tautulli
-    .viewHistory(user.plex_userid)
+    .viewHistory(user.plexUserId)
     .then(data => {
       return res.send({
         success: true,
