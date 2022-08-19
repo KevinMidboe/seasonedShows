@@ -1,13 +1,17 @@
 {
 	"root": true,
 	"parserOptions": {
+		"ecmaVersion": 2020,
 		"sourceType": "module"
 	},
-	"extends": [
-		"eslint-config-airbnb-base",
-		"plugin:prettier/recommended"
-	],
+	"extends": ["eslint-config-airbnb-base", "plugin:prettier/recommended"],
 	"rules": {
+		"no-empty": [
+			2,
+			{
+				"allowEmptyCatch": true
+			}
+		],
 		"no-underscore-dangle": "off",
 		"no-shadow": "off"
 	}
