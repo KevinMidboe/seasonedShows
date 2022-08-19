@@ -7,14 +7,15 @@
   },
   "main": "webserver/server.js",
   "scripts": {
-    "start": "yarn cross-env SEASONED_CONFIG=conf/development.json NODE_ENV=production babel-node seasoned_api/src/webserver/server.js",
-    "test": "cross-env SEASONED_CONFIG=conf/test.json NODE_PATH=. mocha --require @babel/register --recursive seasoned_api/test/unit seasoned_api/test//system",
-    "coverage": "cross-env SEASONED_CONFIG=conf/test.json NODE_PATH=. nyc mocha --require @babel/register --recursive test && nyc report --reporter=text-lcov | coveralls",
-    "lint": "eslint seasoned_api/src",
-    "update": "cross-env SEASONED_CONFIG=conf/development.json NODE_PATH=. node seasoned_api/scripts/updateRequestsInPlex.js",
+    "start": "yarn cross-env SEASONED_CONFIG=configurations/production.json NODE_ENV=production babel-node src/webserver/server.js",
+    "dev": "yarn cross-env SEASONED_CONFIG=configurations/development.json NODE_ENV=development babel-node src/webserver/server.js",
+    "test": "cross-env SEASONED_CONFIG=configurations/test.json NODE_PATH=. mocha --require @babel/register --recursive tests/unit tests/system",
+    "coverage": "cross-env SEASONED_CONFIG=configurations/test.json NODE_PATH=. nyc mocha --require @babel/register --recursive test && nyc report --reporter=text-lcov | coveralls",
+    "lint": "eslint src",
+    "update": "cross-env SEASONED_CONFIG=configurations/development.json NODE_PATH=. node scripts/updateRequestsInPlex.js",
     "docs": "yarn apiDocs; yarn classDocs",
     "apiDocs": "",
-    "classDocs": "seasoned_api/script/generate-class-docs.sh"
+    "classDocs": "scripts/generate-class-docs.sh"
   },
   "dependencies": {
     "axios": "^0.18.0",
@@ -43,15 +44,17 @@
     "@types/node": "^12.6.8",
     "coveralls": "^3.0.5",
     "documentation": "^12.0.3",
-    "eslint": "^4.9.0",
-    "eslint-config-airbnb-base": "^12.1.0",
+    "eslint": "^8.22.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-import": "^2.8.0",
+    "eslint-plugin-prettier": "^4.2.1",
     "istanbul": "^0.4.5",
     "mocha": "^6.2.0",
     "mocha-lcov-reporter": "^1.3.0",
     "nyc": "^11.6.0",
+    "prettier": "^2.7.1",
     "supertest": "^3.0.0",
-    "supertest-as-promised": "^4.0.1",
-    "typescript": "^3.5.3"
+    "supertest-as-promised": "^4.0.1"
   }
 }

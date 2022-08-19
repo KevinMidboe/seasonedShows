@@ -1,0 +1,18 @@
+{
+	"root": true,
+	"parserOptions": {
+		"parser": "@typescript-eslint/parser",
+		"sourceType": "module"
+	},
+	"plugins": ["@typescript-eslint"],
+	"extends": [
+		"eslint-config-airbnb-base",
+		"plugin:@typescript-eslint/recommended",
+		"plugin:prettier/recommended"
+	],
+	"rules": {
+		"no-underscore-dangle": "off",
+		"no-shadow": "off",
+		"@typescript-eslint/no-shadow": ["error"]
+	}
+}

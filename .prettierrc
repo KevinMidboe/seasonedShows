@@ -5,6 +5,5 @@
   "singleQuote": false,
   "bracketSpacing": true,
   "arrowParens": "avoid",
-  "vueIndentScriptAndStyle": false,
   "trailingComma": "none"
 }
