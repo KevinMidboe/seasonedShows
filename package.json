@@ -9,9 +9,10 @@
   "scripts": {
     "start": "yarn cross-env SEASONED_CONFIG=configurations/production.json NODE_ENV=production babel-node src/webserver/server.js",
     "dev": "yarn cross-env SEASONED_CONFIG=configurations/development.json NODE_ENV=development babel-node src/webserver/server.js",
-    "test": "cross-env SEASONED_CONFIG=configurations/test.json NODE_PATH=. mocha --require @babel/register --recursive tests/unit tests/system",
-    "coverage": "cross-env SEASONED_CONFIG=configurations/test.json NODE_PATH=. nyc mocha --require @babel/register --recursive test && nyc report --reporter=text-lcov | coveralls",
-    "lint": "eslint src",
+    "test": "cross-env SEASONED_CONFIG=configurations/test.json mocha --recursive tests/unit",
+    "coverage:upload": "cross-env SEASONED_CONFIG=configurations/test.json mocha --recursive tests/unit && nyc report --reporter=text-lcov | coveralls",
+    "coverage": "cross-env SEASONED_CONFIG=configurations/test.json mocha --recursive tests/unit && nyc report",
+    "lint": "eslint src tests",
     "update": "cross-env SEASONED_CONFIG=configurations/development.json NODE_PATH=. node scripts/updateRequestsInPlex.js",
     "docs": "yarn apiDocs; yarn classDocs",
     "apiDocs": "",
