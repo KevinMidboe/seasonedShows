@@ -1,16 +1,29 @@
-const createCacheEntry = require('test/helpers/createCacheEntry');
-const resetDatabase = require('test/helpers/resetDatabase');
-const request = require('supertest-as-promised');
-const app = require('src/webserver/app');
-const interstellarQuerySuccess = require('test/fixtures/interstellar-query-movie-success-response.json');
+const assert = require("assert");
+const chai = require("chai");
+const chaiHttp = require("chai-http");
 
-describe('As an anonymous user I want to search for a movie', () => {
-  before(() => resetDatabase());
-  before(() => createCacheEntry('mos:1:interstellar', interstellarQuerySuccess));
+const server = require("../../src/webserver/server");
+const resetDatabase = require("../helpers/resetDatabase");
+const createCacheEntry = require("../helpers/createCacheEntry");
+const interstellarQuerySuccess = require("../fixtures/interstellar-query-movie-success-response.json");
 
-  it('should return 200 with the search results even if user is not logged in', () =>
-    request(app)
-    .get('/api/v2/search/movie?query=interstellar&page=1')
-    .expect(200)
+chai.use(chaiHttp);
+
+describe("As an anonymous user I want to search for a movie", () => {
+  beforeEach(() => resetDatabase());
+  beforeEach(() =>
+    createCacheEntry("tmdb/mos:1:interstellar:false", interstellarQuerySuccess)
   );
+
+  it("should return 200 with the search results even if user is not logged in", done => {
+    chai
+      .request(server)
+      .get("/api/v2/search/movie?query=interstellar&page=1")
+      .end((error, response) => {
+        // console.log(response);
+
+        assert.equal(response?.status, 200);
+        done();
+      });
+  });
 });

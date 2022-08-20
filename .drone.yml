@@ -77,11 +77,11 @@ steps:
         from_secret: PLEX_IP
       PLEX_TOKEN:
         from_secret: PLEX_TOKEN
-    # when:
-    #   event:
-    #     - push
-    #   branch:
-    #     - master
+    when:
+      event:
+        - push
+      branch:
+        - master
 
   # - name: deploy
   #   image: appleboy/drone-ssh

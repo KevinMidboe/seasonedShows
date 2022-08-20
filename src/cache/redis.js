@@ -1,6 +1,7 @@
 const configuration = require("../config/configuration").getInstance();
 
 let client;
+const mockCache = {};
 
 try {
   const redis = require("redis"); // eslint-disable-line global-require
@@ -8,7 +9,6 @@ try {
   const host = configuration.get("redis", "host");
   const port = configuration.get("redis", "port");
 
-  console.log(`redis://${host}:${port}`); // eslint-disable-line no-console
   client = redis.createClient({
     url: `redis://${host}:${port}`
   });
@@ -20,13 +20,18 @@ try {
     console.error("Unable to connect to redis, setting up redis-mock."); // eslint-disable-line no-console
 
     client = {
-      get(command) {
-        console.log(`redis-dummy get: ${command}`); // eslint-disable-line no-console
-        return Promise.resolve();
+      get(key, callback) {
+        console.log(`redis-dummy get: ${key}`); // eslint-disable-line no-console
+        const hit = mockCache[key];
+        return Promise.resolve().then(callback(null, hit));
       },
-      set(command) {
-        console.log(`redis-dummy set: ${command}`); // eslint-disable-line no-console
-        return Promise.resolve();
+      set(key, json, callback) {
+        console.log(`redis-dummy set: ${key}`); // eslint-disable-line no-console
+        mockCache[key] = JSON.stringify(json);
+        return Promise.resolve().then(callback(null, "OK"));
+      },
+      expire(key, TTL) {
+        console.log(`redis-dummy expire: ${key} with TTL ${TTL}`); // eslint-disable-line no-console
       }
     };
   });
@@ -39,7 +44,7 @@ function set(key, value, TTL = 10800) {
   client.set(key, json, (error, reply) => {
     if (reply === "OK") {
       // successfully set value with key, now set TTL for key
-      client.expire(key, TTL, e => {
+      client.expire(key, TTL, "NX", e => {
         if (e)
           // eslint-disable-next-line no-console
           console.error(

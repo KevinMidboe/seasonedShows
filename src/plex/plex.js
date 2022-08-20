@@ -1,4 +1,3 @@
-const fetch = require("node-fetch");
 const convertPlexToMovie = require("./convertPlexToMovie");
 const convertPlexToShow = require("./convertPlexToShow");
 const convertPlexToEpisode = require("./convertPlexToEpisode");

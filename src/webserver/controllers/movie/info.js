@@ -44,6 +44,7 @@ async function movieInfoController(req, res) {
   } catch (error) {
     return res.status(error?.statusCode || 500).send({
       success: false,
+      errorMessage: error?.errorMessage,
       message:
         error?.message ||
         `An unexpected error occured while requesting info for with id: ${movieId}`

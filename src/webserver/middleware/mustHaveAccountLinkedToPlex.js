@@ -3,9 +3,9 @@ const establishedDatabase = require("../../database/database");
 /* eslint-disable consistent-return */
 const mustHaveAccountLinkedToPlex = (req, res, next) => {
   const database = establishedDatabase;
-  const { loggedInUser } = req;
 
-  if (loggedInUser === null) {
+  // TODO use mustByAuthenticated middleware
+  if (!req.loggedInUser) {
     return res.status(401).send({
       success: false,
       message: "You must have your account linked to a plex account."
@@ -15,7 +15,7 @@ const mustHaveAccountLinkedToPlex = (req, res, next) => {
   database
     .get(
       `SELECT plex_userid FROM settings WHERE user_name IS ?`,
-      loggedInUser.username
+      req.loggedInUser.username
     )
     .then(row => {
       const plexUserId = row.plex_userid;

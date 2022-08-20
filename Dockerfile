@@ -12,7 +12,7 @@ COPY yarn.lock .
 RUN apt update
 RUN apt install node-pre-gyp -y
 RUN yarn
-RUN cp configurations/development.json.example configurations/development.json
+RUN cp configurations/development.json.example configurations/production.json
 
 EXPOSE 31459
 

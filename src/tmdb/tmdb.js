@@ -38,17 +38,17 @@ class TMDBNotReachableError extends Error {
 }
 
 const tmdbErrorResponse = (error, type = null) => {
-  if (error.status === 404) {
-    const message = error.response.body.status_message;
+  if (error?.status === 404) {
+    const message = error?.response?.body?.status_message;
 
     throw new TMDBNotFoundError(`${message.slice(0, -1)} in tmdb.`);
-  } else if (error.status === 401) {
+  } else if (error?.status === 401) {
     throw new TMDBUnauthorizedError(error?.response?.body?.status_message);
   } else if (error?.code === "ENOTFOUND") {
     throw new TMDBNotReachableError();
   }
 
-  throw new TMDBUnexpectedError(type, error);
+  throw new TMDBUnexpectedError(type, error.message);
 };
 
 /**

@@ -4,8 +4,8 @@ const establishedDatabase = require("../../database/database");
 const mustBeAdmin = (req, res, next) => {
   const database = establishedDatabase;
 
-  if (req.loggedInUser === undefined) {
-    res.status(401).send({
+  if (!req.loggedInUser) {
+    return res.status(401).send({
       success: false,
       message: "You must be logged in."
     });

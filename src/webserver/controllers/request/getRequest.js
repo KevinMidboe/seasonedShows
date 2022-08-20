@@ -14,7 +14,19 @@ function fetchAllRequests(req, res) {
 
   request
     .getRequestByIdAndType(id, type)
-    .then(result => res.send(result))
+    .then(result => {
+      if (!result) {
+        return res.send({
+          success: false,
+          message: `Item ${type} with id ${id} has not been requested`
+        });
+      }
+
+      return res.send({
+        success: true,
+        result
+      });
+    })
     .catch(error => {
       return res.status(error?.statusCode || 500).send({
         success: false,

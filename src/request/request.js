@@ -83,7 +83,8 @@ class RequestRepository {
     return this.database
       .get(this.queries.readWithoutUserData, [id, type])
       .then(row => {
-        assert(row, "Could not find request item with that id and type");
+        if (!row) return null;
+
         return {
           id: row.id,
           title: row.title,
@@ -122,10 +123,7 @@ class RequestRepository {
     return this.database
       .all(fetchQuery, fetchParams)
       .then(async rows => {
-        const sqliteResponse = await this.database.get(
-          fetchTotalResults,
-          filter || null
-        );
+        const sqliteResponse = await this.database.get(fetchTotalResults);
         const { totalRequests } = sqliteResponse;
         const totalPages = Math.ceil(totalRequests / 26);
 

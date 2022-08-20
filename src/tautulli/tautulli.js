@@ -1,5 +1,3 @@
-const fetch = require("node-fetch");
-
 class TautulliUnexpectedError extends Error {
   constructor(errorMessage) {
     const message = "Unexpected error fetching from tautulli.";
