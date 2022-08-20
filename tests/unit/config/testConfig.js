@@ -1,5 +1,5 @@
-const assert = require('assert');
-const Config = require('src/config/configuration.js');
+const assert = require("assert");
+const Config = require("../../../src/config/configuration");
 
 describe('Config', () => {
   before(() => {

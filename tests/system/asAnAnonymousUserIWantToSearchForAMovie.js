@@ -1,8 +1,8 @@
-const createCacheEntry = require('test/helpers/createCacheEntry');
-const resetDatabase = require('test/helpers/resetDatabase');
-const request = require('supertest-as-promised');
-const app = require('src/webserver/app');
-const interstellarQuerySuccess = require('test/fixtures/interstellar-query-movie-success-response.json');
+const request = require("supertest-as-promised");
+const app = require("../../src/webserver/app");
+const resetDatabase = require("../helpers/resetDatabase");
+const createCacheEntry = require("../helpers/createCacheEntry");
+const interstellarQuerySuccess = require("../fixtures/interstellar-query-movie-success-response.json");
 
 describe('As an anonymous user I want to search for a movie', () => {
   before(() => resetDatabase());

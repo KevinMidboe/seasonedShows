@@ -1,7 +1,7 @@
-const assert = require('assert');
+const assert = require("assert");
 // const convertTmdbToMovie = require('src/tmdb/convertTmdbToMovie');
-const { Movie } = require('src/tmdb/types');
-const bladeRunnerQuerySuccess = require('test/fixtures/blade_runner_2049-info-success-response.json') 
+const { Movie } = require("../../../src/tmdb/types");
+const bladeRunnerQuerySuccess = require("../../fixtures/blade_runner_2049-info-success-response.json");
 
 describe('Convert tmdb movieInfo to movie', () => {
   beforeEach(() => [this.bladeRunnerTmdbMovie] = bladeRunnerQuerySuccess);

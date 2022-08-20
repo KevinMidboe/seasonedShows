@@ -1,5 +1,6 @@
 /* eslint-disable no-return-assign */
-const net = require('net');
+const net = require("net");
+const server = require("../../src/webserver/server");
 
 xdescribe('As a developer I want the server to start', () => {
   beforeEach(() =>

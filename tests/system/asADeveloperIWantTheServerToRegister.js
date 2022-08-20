@@ -1,7 +1,7 @@
-const assert = require('assert');
-const request = require('supertest-as-promised');
-const app = require('src/webserver/app');
-const resetDatabase = require('test/helpers/resetDatabase');
+const assert = require("assert");
+const request = require("supertest-as-promised");
+const app = require("../../src/webserver/app");
+const resetDatabase = require("../helpers/resetDatabase");
 
 describe('As a user I want to register', () => {
   before(() => resetDatabase());

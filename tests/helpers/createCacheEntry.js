@@ -1,5 +1,4 @@
-const Cache = require('src/tmdb/cache');
-const SqliteDatabase = require('src/database/sqliteDatabase');
+const Cache = require("../../src/tmdb/cache");
 
 function createCacheEntry(key, value) {
   const cache = new Cache();

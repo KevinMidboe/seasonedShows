@@ -1,9 +1,9 @@
-const assert = require('assert');
-const createCacheEntry = require('test/helpers/createCacheEntry');
-const resetDatabase = require('test/helpers/resetDatabase');
-const request = require('supertest-as-promised');
-const app = require('src/webserver/app');
-const popularMoviesSuccess = require('test/fixtures/popular-movies-success-response.json');
+const assert = require("assert");
+const request = require("supertest-as-promised");
+const app = require("../../src/webserver/app");
+const resetDatabase = require("../helpers/resetDatabase");
+const createCacheEntry = require("../helpers/createCacheEntry");
+const popularMoviesSuccess = require("../fixtures/popular-movies-success-response.json");
 
 describe('As a user I want to get popular movies', () => {
   before(() => resetDatabase());

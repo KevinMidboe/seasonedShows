@@ -1,13 +1,13 @@
-const assert = require('assert');
-const createCacheEntry = require('test/helpers/createCacheEntry');
-const resetDatabase = require('test/helpers/resetDatabase');
-const request = require('supertest-as-promised');
-const app = require('src/webserver/app');
-const popularShowsSuccess = require('test/fixtures/popular-show-success-response.json');
+const assert = require("assert");
+// const request = require("supertest-as-promised");
+const chai = require("chai");
+const chaiHttp = require("chai-http");
+const server = require("../../src/webserver/server");
 
-describe('As a user I want to get popular shows', () => {
-  before(() => resetDatabase());
-  before(() => createCacheEntry('pt:1', popularShowsSuccess));
+const resetDatabase = require("../helpers/resetDatabase");
+const createCacheEntry = require("../helpers/createCacheEntry");
+const popularShowsSuccess = require("../fixtures/popular-show-success-response.json");
+const should = chai.should();
 
   it('should return 200 with the information', () =>
     request(app)

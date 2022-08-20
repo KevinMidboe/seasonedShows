@@ -1,5 +1,5 @@
-const User = require('src/user/user');
-const UserSecurity = require('src/user/userSecurity');
+const User = require("../../src/user/user");
+const UserSecurity = require("../../src/user/userSecurity");
 
 function createUser(username, password) {
   const userSecurity = new UserSecurity();

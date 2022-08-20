@@ -1,8 +1,8 @@
-const assert = require('assert');
-const request = require('supertest-as-promised');
-const app = require('src/webserver/app');
-const createUser = require('test/helpers/createUser');
-const resetDatabase = require('test/helpers/resetDatabase');
+const assert = require("assert");
+const request = require("supertest-as-promised");
+const app = require("../../src/webserver/app");
+const createUser = require("../helpers/createUser");
+const resetDatabase = require("../helpers/resetDatabase");
 
 describe('As a user I want error when registering existing username', () => {
   before(() => {
