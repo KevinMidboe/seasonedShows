@@ -1,8 +1,7 @@
-const Cache = require("../../src/tmdb/cache");
+const redisCache = require("../../src/cache/redis");
 
 function createCacheEntry(key, value) {
-  const cache = new Cache();
-  return cache.set(key, value);
+  return redisCache.set(key, value);
 }
 
 module.exports = createCacheEntry;
