@@ -4,7 +4,7 @@ const chaiHttp = require("chai-http");
 
 const server = require("../../src/webserver/server");
 const resetDatabase = require("../helpers/resetDatabase");
-// const assert = require("assert");
+
 chai.use(chaiHttp);
 
 describe("As a user I want a forbidden error if the token is malformed", () => {

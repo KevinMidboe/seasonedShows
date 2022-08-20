@@ -33,7 +33,8 @@ class RequestRepository {
       // downloaded: "(select status from requests where id is request.id and type is request.type limit 1)",
       // deluge: '(select status from deluge_torrent where id is request.id and type is request.type limit 1)',
       // fetchAllFilterStatus: 'select * from request where '
-      // readWithoutUserData: "select id, title, year, type, status, date from requests where id is ? and type is ?",
+      readWithoutUserData:
+        "select id, title, year, type, status, date from requests where id is ? and type is ?",
       read: "select id, title, year, type, status, requested_by, ip, date, user_agent from requests where id is ? and type is ?"
     };
   }
@@ -83,7 +84,8 @@ class RequestRepository {
     return this.database
       .get(this.queries.readWithoutUserData, [id, type])
       .then(row => {
-        assert(row, "Could not find request item with that id and type");
+        if (!row) return null;
+
         return {
           id: row.id,
           title: row.title,
@@ -122,10 +124,7 @@ class RequestRepository {
     return this.database
       .all(fetchQuery, fetchParams)
       .then(async rows => {
-        const sqliteResponse = await this.database.get(
-          fetchTotalResults,
-          filter || null
-        );
+        const sqliteResponse = await this.database.get(fetchTotalResults);
         const { totalRequests } = sqliteResponse;
         const totalPages = Math.ceil(totalRequests / 26);
 
