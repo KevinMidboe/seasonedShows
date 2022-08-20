@@ -5,6 +5,7 @@
 		"sourceType": "module"
 	},
 	"extends": ["eslint-config-airbnb-base", "plugin:prettier/recommended"],
+	"plugins": ["mocha"],
 	"rules": {
 		"max-classes-per-file": 1,
 		"no-empty": [
@@ -16,5 +17,8 @@
 		"no-promise-executor-return": 1,
 		"no-shadow": "off",
 		"no-underscore-dangle": "off"
+	},
+	"env": {
+		"mocha": true
 	}
 }

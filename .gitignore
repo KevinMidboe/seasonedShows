@@ -1,8 +1,11 @@
 .DS_Store
 
-development.json
+configurations/development.json
+configurations/production.json
 .env
 shows.db
 
 node_modules
 */package-lock.json
+.nyc_output
+yarn-error.log
