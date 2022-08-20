@@ -1,4 +1,3 @@
-const rp = require("request-promise");
 const convertPlexToSeasoned = require("./convertPlexToSeasoned");
 const convertPlexToStream = require("./convertPlexToStream");
 
@@ -35,8 +34,9 @@ function mapResults(response) {
 }
 
 class PlexRepository {
-  constructor(plexIP) {
+  constructor(plexIP, plexToken) {
     this.plexIP = plexIP;
+    this.plexToken = plexToken;
   }
 
   inPlex(_tmdbResult) {
@@ -56,19 +56,17 @@ class PlexRepository {
   }
 
   search(query) {
-    const queryUri = encodeURIComponent(query);
-    const uri = encodeURI(
-      `http://${this.plexIP}:32400/search?query=${queryUri}`
+    const url = encodeURI(
+      `http://${this.plexIP}:32400/search?query=${encodeURIComponent(
+        query
+      )}&X-Plex-Token=${this.plexToken}`
     );
     const options = {
-      uri,
-      headers: {
-        Accept: "application/json"
-      },
-      json: true
+      headers: { Accept: "application/json" }
     };
 
-    return rp(options)
+    return fetch(url, options)
+      .then(resp => resp.json())
       .then(result => mapResults(result))
       .then(([mappedResults, resultCount]) => ({
         results: mappedResults,
@@ -77,15 +75,13 @@ class PlexRepository {
   }
 
   nowPlaying() {
+    const url = `http://${this.plexIP}:32400/status/sessions?X-Plex-Token=${this.plexToken}`;
     const options = {
-      uri: `http://${this.plexIP}:32400/status/sessions`,
-      headers: {
-        Accept: "application/json"
-      },
-      json: true
+      headers: { Accept: "application/json" }
     };
 
-    return rp(options)
+    return fetch(url, options)
+      .then(resp => resp.json())
       .then(result => {
         if (result.MediaContainer.size > 0) {
           const playing =
