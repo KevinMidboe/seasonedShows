@@ -38,44 +38,6 @@ class TMDBNotReachableError extends Error {
 }
 
 const tmdbErrorResponse = (error, type = null) => {
-  if (error.status === 404) {
-    const message = error.response.body.status_message;
-
-    throw new TMDBNotFoundError(`${message.slice(0, -1)} in tmdb.`);
-  } else if (error.status === 401) {
-    throw new TMDBUnauthorizedError(error?.response?.body?.status_message);
-  } else if (error?.code === "ENOTFOUND") {
-    throw new TMDBNotReachableError();
-  }
-}
-
-class TMDBUnauthorizedError extends Error {
-  constructor(message = "TMDB returned access denied, requires api token.") {
-    super(message);
-
-    this.statusCode = 401;
-  }
-}
-
-class TMDBUnexpectedError extends Error {
-  constructor(type, errorMessage) {
-    const message = `An unexpected error occured while fetching ${type} from tmdb`;
-    super(message);
-
-    this.errorMessage = errorMessage;
-    this.statusCode = 500;
-  }
-}
-
-class TMDBNotReachableError extends Error {
-  constructor(
-    message = "TMDB api not reachable, check your internet connection"
-  ) {
-    super(message);
-  }
-}
-
-const tmdbErrorResponse = (error, type = null) => {
   if (error?.status === 404) {
     const message = error?.response?.body?.status_message;
 
