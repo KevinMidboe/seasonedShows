@@ -9,6 +9,8 @@ const resetDatabase = require("../helpers/resetDatabase");
 const createCacheEntry = require("../helpers/createCacheEntry");
 const infoMovieSuccess = require("../fixtures/blade_runner_2049-info-success-response.json");
 
+chai.use(chaiHttp);
+
 describe("As a user I want to request a movie", () => {
   beforeEach(() => resetDatabase());
   beforeEach(() => createUser("test_user", "test@gmail.com", "password"));
