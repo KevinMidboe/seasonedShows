@@ -2,19 +2,30 @@
 	"database": {
 		"host": ":memory:"
 	},
+	"redis": {
+		"host": "localhost",
+		"port": 6379
+	},
 	"webserver": {
-		"port": 31400
+		"port": 31400,
+		"origins": []
 	},
 	"tmdb": {
 		"apiKey": "bogus-api-key"
 	},
 	"plex": {
-		"ip": "0.0.0.0"
+		"ip": "localhost",
+		"token": ""
+	},
+	"tautulli": {
+		"apiKey": "",
+		"ip": "",
+		"port": ""
 	},
 	"raven": {
 		"DSN": ""
 	},
 	"authentication": {
-    		"secret": "secret"
-    	}
+		"secret": "secret"
+	}
 }
