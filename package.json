@@ -9,7 +9,7 @@
   "scripts": {
     "start": "SEASONED_CONFIG=configurations/production.json NODE_ENV=production node src/webserver/server.js",
     "dev": "SEASONED_CONFIG=configurations/development.json NODE_ENV=development node src/webserver/server.js",
-    "test": "SEASONED_CONFIG=configurations/test.json mocha --recursive tests/unit",
+    "test": "SEASONED_CONFIG=configurations/test.json mocha --recursive tests/unit tests/system",
     "coverage:upload": "SEASONED_CONFIG=configurations/test.json mocha --recursive tests/unit && nyc report --reporter=text-lcov | coveralls",
     "coverage": "SEASONED_CONFIG=configurations/test.json mocha --recursive tests/unit && nyc report",
     "lint": "eslint src tests",
