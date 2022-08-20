@@ -1,5 +1,5 @@
-const User = require("./user");
 const jwt = require("jsonwebtoken");
+const User = require("./user");
 
 class Token {
   constructor(user, admin = false, settings = null) {
@@ -16,8 +16,8 @@ class Token {
   toString(secret) {
     const { user, admin, settings } = this;
 
-    let data = { username: user.username, settings };
-    if (admin) data["admin"] = admin;
+    const data = { username: user.username, settings };
+    if (admin) data.admin = admin;
 
     return jwt.sign(data, secret, { expiresIn: "90d" });
   }

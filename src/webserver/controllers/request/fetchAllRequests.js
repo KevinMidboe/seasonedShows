@@ -1,4 +1,5 @@
 const RequestRepository = require("../../../request/request");
+
 const request = new RequestRepository();
 
 /**
@@ -8,19 +9,18 @@ const request = new RequestRepository();
  * @returns {Callback}
  */
 function fetchAllRequests(req, res) {
-  let { page, filter, sort, query } = req.query;
-  let sort_by = sort;
-  let sort_direction = undefined;
+  const { page, filter } = req.query;
 
-  if (sort !== undefined && sort.includes(":")) {
-    [sort_by, sort_direction] = sort.split(":");
-  }
-
-  Promise.resolve()
-    .then(() => request.fetchAll(page, sort_by, sort_direction, filter, query))
+  request
+    .fetchAll(page, filter)
     .then(result => res.send(result))
     .catch(error => {
-      res.status(404).send({ success: false, message: error.message });
+      return res.status(error?.statusCode || 500).send({
+        success: false,
+        message:
+          error?.message ||
+          `An unexpected error occured while requesting all requests`
+      });
     });
 }
 

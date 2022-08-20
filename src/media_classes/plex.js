@@ -1,3 +1,5 @@
+/* eslint-disable camelcase */
+
 const Media = require("./media");
 
 class Plex extends Media {

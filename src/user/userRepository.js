@@ -1,6 +1,69 @@
 const assert = require("assert");
 const establishedDatabase = require("../database/database");
 
+class LinkPlexUserError extends Error {
+  constructor(errorMessage = null) {
+    const message =
+      "An unexpected error occured while linking plex and seasoned accounts";
+    super(message);
+
+    this.statusCode = 500;
+    this.errorMessage = errorMessage;
+    this.source = "database";
+  }
+}
+
+class UnlinkPlexUserError extends Error {
+  constructor(errorMessage = null) {
+    const message =
+      "An unexpected error occured while unlinking plex and seasoned accounts";
+    super(message);
+
+    this.statusCode = 500;
+    this.errorMessage = errorMessage;
+    this.source = "database";
+  }
+}
+
+class UnexpectedUserSettingsError extends Error {
+  constructor(errorMessage = null) {
+    const message =
+      "An unexpected error occured while fetching settings for your account";
+    super(message);
+
+    this.statusCode = 500;
+    this.errorMessage = errorMessage;
+    this.source = "database";
+  }
+}
+
+class NoSettingsUserNotFoundError extends Error {
+  constructor() {
+    const message = "User not found, no settings to get";
+    super(message);
+
+    this.statusCode = 404;
+  }
+}
+
+const rejectUnexpectedDatabaseError = (
+  message,
+  status,
+  error,
+  reject = null
+) => {
+  const body = {
+    status,
+    message,
+    source: "seasoned database"
+  };
+
+  if (reject == null) {
+    return new Promise((_, reject) => reject(body));
+  }
+  return reject(body);
+};
+
 class UserRepository {
   constructor(database) {
     this.database = database || establishedDatabase;
@@ -51,8 +114,7 @@ class UserRepository {
         assert(row, "The user does not exist.");
         return row.password;
       })
-      .catch(err => {
-        console.log(error);
+      .catch(() => {
         throw new Error("Unable to find your user.");
       });
   }
@@ -78,17 +140,7 @@ class UserRepository {
       this.database
         .run(this.queries.link, [plexUserID, username])
         .then(row => resolve(row))
-        .catch(error => {
-          // TODO log this unknown db error
-          console.error("db error", error);
-
-          reject({
-            status: 500,
-            message:
-              "An unexpected error occured while linking plex and seasoned accounts",
-            source: "seasoned database"
-          });
-        });
+        .catch(error => reject(new LinkPlexUserError(error)));
     });
   }
 
@@ -102,17 +154,7 @@ class UserRepository {
       this.database
         .run(this.queries.unlink, username)
         .then(row => resolve(row))
-        .catch(error => {
-          // TODO log this unknown db error
-          console.log("db error", error);
-
-          reject({
-            status: 500,
-            message:
-              "An unexpected error occured while unlinking plex and seasoned accounts",
-            source: "seasoned database"
-          });
-        });
+        .catch(error => reject(new UnlinkPlexUserError(error)));
     });
   }
 
@@ -138,6 +180,7 @@ class UserRepository {
         .get(this.queries.getSettings, username)
         .then(async row => {
           if (row == null) {
+            // eslint-disable-next-line no-console
             console.debug(
               `settings do not exist for user: ${username}. Creating settings entry.`
             );
@@ -153,27 +196,13 @@ class UserRepository {
                 reject(error);
               }
             } else {
-              reject({
-                status: 404,
-                message: "User not found, no settings to get"
-              });
+              reject(new NoSettingsUserNotFoundError());
             }
           }
 
           resolve(row);
         })
-        .catch(error => {
-          console.error(
-            "Unexpected error occured while fetching settings for your account. Error:",
-            error
-          );
-          reject({
-            status: 500,
-            message:
-              "An unexpected error occured while fetching settings for your account",
-            source: "seasoned database"
-          });
-        });
+        .catch(error => reject(new UnexpectedUserSettingsError(error)));
     });
   }
 
@@ -184,12 +213,12 @@ class UserRepository {
    * @param {String} emoji
    * @returns {Promsie}
    */
-  updateSettings(username, dark_mode = undefined, emoji = undefined) {
+  updateSettings(username, _darkMode = null, _emoji = null) {
     const settings = this.getSettings(username);
-    dark_mode = dark_mode !== undefined ? dark_mode : settings.dark_mode;
-    emoji = emoji !== undefined ? emoji : settings.emoji;
+    const darkMode = _darkMode || settings.darkMode;
+    const emoji = _emoji || settings.emoji;
 
-    return this.dbUpdateSettings(username, dark_mode, emoji).catch(error => {
+    return this.dbUpdateSettings(username, darkMode, emoji).catch(error => {
       if (error.status && error.message) {
         return error;
       }
@@ -225,32 +254,13 @@ class UserRepository {
    * @param {String} username
    * @returns {Promsie}
    */
-  dbUpdateSettings(username, dark_mode, emoji) {
-    return new Promise((resolve, reject) =>
+  dbUpdateSettings(username, darkMode, emoji) {
+    return new Promise(resolve =>
       this.database
-        .run(this.queries.updateSettings, [username, dark_mode, emoji])
+        .run(this.queries.updateSettings, [username, darkMode, emoji])
         .then(row => resolve(row))
     );
   }
 }
-
-const rejectUnexpectedDatabaseError = (
-  message,
-  status,
-  error,
-  reject = null
-) => {
-  console.error(error);
-  const body = {
-    status,
-    message,
-    source: "seasoned database"
-  };
-
-  if (reject == null) {
-    return new Promise((resolve, reject) => reject(body));
-  }
-  reject(body);
-};
 
 module.exports = UserRepository;

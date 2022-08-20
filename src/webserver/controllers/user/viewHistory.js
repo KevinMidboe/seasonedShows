@@ -1,5 +1,6 @@
 const configuration = require("../../../config/configuration").getInstance();
 const Tautulli = require("../../../tautulli/tautulli");
+
 const apiKey = configuration.get("tautulli", "apiKey");
 const ip = configuration.get("tautulli", "ip");
 const port = configuration.get("tautulli", "port");
@@ -10,19 +11,18 @@ function handleError(error, res) {
 
   if (status && message) {
     return res.status(status).send({ success: false, message });
-  } else {
-    console.log("caught view history controller error", error);
-    return res.status(500).send({
-      message: "An unexpected error occured while fetching view history"
-    });
   }
+
+  return res.status(500).send({
+    message: "An unexpected error occured while fetching view history"
+  });
 }
 
 function watchTimeStatsController(req, res) {
   const user = req.loggedInUser;
 
   return tautulli
-    .watchTimeStats(user.plex_userid)
+    .watchTimeStats(user.plexUserId)
     .then(data => {
       return res.send({
         success: true,
@@ -35,10 +35,11 @@ function watchTimeStatsController(req, res) {
 
 function getPlaysByDayOfWeekController(req, res) {
   const user = req.loggedInUser;
-  const { days, y_axis } = req.query;
+  const days = req.query?.days;
+  const yAxis = req.query?.y_axis;
 
   return tautulli
-    .getPlaysByDayOfWeek(user.plex_userid, days, y_axis)
+    .getPlaysByDayOfWeek(user.plexUserId, days, yAxis)
     .then(data =>
       res.send({
         success: true,
@@ -51,7 +52,8 @@ function getPlaysByDayOfWeekController(req, res) {
 
 function getPlaysByDaysController(req, res) {
   const user = req.loggedInUser;
-  const { days, y_axis } = req.query;
+  const days = req.query?.days;
+  const yAxis = req.query?.y_axis;
 
   if (days === undefined) {
     return res.status(422).send({
@@ -61,7 +63,7 @@ function getPlaysByDaysController(req, res) {
   }
 
   const allowedYAxisDataType = ["plays", "duration"];
-  if (!allowedYAxisDataType.includes(y_axis)) {
+  if (!allowedYAxisDataType.includes(yAxis)) {
     return res.status(422).send({
       success: false,
       message: `Y axis parameter must be one of values: [${allowedYAxisDataType}]`
@@ -69,7 +71,7 @@ function getPlaysByDaysController(req, res) {
   }
 
   return tautulli
-    .getPlaysByDays(user.plex_userid, days, y_axis)
+    .getPlaysByDays(user.plexUserId, days, yAxis)
     .then(data =>
       res.send({
         success: true,
@@ -86,7 +88,7 @@ function userViewHistoryController(req, res) {
   // and then return 501 Not implemented
 
   return tautulli
-    .viewHistory(user.plex_userid)
+    .viewHistory(user.plexUserId)
     .then(data => {
       return res.send({
         success: true,

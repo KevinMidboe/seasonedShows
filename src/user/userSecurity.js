@@ -50,7 +50,7 @@ class UserSecurity {
     return new Promise((resolve, reject) => {
       bcrypt.compare(clearPassword, hash, (error, match) => {
         if (match) resolve(true);
-        reject(false);
+        reject(error);
       });
     });
   }
@@ -61,7 +61,7 @@ class UserSecurity {
    * @returns {Promise}
    */
   static hashPassword(clearPassword) {
-    return new Promise(resolve => {
+    return new Promise((resolve, reject) => {
       const saltRounds = 10;
       bcrypt.hash(clearPassword, saltRounds, (error, hash) => {
         if (error) reject(error);

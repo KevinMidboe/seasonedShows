@@ -1,65 +1,9 @@
-import Movie from "./movie";
-import Show from "./show";
+/* eslint-disable camelcase */
+const Movie = require("./movie");
+const Show = require("./show");
 
-class Credits {
-  constructor(id, cast = [], crew = []) {
-    this.id = id;
-    this.cast = cast;
-    this.crew = crew;
-    this.type = "credits";
-  }
-
-  static convertFromTmdbResponse(response) {
-    const { id, cast, crew } = response;
-
-    const allCast = cast.map(cast => {
-      if (cast["media_type"]) {
-        if (cast.media_type === "movie") {
-          return CreditedMovie.convertFromTmdbResponse(cast);
-        } else if (cast.media_type === "tv") {
-          return CreditedShow.convertFromTmdbResponse(cast);
-        }
-      }
-
-      return new CastMember(
-        cast.character,
-        cast.gender,
-        cast.id,
-        cast.name,
-        cast.profile_path
-      );
-    });
-
-    const allCrew = crew.map(crew => {
-      if (cast["media_type"]) {
-        if (cast.media_type === "movie") {
-          return CreditedMovie.convertFromTmdbResponse(cast);
-        } else if (cast.media_type === "tv") {
-          return CreditedShow.convertFromTmdbResponse(cast);
-        }
-      }
-
-      return new CrewMember(
-        crew.department,
-        crew.gender,
-        crew.id,
-        crew.job,
-        crew.name,
-        crew.profile_path
-      );
-    });
-
-    return new Credits(id, allCast, allCrew);
-  }
-
-  createJsonResponse() {
-    return {
-      id: this.id,
-      cast: this.cast.map(cast => cast.createJsonResponse()),
-      crew: this.crew.map(crew => crew.createJsonResponse())
-    };
-  }
-}
+class CreditedMovie extends Movie {}
+class CreditedShow extends Show {}
 
 class CastMember {
   constructor(character, gender, id, name, profile_path) {
@@ -107,7 +51,66 @@ class CrewMember {
   }
 }
 
-class CreditedMovie extends Movie {}
-class CreditedShow extends Show {}
+class Credits {
+  constructor(id, cast = [], crew = []) {
+    this.id = id;
+    this.cast = cast;
+    this.crew = crew;
+    this.type = "credits";
+  }
+
+  static convertFromTmdbResponse(response) {
+    const { id, cast, crew } = response;
+
+    const allCast = cast.map(cast => {
+      if (cast.media_type) {
+        if (cast.media_type === "movie") {
+          return CreditedMovie.convertFromTmdbResponse(cast);
+        }
+        if (cast.media_type === "tv") {
+          return CreditedShow.convertFromTmdbResponse(cast);
+        }
+      }
+
+      return new CastMember(
+        cast.character,
+        cast.gender,
+        cast.id,
+        cast.name,
+        cast.profile_path
+      );
+    });
+
+    const allCrew = crew.map(crew => {
+      if (cast.media_type) {
+        if (cast.media_type === "movie") {
+          return CreditedMovie.convertFromTmdbResponse(cast);
+        }
+        if (cast.media_type === "tv") {
+          return CreditedShow.convertFromTmdbResponse(cast);
+        }
+      }
+
+      return new CrewMember(
+        crew.department,
+        crew.gender,
+        crew.id,
+        crew.job,
+        crew.name,
+        crew.profile_path
+      );
+    });
+
+    return new Credits(id, allCast, allCrew);
+  }
+
+  createJsonResponse() {
+    return {
+      id: this.id,
+      cast: this.cast.map(cast => cast.createJsonResponse()),
+      crew: this.crew.map(crew => crew.createJsonResponse())
+    };
+  }
+}
 
 module.exports = Credits;

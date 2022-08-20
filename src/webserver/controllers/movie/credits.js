@@ -10,20 +10,12 @@ const movieCreditsController = (req, res) => {
     .movieCredits(movieId)
     .then(credits => res.send(credits.createJsonResponse()))
     .catch(error => {
-      const { status, message } = error;
-
-      if (status && message) {
-        res.status(status).send({ success: false, message });
-      } else {
-        // TODO log unhandled errors
-        console.log("caugth movie credits controller error", error);
-        res
-          .status(500)
-          .send({
-            message:
-              "An unexpected error occured while requesting movie credits"
-          });
-      }
+      return res.status(error?.statusCode || 500).send({
+        success: false,
+        message:
+          error?.message ||
+          `An unexpected error occured while requesting credits for movie with id: ${movieId}`
+      });
     });
 };
 

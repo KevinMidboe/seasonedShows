@@ -1,11 +1,12 @@
 const path = require("path");
-const Field = require("./field.js");
+const Field = require("./field");
 
 let instance = null;
 
 class Config {
   constructor() {
     this.location = Config.determineLocation();
+    // eslint-disable-next-line import/no-dynamic-require, global-require
     this.fields = require(`${this.location}`);
   }
 

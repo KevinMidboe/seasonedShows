@@ -19,12 +19,10 @@ function searchMediaController(req, res) {
       if (media !== undefined || media.length > 0) {
         res.send(media);
       } else {
-        res
-          .status(404)
-          .send({
-            success: false,
-            message: "Search query did not return any results."
-          });
+        res.status(404).send({
+          success: false,
+          message: "Search query did not return any results."
+        });
       }
     })
     .catch(error => {

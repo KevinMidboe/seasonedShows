@@ -1,19 +1,33 @@
-const UserRepository = require("../../../user/userRepository");
-const userRepository = new UserRepository();
-const fetch = require("node-fetch");
 const FormData = require("form-data");
+const UserRepository = require("../../../user/userRepository");
+
+const userRepository = new UserRepository();
+
+class PlexAuthenticationError extends Error {
+  constructor(errorResponse, statusCode) {
+    const message =
+      "Unexptected error while authenticating to plex signin api. View error response.";
+    super(message);
+
+    this.errorResponse = errorResponse;
+    this.statusCode = statusCode;
+    this.success = false;
+  }
+}
 
 function handleError(error, res) {
-  let { status, message, source } = error;
+  const status = error?.status;
+  let { message, source } = error;
 
   if (status && message) {
     if (status === 401) {
-      (message = "Unauthorized. Please check plex credentials."),
-        (source = "plex");
+      message = "Unauthorized. Please check plex credentials.";
+      source = "plex";
     }
 
     res.status(status).send({ success: false, message, source });
   } else {
+    // eslint-disable-next-line no-console
     console.log("caught authenticate plex account controller error", error);
     res.status(500).send({
       message:
@@ -25,11 +39,7 @@ function handleError(error, res) {
 
 function handleResponse(response) {
   if (!response.ok) {
-    throw {
-      success: false,
-      status: response.status,
-      message: response.statusText
-    };
+    throw new PlexAuthenticationError(response.statusText, response.status);
   }
 
   return response.json();
@@ -63,7 +73,7 @@ function link(req, res) {
 
   return plexAuthenticate(username, password)
     .then(plexUser => userRepository.linkPlexUserId(user.username, plexUser.id))
-    .then(response =>
+    .then(() =>
       res.send({
         success: true,
         message:
@@ -78,7 +88,7 @@ function unlink(req, res) {
 
   return userRepository
     .unlinkPlexUserId(username)
-    .then(response =>
+    .then(() =>
       res.send({
         success: true,
         message: "Successfully unlinked plex account from seasoned request."

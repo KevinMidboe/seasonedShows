@@ -27,7 +27,7 @@ const cookieOptions = {
  */
 async function loginController(req, res) {
   const user = new User(req.body.username);
-  const password = req.body.password;
+  const { password } = req.body;
 
   try {
     const [loggedIn, isAdmin, settings] = await Promise.all([
@@ -43,11 +43,7 @@ async function loginController(req, res) {
       });
     }
 
-    const token = new Token(
-      user,
-      isAdmin === 1 ? true : false,
-      settings
-    ).toString(secret);
+    const token = new Token(user, isAdmin === 1, settings).toString(secret);
 
     return res.cookie("authorization", token, cookieOptions).status(200).send({
       success: true,

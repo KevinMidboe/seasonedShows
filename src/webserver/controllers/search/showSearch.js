@@ -1,6 +1,7 @@
 const SearchHistory = require("../../../searchHistory/searchHistory");
 const configuration = require("../../../config/configuration").getInstance();
 const TMDB = require("../../../tmdb/tmdb");
+
 const tmdb = new TMDB(configuration.get("tmdb", "apiKey"));
 const searchHistory = new SearchHistory();
 
@@ -13,7 +14,7 @@ const searchHistory = new SearchHistory();
 function showSearchController(req, res) {
   const { query, page, adult } = req.query;
   const username = req.loggedInUser ? req.loggedInUser.username : null;
-  const includeAdult = adult == "true" ? true : false;
+  const includeAdult = adult === "true";
 
   if (username) {
     searchHistory.create(username, query);
@@ -25,7 +26,12 @@ function showSearchController(req, res) {
       res.send(shows);
     })
     .catch(error => {
-      res.status(500).send({ success: false, message: error.message });
+      res.status(error?.statusCode || 500).send({
+        success: false,
+        message:
+          error?.message ||
+          `An unexpected error occured while searching person with query: ${query}`
+      });
     });
 }
 

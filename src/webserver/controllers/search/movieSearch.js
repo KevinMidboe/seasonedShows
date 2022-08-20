@@ -1,6 +1,7 @@
 const configuration = require("../../../config/configuration").getInstance();
 const TMDB = require("../../../tmdb/tmdb");
 const SearchHistory = require("../../../searchHistory/searchHistory");
+
 const tmdb = new TMDB(configuration.get("tmdb", "apiKey"));
 const searchHistory = new SearchHistory();
 
@@ -13,7 +14,7 @@ const searchHistory = new SearchHistory();
 function movieSearchController(req, res) {
   const { query, page, adult } = req.query;
   const username = req.loggedInUser ? req.loggedInUser.username : null;
-  const includeAdult = adult == "true" ? true : false;
+  const includeAdult = adult === "true";
 
   if (username) {
     searchHistory.create(username, query);
@@ -23,17 +24,12 @@ function movieSearchController(req, res) {
     .movieSearch(query, page, includeAdult)
     .then(movieSearchResults => res.send(movieSearchResults))
     .catch(error => {
-      const { status, message } = error;
-
-      if (status && message) {
-        res.status(status).send({ success: false, message });
-      } else {
-        // TODO log unhandled errors
-        console.log("caugth movie search controller error", error);
-        res.status(500).send({
-          message: `An unexpected error occured while searching movies with query: ${query}`
-        });
-      }
+      return res.status(error?.statusCode || 500).send({
+        success: false,
+        message:
+          error?.message ||
+          `An unexpected error occured while searching movies with query: ${query}`
+      });
     });
 }
 

@@ -1,6 +1,7 @@
 const configuration = require("../../../config/configuration").getInstance();
 const RequestRepository = require("../../../request/request");
 const TMDB = require("../../../tmdb/tmdb");
+
 const tmdb = new TMDB(configuration.get("tmdb", "apiKey"));
 const request = new RequestRepository();
 
@@ -23,16 +24,14 @@ function submitRequestController(req, res) {
   const id = req.params.mediaId;
   const type = req.query.type ? req.query.type.toLowerCase() : undefined;
   const ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
-  const user_agent = req.headers["user-agent"];
+  const userAgent = req.headers["user-agent"];
   const username = req.loggedInUser ? req.loggedInUser.username : null;
 
-  let mediaFunction = undefined;
+  let mediaFunction;
 
   if (type === "movie") {
-    console.log("movie");
     mediaFunction = tmdbMovieInfo;
   } else if (type === "show") {
-    console.log("show");
     mediaFunction = tmdbShowInfo;
   } else {
     res.status(422).send({
@@ -48,7 +47,7 @@ function submitRequestController(req, res) {
 
   mediaFunction(id)
     .then(tmdbMedia =>
-      request.requestFromTmdb(tmdbMedia, ip, user_agent, username)
+      request.requestFromTmdb(tmdbMedia, ip, userAgent, username)
     )
     .then(() =>
       res.send({ success: true, message: "Media item successfully requested" })

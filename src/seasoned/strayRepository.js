@@ -1,7 +1,7 @@
 const assert = require("assert");
+const pythonShell = require("python-shell");
 const Stray = require("./stray");
 const establishedDatabase = require("../database/database");
-const pythonShell = require("python-shell");
 
 class StrayRepository {
   constructor(database) {

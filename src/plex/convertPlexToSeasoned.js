@@ -1,3 +1,5 @@
+/* eslint-disable camelcase */
+
 const Plex = require("../media_classes/plex");
 
 function translateAdded(date_string) {
@@ -5,10 +7,10 @@ function translateAdded(date_string) {
 }
 
 function convertPlexToSeasoned(plex) {
-  const title = plex.title;
-  const year = plex.year;
-  const type = plex.type;
-  const summary = plex.summary;
+  const { title } = plex;
+  const { year } = plex;
+  const { type } = plex;
+  const { summary } = plex;
   const poster_path = plex.thumb;
   const background_path = plex.art;
   const added = translateAdded(plex.addedAt);
@@ -27,7 +29,6 @@ function convertPlexToSeasoned(plex) {
     seasons,
     episodes
   );
-  // seasoned.print();
   return seasoned;
 }
 

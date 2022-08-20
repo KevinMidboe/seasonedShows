@@ -1,6 +1,7 @@
 const configuration = require("../../../config/configuration").getInstance();
 const TMDB = require("../../../tmdb/tmdb");
 const RequestRepository = require("../../../request/request");
+
 const tmdb = new TMDB(configuration.get("tmdb", "apiKey"));
 const request = new RequestRepository();
 // const { sendSMS } = require("src/notifications/sms");
@@ -23,10 +24,10 @@ function requestTmdbIdController(req, res) {
   const { id, type } = req.body;
 
   const ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
-  const user_agent = req.headers["user-agent"];
+  const userAgent = req.headers["user-agent"];
   const username = req.loggedInUser ? req.loggedInUser.username : null;
 
-  let mediaFunction = undefined;
+  let mediaFunction;
 
   if (id === undefined || type === undefined) {
     res.status(422).send({
@@ -49,7 +50,7 @@ function requestTmdbIdController(req, res) {
   mediaFunction(id)
     // .catch((error) => { console.error(error); res.status(404).send({ success: false, error: 'Id not found' }) })
     .then(tmdbMedia => {
-      request.requestFromTmdb(tmdbMedia, ip, user_agent, username);
+      request.requestFromTmdb(tmdbMedia, ip, userAgent, username);
 
       // TODO enable SMS
       // const url = `https://request.movie?${tmdbMedia.type}=${tmdbMedia.id}`;

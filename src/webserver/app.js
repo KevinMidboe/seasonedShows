@@ -11,7 +11,7 @@ const mustBeAdmin = require("./middleware/mustBeAdmin");
 const mustHaveAccountLinkedToPlex = require("./middleware/mustHaveAccountLinkedToPlex");
 
 const listController = require("./controllers/list/listController");
-const tautulli = require("./controllers/user/viewHistory.js");
+const tautulli = require("./controllers/user/viewHistory");
 const SettingsController = require("./controllers/user/settings");
 const AuthenticatePlexAccountController = require("./controllers/user/authenticatePlexAccount");
 
@@ -24,7 +24,7 @@ app.use(bodyParser.json());
 app.use(cookieParser());
 
 const router = express.Router();
-const allowedOrigins = configuration.get("webserver", "origins");
+// const allowedOrigins = configuration.get("webserver", "origins");
 
 // TODO: All JSON handling in a single router
 // router.use(bodyParser.json());
@@ -56,18 +56,19 @@ router.get("/", (req, res) => {
   res.send("welcome to seasoned api");
 });
 
-app.use(Raven.errorHandler());
-app.use((err, req, res, next) => {
-  res.statusCode = 500;
-  res.end(res.sentry + "\n");
-});
+// app.use(Raven.errorHandler());
+// app.use((err, req, res) => {
+//   res.statusCode = 500;
+//   res.end(`${res.sentry}\n`);
+// });
 
 /**
  * User
  */
-router.post("/v1/user", require("./controllers/user/register.js"));
-router.post("/v1/user/login", require("./controllers/user/login.js"));
-router.post("/v1/user/logout", require("./controllers/user/logout.js"));
+router.post("/v1/user", require("./controllers/user/register"));
+router.post("/v1/user/login", require("./controllers/user/login"));
+router.post("/v1/user/logout", require("./controllers/user/logout"));
+
 router.get(
   "/v1/user/settings",
   mustBeAuthenticated,
@@ -81,13 +82,14 @@ router.put(
 router.get(
   "/v1/user/search_history",
   mustBeAuthenticated,
-  require("./controllers/user/searchHistory.js")
+  require("./controllers/user/searchHistory")
 );
 router.get(
   "/v1/user/requests",
   mustBeAuthenticated,
-  require("./controllers/user/requests.js")
+  require("./controllers/user/requests")
 );
+
 router.post(
   "/v1/user/link_plex",
   mustBeAuthenticated,
@@ -123,46 +125,40 @@ router.get(
 /**
  * Seasoned
  */
-router.get("/v1/seasoned/all", require("./controllers/seasoned/readStrays.js"));
+router.get("/v1/seasoned/all", require("./controllers/seasoned/readStrays"));
 router.get(
   "/v1/seasoned/:strayId",
-  require("./controllers/seasoned/strayById.js")
+  require("./controllers/seasoned/strayById")
 );
 router.post(
   "/v1/seasoned/verify/:strayId",
-  require("./controllers/seasoned/verifyStray.js")
+  require("./controllers/seasoned/verifyStray")
 );
 
-router.get("/v2/search/", require("./controllers/search/multiSearch.js"));
-router.get("/v2/search/movie", require("./controllers/search/movieSearch.js"));
-router.get("/v2/search/show", require("./controllers/search/showSearch.js"));
-router.get(
-  "/v2/search/person",
-  require("./controllers/search/personSearch.js")
-);
+router.get("/v2/search/", require("./controllers/search/multiSearch"));
+router.get("/v2/search/movie", require("./controllers/search/movieSearch"));
+router.get("/v2/search/show", require("./controllers/search/showSearch"));
+router.get("/v2/search/person", require("./controllers/search/personSearch"));
 
 router.get("/v2/movie/now_playing", listController.nowPlayingMovies);
 router.get("/v2/movie/popular", listController.popularMovies);
 router.get("/v2/movie/top_rated", listController.topRatedMovies);
 router.get("/v2/movie/upcoming", listController.upcomingMovies);
-router.get("/v2/movie/:id/credits", require("./controllers/movie/credits.js"));
+router.get("/v2/movie/:id/credits", require("./controllers/movie/credits"));
 router.get(
   "/v2/movie/:id/release_dates",
-  require("./controllers/movie/releaseDates.js")
+  require("./controllers/movie/releaseDates")
 );
-router.get("/v2/movie/:id", require("./controllers/movie/info.js"));
+router.get("/v2/movie/:id", require("./controllers/movie/info"));
 
 router.get("/v2/show/now_playing", listController.nowPlayingShows);
 router.get("/v2/show/popular", listController.popularShows);
 router.get("/v2/show/top_rated", listController.topRatedShows);
-router.get("/v2/show/:id/credits", require("./controllers/show/credits.js"));
-router.get("/v2/show/:id", require("./controllers/show/info.js"));
+router.get("/v2/show/:id/credits", require("./controllers/show/credits"));
+router.get("/v2/show/:id", require("./controllers/show/info"));
 
-router.get(
-  "/v2/person/:id/credits",
-  require("./controllers/person/credits.js")
-);
-router.get("/v2/person/:id", require("./controllers/person/info.js"));
+router.get("/v2/person/:id/credits", require("./controllers/person/credits"));
+router.get("/v2/person/:id", require("./controllers/person/info"));
 
 /**
  * Plex
@@ -172,40 +168,40 @@ router.get("/v2/plex/search", require("./controllers/plex/search"));
 /**
  * List
  */
-router.get("/v1/plex/search", require("./controllers/plex/searchMedia.js"));
-router.get("/v1/plex/playing", require("./controllers/plex/plexPlaying.js"));
-router.get("/v1/plex/request", require("./controllers/plex/searchRequest.js"));
+router.get("/v1/plex/search", require("./controllers/plex/searchMedia"));
+router.get("/v1/plex/playing", require("./controllers/plex/plexPlaying"));
+router.get("/v1/plex/request", require("./controllers/plex/searchRequest"));
 router.get(
   "/v1/plex/request/:mediaId",
-  require("./controllers/plex/readRequest.js")
+  require("./controllers/plex/readRequest")
 );
 router.post(
   "/v1/plex/request/:mediaId",
-  require("./controllers/plex/submitRequest.js")
+  require("./controllers/plex/submitRequest")
 );
-router.post("/v1/plex/hook", require("./controllers/plex/hookDump.js"));
+router.post("/v1/plex/hook", require("./controllers/plex/hookDump"));
 
 router.get(
   "/v1/plex/watch-link",
   mustBeAuthenticated,
-  require("./controllers/plex/watchDirectLink.js")
+  require("./controllers/plex/watchDirectLink")
 );
 
 /**
  * Requests
  */
 
-router.get("/v2/request", require("./controllers/request/fetchAllRequests.js"));
-router.get("/v2/request/:id", require("./controllers/request/getRequest.js"));
-router.post("/v2/request", require("./controllers/request/requestTmdbId.js"));
+router.get("/v2/request", require("./controllers/request/fetchAllRequests"));
+router.get("/v2/request/:id", require("./controllers/request/getRequest"));
+router.post("/v2/request", require("./controllers/request/requestTmdbId"));
 router.get(
   "/v1/plex/requests/all",
-  require("./controllers/plex/fetchRequested.js")
+  require("./controllers/plex/fetchRequested")
 );
 router.put(
   "/v1/plex/request/:requestId",
   mustBeAuthenticated,
-  require("./controllers/plex/updateRequested.js")
+  require("./controllers/plex/updateRequested")
 );
 
 /**
@@ -213,24 +209,24 @@ router.put(
  */
 router.get(
   "/v1/pirate/search",
-  mustBeAuthenticated,
-  require("./controllers/pirate/searchTheBay.js")
+  mustBeAdmin,
+  require("./controllers/pirate/searchTheBay")
 );
 router.post(
   "/v1/pirate/add",
-  mustBeAuthenticated,
-  require("./controllers/pirate/addMagnet.js")
+  mustBeAdmin,
+  require("./controllers/pirate/addMagnet")
 );
 
 /**
  * git
  */
-router.post("/v1/git/dump", require("./controllers/git/dumpHook.js"));
+router.post("/v1/git/dump", require("./controllers/git/dumpHook"));
 
 /**
  * misc
  */
-router.get("/v1/emoji", require("./controllers/misc/emoji.js"));
+router.get("/v1/emoji", require("./controllers/misc/emoji"));
 
 // REGISTER OUR ROUTES -------------------------------
 // all of our routes will be prefixed with /api

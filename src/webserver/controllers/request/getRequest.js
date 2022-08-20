@@ -1,4 +1,5 @@
 const RequestRepository = require("../../../request/request");
+
 const request = new RequestRepository();
 
 /**
@@ -8,14 +9,19 @@ const request = new RequestRepository();
  * @returns {Callback}
  */
 function fetchAllRequests(req, res) {
-  const id = req.params.id;
+  const { id } = req.params;
   const { type } = req.query;
 
   request
     .getRequestByIdAndType(id, type)
     .then(result => res.send(result))
     .catch(error => {
-      res.status(404).send({ success: false, message: error.message });
+      return res.status(error?.statusCode || 500).send({
+        success: false,
+        message:
+          error?.message ||
+          `An unexpected error occured while requesting request with id: ${id}`
+      });
     });
 }
 

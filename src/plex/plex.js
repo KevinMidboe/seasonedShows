@@ -2,57 +2,100 @@ const fetch = require("node-fetch");
 const convertPlexToMovie = require("./convertPlexToMovie");
 const convertPlexToShow = require("./convertPlexToShow");
 const convertPlexToEpisode = require("./convertPlexToEpisode");
-
-const { Movie, Show, Person } = require("../tmdb/types");
-
 const redisCache = require("../cache/redis");
 
-const sanitize = string => string.toLowerCase().replace(/[^\w]/gi, "");
+class PlexRequestTimeoutError extends Error {
+  constructor() {
+    const message = "Timeout: Plex did not respond.";
 
-function fixedEncodeURIComponent(str) {
-  return encodeURIComponent(str).replace(/[!'()*]/g, function (c) {
-    return "%" + c.charCodeAt(0).toString(16).toUpperCase();
-  });
+    super(message);
+    this.statusCode = 408;
+  }
 }
 
-const matchingTitleAndYear = (plex, tmdb) => {
-  let matchingTitle, matchingYear;
+class PlexUnexpectedError extends Error {
+  constructor(plexError = null) {
+    const message = "Unexpected plex error occured.";
 
-  if (plex["title"] != null && tmdb["title"] != null) {
+    super(message);
+    this.statusCode = 500;
+    this.plexError = plexError;
+  }
+}
+
+const sanitize = string => string.toLowerCase().replace(/[^\w]/gi, "");
+const matchingTitleAndYear = (plex, tmdb) => {
+  let matchingTitle;
+  let matchingYear;
+
+  if (plex?.title && tmdb?.title) {
     const plexTitle = sanitize(plex.title);
     const tmdbTitle = sanitize(tmdb.title);
-    matchingTitle = plexTitle == tmdbTitle;
-    matchingTitle = matchingTitle
-      ? matchingTitle
-      : plexTitle.startsWith(tmdbTitle);
+    matchingTitle = plexTitle === tmdbTitle;
+    matchingTitle = matchingTitle || plexTitle.startsWith(tmdbTitle);
   } else matchingTitle = false;
 
-  if (plex["year"] != null && tmdb["year"] != null)
-    matchingYear = plex.year == tmdb.year;
+  if (plex?.year && tmdb?.year) matchingYear = plex.year === tmdb.year;
   else matchingYear = false;
 
   return matchingTitle && matchingYear;
 };
 
-const successfullResponse = response => {
-  if (response && response["MediaContainer"]) return response;
+function fixedEncodeURIComponent(str) {
+  return encodeURIComponent(str).replace(/[!'()*]/g, c => {
+    return `%${c.charCodeAt(0).toString(16).toUpperCase()}`;
+  });
+}
 
-  if (
-    response == null ||
-    response["status"] == null ||
-    response["statusText"] == null
-  ) {
-    throw Error("Unable to decode response");
-  }
+function matchTmdbAndPlexMedia(plex, tmdb) {
+  let match;
 
-  const { status, statusText } = response;
+  if (plex === null || tmdb === null) return false;
 
-  if (status === 200) {
-    return response.json();
+  if (plex instanceof Array) {
+    const possibleMatches = plex.map(plexItem =>
+      matchingTitleAndYear(plexItem, tmdb)
+    );
+    match = possibleMatches.includes(true);
   } else {
-    throw { message: statusText, status: status };
+    match = matchingTitleAndYear(plex, tmdb);
   }
+
+  return match;
+}
+
+const successfullResponse = response => {
+  const { status, statusText } = response;
+  if (status !== 200) {
+    throw new PlexUnexpectedError(statusText);
+  }
+
+  if (response?.MediaContainer) return response;
+
+  return response.json();
 };
+
+function mapResults(response) {
+  if (response?.MediaContainer?.Hub === null) {
+    return [];
+  }
+
+  return response.MediaContainer.Hub.filter(category => category.size > 0)
+    .map(category => {
+      if (category.type === "movie") {
+        return category.Metadata.map(convertPlexToMovie);
+      }
+      if (category.type === "show") {
+        return category.Metadata.map(convertPlexToShow);
+      }
+      if (category.type === "episode") {
+        return category.Metadata.map(convertPlexToEpisode);
+      }
+
+      return null;
+    })
+    .filter(result => result !== null);
+}
 
 class Plex {
   constructor(ip, port = 32400, cache = null) {
@@ -77,42 +120,21 @@ class Plex {
     return new Promise((resolve, reject) =>
       this.cache
         .get(cacheKey)
-        .then(machineInfo => resolve(machineInfo["machineIdentifier"]))
+        .then(machineInfo => resolve(machineInfo?.machineIdentifier))
         .catch(() => fetch(url, options))
         .then(response => response.json())
         .then(machineInfo =>
-          this.cache.set(cacheKey, machineInfo["MediaContainer"], 2628000)
+          this.cache.set(cacheKey, machineInfo.MediaContainer, 2628000)
         )
-        .then(machineInfo => resolve(machineInfo["machineIdentifier"]))
+        .then(machineInfo => resolve(machineInfo?.machineIdentifier))
         .catch(error => {
-          if (error != undefined && error.type === "request-timeout") {
-            reject({
-              message: "Plex did not respond",
-              status: 408,
-              success: false
-            });
+          if (error?.type === "request-timeout") {
+            reject(new PlexRequestTimeoutError());
           }
 
-          reject(error);
+          reject(new PlexUnexpectedError());
         })
     );
-  }
-
-  matchTmdbAndPlexMedia(plex, tmdb) {
-    let match;
-
-    if (plex == null || tmdb == null) return false;
-
-    if (plex instanceof Array) {
-      let possibleMatches = plex.map(plexItem =>
-        matchingTitleAndYear(plexItem, tmdb)
-      );
-      match = possibleMatches.includes(true);
-    } else {
-      match = matchingTitleAndYear(plex, tmdb);
-    }
-
-    return match;
   }
 
   async existsInPlex(tmdb) {
@@ -120,7 +142,7 @@ class Plex {
       tmdb.title,
       tmdb.year
     );
-    return plexMatch ? true : false;
+    return !!plexMatch;
   }
 
   findPlexItemByTitleAndYear(title, year) {
@@ -128,10 +150,10 @@ class Plex {
 
     return this.search(title).then(plexResults => {
       const matchesInPlex = plexResults.map(plex =>
-        this.matchTmdbAndPlexMedia(plex, query)
+        matchTmdbAndPlexMedia(plex, query)
       );
       const matchesIndex = matchesInPlex.findIndex(el => el === true);
-      return matchesInPlex != -1 ? plexResults[matchesIndex] : null;
+      return matchesInPlex !== -1 ? plexResults[matchesIndex] : null;
     });
   }
 
@@ -147,10 +169,10 @@ class Plex {
       matchingObjectInPlexPromise
     ]).then(([machineIdentifier, matchingObjectInPlex]) => {
       if (
-        matchingObjectInPlex == false ||
-        matchingObjectInPlex == null ||
-        matchingObjectInPlex["key"] == null ||
-        machineIdentifier == null
+        matchingObjectInPlex === false ||
+        matchingObjectInPlex === null ||
+        matchingObjectInPlex.key === null ||
+        machineIdentifier === null
       )
         return false;
 
@@ -176,18 +198,14 @@ class Plex {
         .catch(() => fetch(url, options)) // else fetch fresh data
         .then(successfullResponse)
         .then(results => this.cache.set(cacheKey, results, 21600)) // 6 hours
-        .then(this.mapResults)
+        .then(mapResults)
         .then(resolve)
         .catch(error => {
-          if (error != undefined && error.type === "request-timeout") {
-            reject({
-              message: "Plex did not respond",
-              status: 408,
-              success: false
-            });
+          if (error?.type === "request-timeout") {
+            reject(new PlexRequestTimeoutError());
           }
 
-          reject(error);
+          reject(new PlexUnexpectedError());
         })
     );
   }
@@ -200,40 +218,13 @@ class Plex {
     const query = title;
     const cacheKey = `${this.cacheTags.search}/${query}*`;
 
-    this.cache.del(
-      cacheKey,
-      (error,
-      response => {
-        if (response == 1) return true;
-
-        // TODO improve cache key matching by lowercasing it on the backend.
-        // what do we actually need to check for if the key was deleted or not
-        // it might be an error or another response code.
-        console.log("Unable to delete, key might not exists");
-      })
-    );
-  }
-
-  mapResults(response) {
-    if (
-      response == null ||
-      response.MediaContainer == null ||
-      response.MediaContainer.Hub == null
-    ) {
-      return [];
-    }
-
-    return response.MediaContainer.Hub.filter(category => category.size > 0)
-      .map(category => {
-        if (category.type === "movie") {
-          return category.Metadata;
-        } else if (category.type === "show") {
-          return category.Metadata.map(convertPlexToShow);
-        } else if (category.type === "episode") {
-          return category.Metadata.map(convertPlexToEpisode);
-        }
-      })
-      .filter(result => result !== undefined);
+    this.cache.del(cacheKey, (error, response) => {
+      // TODO improve cache key matching by lowercasing it on the backend.
+      // what do we actually need to check for if the key was deleted or not
+      // it might be an error or another response code.
+      console.log("Unable to delete, key might not exists");
+      return response === 1;
+    });
   }
 }
 

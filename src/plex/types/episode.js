@@ -8,8 +8,8 @@ class Episode {
     this.summary = null;
     this.rating = null;
     this.views = null;
-    this.aired = null;   
-    this.type = 'episode';
+    this.aired = null;
+    this.type = "episode";
   }
 }
 

@@ -1,21 +1,9 @@
 const configuration = require("../../../config/configuration").getInstance();
 const TMDB = require("../../../tmdb/tmdb");
 const Plex = require("../../../plex/plex");
+
 const tmdb = new TMDB(configuration.get("tmdb", "apiKey"));
 const plex = new Plex(configuration.get("plex", "ip"));
-
-function handleError(error, res) {
-  const { status, message } = error;
-
-  if (status && message) {
-    res.status(status).send({ success: false, message });
-  } else {
-    console.log("caught showinfo controller error", error);
-    res.status(500).send({
-      message: "An unexpected error occured while requesting show info."
-    });
-  }
-}
 
 /**
  * Controller: Retrieve information for a show
@@ -26,16 +14,13 @@ function handleError(error, res) {
 
 async function showInfoController(req, res) {
   const showId = req.params.id;
-  let { credits, check_existance } = req.query;
+  let credits = req.query?.credits;
+  let checkExistance = req.query?.check_existance;
 
-  credits && credits.toLowerCase() === "true"
-    ? (credits = true)
-    : (credits = false);
-  check_existance && check_existance.toLowerCase() === "true"
-    ? (check_existance = true)
-    : (check_existance = false);
+  credits = credits?.toLowerCase() === "true";
+  checkExistance = checkExistance?.toLowerCase() === "true";
 
-  let tmdbQueue = [tmdb.showInfo(showId)];
+  const tmdbQueue = [tmdb.showInfo(showId)];
   if (credits) tmdbQueue.push(tmdb.showCredits(showId));
 
   try {
@@ -44,11 +29,21 @@ async function showInfoController(req, res) {
     const show = Show.createJsonResponse();
     if (credits) show.credits = Credits.createJsonResponse();
 
-    if (check_existance) show.exists_in_plex = await plex.existsInPlex(show);
+    if (checkExistance) {
+      /* eslint no-empty: ["error", { "allowEmptyCatch": true }] */
+      try {
+        show.exists_in_plex = await plex.existsInPlex(show);
+      } catch {}
+    }
 
-    res.send(show);
+    return res.send(show);
   } catch (error) {
-    handleError(error, res);
+    return res.status(error?.statusCode || 500).send({
+      success: false,
+      message:
+        error?.message ||
+        `An unexpected error occured while requesting info for show with id: ${showId}`
+    });
   }
 }
 

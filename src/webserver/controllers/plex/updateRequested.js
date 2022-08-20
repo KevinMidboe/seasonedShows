@@ -10,8 +10,8 @@ const requestRepository = new RequestRepository();
  */
 function updateRequested(req, res) {
   const id = req.params.requestId;
-  const type = req.body.type;
-  const status = req.body.status;
+  const { type } = req.body;
+  const { status } = req.body;
 
   requestRepository
     .updateRequestedById(id, type, status)

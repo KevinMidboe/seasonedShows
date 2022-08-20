@@ -11,22 +11,18 @@ const reqTokenToUser = (req, res, next) => {
   const cookieAuthToken = req.cookies.authorization;
   const headerAuthToken = req.headers.authorization;
 
-  if (cookieAuthToken || headerAuthToken) {
-    try {
-      const token = Token.fromString(
-        cookieAuthToken || headerAuthToken,
-        secret
-      );
-      req.loggedInUser = token.user;
-    } catch (error) {
-      req.loggedInUser = undefined;
-    }
-  } else {
-    // guest session
-    console.debug("No auth token in header or cookie.");
+  if (!(cookieAuthToken || headerAuthToken)) {
+    return next();
   }
 
-  next();
+  try {
+    const token = Token.fromString(cookieAuthToken || headerAuthToken, secret);
+    req.loggedInUser = token.user;
+  } catch (error) {
+    req.loggedInUser = null;
+  }
+
+  return next();
 };
 
 module.exports = reqTokenToUser;

@@ -1,3 +1,4 @@
+// eslint-disable-next-line consistent-return
 const mustBeAuthenticated = (req, res, next) => {
   if (req.loggedInUser === undefined) {
     return res.status(401).send({
@@ -5,7 +6,8 @@ const mustBeAuthenticated = (req, res, next) => {
       message: "You must be logged in."
     });
   }
-  return next();
+
+  next();
 };
 
 module.exports = mustBeAuthenticated;

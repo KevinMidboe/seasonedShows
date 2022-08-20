@@ -1,32 +1,31 @@
-const { promisify } = require("util");
 const configuration = require("../config/configuration").getInstance();
 
 let client;
 
 try {
-  const redis = require("redis");
-  console.log("Trying to connect with redis..");
+  const redis = require("redis"); // eslint-disable-line global-require
+  console.log("Trying to connect with redis.."); // eslint-disable-line no-console
   const host = configuration.get("redis", "host");
   const port = configuration.get("redis", "port");
 
-  console.log(`redis://${host}:${port}`);
+  console.log(`redis://${host}:${port}`); // eslint-disable-line no-console
   client = redis.createClient({
     url: `redis://${host}:${port}`
   });
 
-  client.on("connect", () => console.log("Redis connection established!"));
+  client.on("connect", () => console.log("Redis connection established!")); // eslint-disable-line no-console
 
-  client.on("error", function (err) {
+  client.on("error", () => {
     client.quit();
-    console.error("Unable to connect to redis, setting up redis-mock.");
+    console.error("Unable to connect to redis, setting up redis-mock."); // eslint-disable-line no-console
 
     client = {
-      get: function () {
-        console.log("redis-dummy get", arguments[0]);
+      get(command) {
+        console.log(`redis-dummy get: ${command}`); // eslint-disable-line no-console
         return Promise.resolve();
       },
-      set: function () {
-        console.log("redis-dummy set", arguments[0]);
+      set(command) {
+        console.log(`redis-dummy set: ${command}`); // eslint-disable-line no-console
         return Promise.resolve();
       }
     };
@@ -38,10 +37,11 @@ function set(key, value, TTL = 10800) {
 
   const json = JSON.stringify(value);
   client.set(key, json, (error, reply) => {
-    if (reply == "OK") {
+    if (reply === "OK") {
       // successfully set value with key, now set TTL for key
       client.expire(key, TTL, e => {
         if (e)
+          // eslint-disable-next-line no-console
           console.error(
             "Unexpected error while setting expiration for key:",
             key,
@@ -55,14 +55,14 @@ function set(key, value, TTL = 10800) {
   return value;
 }
 
-function get() {
+function get(key) {
   return new Promise((resolve, reject) => {
     client.get(key, (error, reply) => {
-      if (reply == null) {
+      if (reply === null) {
         return reject();
       }
 
-      resolve(JSON.parse(reply));
+      return resolve(JSON.parse(reply));
     });
   });
 }
