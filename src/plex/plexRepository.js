@@ -1,3 +1,4 @@
+const rp = require("request-promise");
 const convertPlexToSeasoned = require("./convertPlexToSeasoned");
 const convertPlexToStream = require("./convertPlexToStream");
 

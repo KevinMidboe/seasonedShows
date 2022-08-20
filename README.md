@@ -6,16 +6,19 @@
 <h4 align="center"> Season your media library with the shows and movies that you and your friends want.</h4>
 
 <p align="center">
-  <a href="https://travis-ci.org/KevinMidboe/seasonedShows">
-    <img src="https://travis-ci.org/KevinMidboe/seasonedShows.svg?branch=master"
-         alt="Travis CI">
+  <a href="https://drone.schleppe.cloud/KevinMidboe/seasonedShows">
+    <img src="https://drone.schleppe.cloud/api/badges/KevinMidboe/seasonedShows/status.svg"
+         alt="Drone CI">
   </a>
+
   <a href="https://coveralls.io/github/KevinMidboe/seasonedShows?branch=api/v2">
     <img src="https://coveralls.io/repos/github/KevinMidboe/seasonedShows/badge.svg?branch=api/v2" alt="">
   </a>
-  <a href="https://snyk.io/test/github/KevinMidboe/seasonedShows?targetFile=seasoned_api/package.json">
-    <img src="https://snyk.io/test/github/KevinMidboe/seasonedShows/badge.svg?targetFile=seasoned_api/package.json" alt="">
+  
+  <a href="https://snyk.io/test/github/KevinMidboe/seasonedShows?targetFile=package.json">
+    <img src="https://snyk.io/test/github/KevinMidboe/seasonedShows/badge.svg?targetFile=package.json" alt="">
   </a>
+  
   <a href="https://opensource.org/licenses/MIT">
     <img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="">
   </a>
