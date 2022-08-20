@@ -1,5 +1,8 @@
-const request = require("supertest-as-promised");
-const app = require("../../src/webserver/app");
+const assert = require("assert");
+const chai = require("chai");
+const chaiHttp = require("chai-http");
+
+const server = require("../../src/webserver/server");
 const createUser = require("../helpers/createUser");
 const createToken = require("../helpers/createToken");
 const resetDatabase = require("../helpers/resetDatabase");
@@ -11,10 +14,14 @@ describe("As a user I want to request a movie", () => {
   beforeEach(() => createUser("test_user", "test@gmail.com", "password"));
   beforeEach(() => createCacheEntry("mi:335984:false", infoMovieSuccess));
 
-  it("should return 200 when item is requested", () =>
-    request(app)
+  it("should return 200 when item is requested", () => {
+    chai
+      .request(server)
       .post("/api/v2/request")
       .set("authorization", createToken("test_user", "secret"))
       .send({ id: 335984, type: "movie" })
-      .expect(200));
+      .end((error, response) => {
+        assert.equal(response?.status, 200);
+      });
+  });
 });

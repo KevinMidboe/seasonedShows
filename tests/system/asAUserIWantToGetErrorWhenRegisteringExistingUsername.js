@@ -1,23 +1,30 @@
 const assert = require("assert");
-const request = require("supertest-as-promised");
-const app = require("../../src/webserver/app");
+const chai = require("chai");
+const chaiHttp = require("chai-http");
+
+const server = require("../../src/webserver/server");
 const createUser = require("../helpers/createUser");
 const resetDatabase = require("../helpers/resetDatabase");
 
-describe("As a user I want error when registering existing username", () => {
-  beforeEach(() => {
-    return resetDatabase().then(() => createUser("test_user", "password"));
-  });
+chai.use(chaiHttp);
 
-  it("should return 401 with error message when same username is given", () =>
-    request(app)
+describe("As a user I want error when registering existing username", () => {
+  beforeEach(() => resetDatabase());
+  beforeEach(() => createUser("test_user", "password"));
+
+  it("should return 401 with error message when same username is given", done => {
+    chai
+      .request(server)
       .post("/api/v1/user")
       .send({ username: "test_user", password: "password" })
-      .expect(401)
-      .then(response =>
+      .end((error, response) => {
+        // console.log(response);
+        assert.equal(response?.status, 401);
         assert.equal(
-          response.text,
+          response?.text,
           '{"success":false,"message":"That username is already registered"}'
-        )
-      ));
+        );
+        done();
+      });
+  });
 });

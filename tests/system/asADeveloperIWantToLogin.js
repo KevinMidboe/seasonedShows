@@ -1,24 +1,40 @@
-const request = require("supertest-as-promised");
-const app = require("../../src/webserver/app");
+const assert = require("assert");
+const chai = require("chai");
+const chaiHttp = require("chai-http");
+
+const server = require("../../src/webserver/server");
 const createUser = require("../helpers/createUser");
 const resetDatabase = require("../helpers/resetDatabase");
-// const assert = require("assert");
+
+chai.use(chaiHttp);
 
 describe("As a user I want to log in", () => {
-  beforeEach(() => {
-    return resetDatabase().then(() => createUser("test_user", "password"));
-  });
+  beforeEach(() => resetDatabase());
+  beforeEach(() => createUser("test_user", "password"));
 
-  it("should return 200 with a token if correct credentials are given", () =>
-    request(app)
+  it("should return 200 with a token if correct credentials are given", done => {
+    chai
+      .request(server)
       .post("/api/v1/user/login")
       .send({ username: "test_user", password: "password" })
-      .expect(200));
-  // .then(response => assert.equal(typeof response.body.token, "string")));
+      .end((error, response) => {
+        // console.log(response);
 
-  it("should return 401 if incorrect credentials are given", () =>
-    request(app)
+        assert.equal(response?.status, 200);
+        done();
+      });
+  });
+
+  it("should return 401 if incorrect credentials are given", done => {
+    chai
+      .request(server)
       .post("/api/v1/user/login")
       .send({ username: "test_user", password: "anti-password" })
-      .expect(401));
+      .end((error, response) => {
+        // console.log(response);
+
+        assert.equal(response?.status, 401);
+        done();
+      });
+  });
 });
