@@ -2,14 +2,12 @@
 const net = require("net");
 const server = require("../../src/webserver/server");
 
-xdescribe('As a developer I want the server to start', () => {
-  beforeEach(() =>
-    this.server = require('src/webserver/server'));
-
-  it('should listen on port 31400', (done) => {
-    net.createConnection(31400, done);
+describe("As a developer I want the server to start", () => {
+  after(() => {
+    server.close();
   });
 
-  afterEach(() =>
-    this.server.close());
+  it("should listen on port 31400", done => {
+    net.createConnection(31400, done);
+  });
 });

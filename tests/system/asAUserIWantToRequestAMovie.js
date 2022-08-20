@@ -6,18 +6,15 @@ const resetDatabase = require("../helpers/resetDatabase");
 const createCacheEntry = require("../helpers/createCacheEntry");
 const infoMovieSuccess = require("../fixtures/blade_runner_2049-info-success-response.json");
 
-describe('As a user I want to request a movie', () => {
-  before(async () => {
-    await resetDatabase()
-    await createUser('test_user', 'test@gmail.com', 'password')
-   })
-  before(() => createCacheEntry('mi:335984:false', infoMovieSuccess));
+describe("As a user I want to request a movie", () => {
+  beforeEach(() => resetDatabase());
+  beforeEach(() => createUser("test_user", "test@gmail.com", "password"));
+  beforeEach(() => createCacheEntry("mi:335984:false", infoMovieSuccess));
 
-  it('should return 200 when item is requested', () =>
+  it("should return 200 when item is requested", () =>
     request(app)
-    .post('/api/v2/request')
-    .set('authorization', createToken('test_user', 'secret'))
-    .send({ id: 335984, type: 'movie' })
-    .expect(200)
-  );
+      .post("/api/v2/request")
+      .set("authorization", createToken("test_user", "secret"))
+      .send({ id: 335984, type: "movie" })
+      .expect(200));
 });
