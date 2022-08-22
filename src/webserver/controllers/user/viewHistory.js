@@ -1,6 +1,7 @@
-const configuration = require("../../../config/configuration").getInstance();
-const Tautulli = require("../../../tautulli/tautulli");
+import configuration from "../../../config/configuration";
+import Tautulli from "../../../tautulli/tautulli";
 
+const configuration = Configuration.getInstance();
 const apiKey = configuration.get("tautulli", "apiKey");
 const ip = configuration.get("tautulli", "ip");
 const port = configuration.get("tautulli", "port");
@@ -101,9 +102,9 @@ function userViewHistoryController(req, res) {
   // const username = user.username;
 }
 
-module.exports = {
+export default {
   watchTimeStatsController,
-  getPlaysByDaysController,
   getPlaysByDayOfWeekController,
+  getPlaysByDaysController,
   userViewHistoryController
 };
