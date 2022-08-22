@@ -4,6 +4,7 @@ configurations/development.json
 configurations/production.json
 .env
 shows.db
+lib/
 
 node_modules
 */package-lock.json

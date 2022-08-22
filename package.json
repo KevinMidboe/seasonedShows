@@ -7,16 +7,18 @@
   },
   "main": "webserver/server.js",
   "scripts": {
-    "start": "SEASONED_CONFIG=configurations/production.json NODE_ENV=production node src/webserver/server.js",
+    "start": "SEASONED_CONFIG=configurations/production.json NODE_ENV=production node lib/webserver/server.js",
     "dev": "SEASONED_CONFIG=configurations/development.json NODE_ENV=development node src/webserver/server.js",
     "test": "SEASONED_CONFIG=configurations/test.json mocha --recursive tests/unit tests/system",
+    "build": "yarn tsc",
     "coverage:upload": "SEASONED_CONFIG=configurations/test.json mocha --recursive tests/unit && nyc report --reporter=text-lcov | coveralls",
     "coverage": "SEASONED_CONFIG=configurations/test.json mocha --recursive tests/unit && nyc report",
     "lint": "eslint src tests",
-    "update": "SEASONED_CONFIG=configurations/development.json node scripts/updateRequestsInPlex.js",
+    "update": "SEASONED_CONFIG=configurations/production.json node scripts/updateRequestsInPlex.js",
     "docs": "yarn apiDocs; yarn classDocs",
     "apiDocs": "",
-    "classDocs": "scripts/generate-class-docs.sh"
+    "classDocs": "scripts/generate-class-docs.sh",
+    "postbuild": "cp -r src/database/schemas lib/database"
   },
   "dependencies": {
     "bcrypt": "^5.0.1",
@@ -29,13 +31,16 @@
     "python-shell": "^0.5.0",
     "raven": "^2.4.2",
     "redis": "^3.0.2",
-    "sqlite3": "^5.0.1"
+    "sqlite3": "^5.0.1",
+    "typescript": "^4.7.4"
   },
   "devDependencies": {
     "@babel/core": "^7.5.5",
     "@babel/preset-env": "^7.5.5",
     "@babel/register": "^7.5.5",
-    "@types/node": "^12.6.8",
+    "@types/node": "^18.7.8",
+    "@typescript-eslint/eslint-plugin": "^5.33.1",
+    "@typescript-eslint/parser": "^5.33.1",
     "chai": "^4.3.6",
     "chai-http": "^4.3.0",
     "coveralls": "^3.0.5",
