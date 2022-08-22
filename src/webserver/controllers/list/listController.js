@@ -1,6 +1,7 @@
-const configuration = require("../../../config/configuration").getInstance();
-const TMDB = require("../../../tmdb/tmdb");
+import TMDB from "../../../tmdb/tmdb";
+import Configuration from "../../../config/configuration";
 
+const configuration = Configuration.getInstance();
 const tmdb = new TMDB(configuration.get("tmdb", "apiKey"));
 
 // there should be a translate function from query params to
@@ -50,27 +51,17 @@ function fetchTmdbList(req, res, listname, type) {
   );
 }
 
-const nowPlayingMovies = (req, res) =>
+export const nowPlayingMovies = (req, res) =>
   fetchTmdbList(req, res, "miscNowPlayingMovies", "movie");
-const popularMovies = (req, res) =>
+export const popularMovies = (req, res) =>
   fetchTmdbList(req, res, "miscPopularMovies", "movie");
-const topRatedMovies = (req, res) =>
+export const topRatedMovies = (req, res) =>
   fetchTmdbList(req, res, "miscTopRatedMovies", "movie");
-const upcomingMovies = (req, res) =>
+export const upcomingMovies = (req, res) =>
   fetchTmdbList(req, res, "miscUpcomingMovies", "movie");
-const nowPlayingShows = (req, res) =>
+export const nowPlayingShows = (req, res) =>
   fetchTmdbList(req, res, "tvOnTheAir", "show");
-const popularShows = (req, res) =>
+export const popularShows = (req, res) =>
   fetchTmdbList(req, res, "miscPopularTvs", "show");
-const topRatedShows = (req, res) =>
+export const topRatedShows = (req, res) =>
   fetchTmdbList(req, res, "miscTopRatedTvs", "show");
-
-module.exports = {
-  nowPlayingMovies,
-  popularMovies,
-  topRatedMovies,
-  upcomingMovies,
-  nowPlayingShows,
-  popularShows,
-  topRatedShows
-};

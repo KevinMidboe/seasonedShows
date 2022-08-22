@@ -1,6 +1,6 @@
-const fs = require("fs");
-const path = require("path");
-const sqlite3 = require("sqlite3").verbose();
+import fs from "fs";
+import path from "path";
+import sqlite3 from "sqlite3";
 
 class SqliteDatabase {
   constructor(host) {
@@ -115,4 +115,4 @@ class SqliteDatabase {
   }
 }
 
-module.exports = SqliteDatabase;
+export default SqliteDatabase;

@@ -1,5 +1,7 @@
-const configuration = require("../../../config/configuration").getInstance();
-const Plex = require("../../../plex/plex");
+import Plex from "../../../plex/plex";
+import Configuration from "../../../config/configuration";
+
+const configuration = Configuration.getInstance();
 
 const plex = new Plex(configuration.get("plex", "ip"));
 
@@ -28,4 +30,4 @@ function searchPlexController(req, res) {
     });
 }
 
-module.exports = searchPlexController;
+export default searchPlexController;

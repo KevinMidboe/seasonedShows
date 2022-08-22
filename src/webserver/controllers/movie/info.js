@@ -1,7 +1,8 @@
-const configuration = require("../../../config/configuration").getInstance();
-const TMDB = require("../../../tmdb/tmdb");
-const Plex = require("../../../plex/plex");
+import TMDB from "../../../tmdb/tmdb";
+import Plex from "../../../plex/plex";
+import Configuration from "../../../config/configuration";
 
+const configuration = Configuration.getInstance();
 const tmdb = new TMDB(configuration.get("tmdb", "apiKey"));
 const plex = new Plex(configuration.get("plex", "ip"));
 
@@ -52,4 +53,4 @@ async function movieInfoController(req, res) {
   }
 }
 
-module.exports = movieInfoController;
+export default movieInfoController;

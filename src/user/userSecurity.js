@@ -1,5 +1,5 @@
-const bcrypt = require("bcrypt");
-const UserRepository = require("./userRepository");
+import bcrypt from "bcrypt";
+import UserRepository from "./userRepository";
 
 class UserSecurity {
   constructor(database) {
@@ -72,4 +72,4 @@ class UserSecurity {
   }
 }
 
-module.exports = UserSecurity;
+export default UserSecurity;

@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
-const Movie = require("./movie");
-const Show = require("./show");
+import Movie from "./movie";
+import Show from "./show";
 
 class CreditedMovie extends Movie {}
 class CreditedShow extends Show {}
@@ -113,4 +113,4 @@ class Credits {
   }
 }
 
-module.exports = Credits;
+export default Credits;

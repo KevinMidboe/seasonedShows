@@ -1,5 +1,5 @@
-const path = require("path");
-const Field = require("./field");
+import path from "path";
+import Field from "./field";
 
 let instance = null;
 
@@ -45,4 +45,4 @@ class Config {
   }
 }
 
-module.exports = Config;
+export default Config;

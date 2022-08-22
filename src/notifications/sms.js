@@ -1,4 +1,6 @@
-const configuration = require("../config/configuration").getInstance();
+import Configuration from "../config/configuration";
+
+const configuration = Configuration.getInstance();
 
 class SMSUnexpectedError extends Error {
   constructor(errorMessage) {
@@ -9,7 +11,7 @@ class SMSUnexpectedError extends Error {
   }
 }
 
-const sendSMS = message => {
+export function sendSMS(message) {
   const apiKey = configuration.get("sms", "apikey");
 
   if (!apiKey) {
@@ -35,6 +37,4 @@ const sendSMS = message => {
       .then(response => resolve(response))
       .catch(error => reject(new SMSUnexpectedError(error)));
   });
-};
-
-module.exports = { sendSMS };
+}

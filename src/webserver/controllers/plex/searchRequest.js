@@ -1,6 +1,6 @@
-const SearchHistory = require("../../../searchHistory/searchHistory");
-const Cache = require("../../../tmdb/cache");
-const RequestRepository = require("../../../plex/requestRepository");
+import SearchHistory from "../../../searchHistory/searchHistory";
+import Cache from "../../../tmdb/cache";
+import RequestRepository from "../../../plex/requestRepository";
 
 const cache = new Cache();
 const requestRepository = new RequestRepository(cache);
@@ -21,4 +21,4 @@ function searchRequestController(req, res) {
     });
 }
 
-module.exports = searchRequestController;
+export default searchRequestController;

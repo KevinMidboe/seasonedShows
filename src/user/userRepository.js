@@ -1,5 +1,5 @@
-const assert = require("assert");
-const establishedDatabase = require("../database/database");
+import assert from "assert";
+import establishedDatabase from "../database/database";
 
 class LinkPlexUserError extends Error {
   constructor(errorMessage = null) {
@@ -263,4 +263,4 @@ class UserRepository {
   }
 }
 
-module.exports = UserRepository;
+export default UserRepository;

@@ -1,7 +1,7 @@
-const convertPlexToMovie = require("./convertPlexToMovie");
-const convertPlexToShow = require("./convertPlexToShow");
-const convertPlexToEpisode = require("./convertPlexToEpisode");
-const redisCache = require("../cache/redis");
+import convertPlexToMovie from "./convertPlexToMovie";
+import convertPlexToShow from "./convertPlexToShow";
+import convertPlexToEpisode from "./convertPlexToEpisode";
+import redisCache from "../cache/redis";
 
 class PlexRequestTimeoutError extends Error {
   constructor() {
@@ -227,4 +227,4 @@ class Plex {
   }
 }
 
-module.exports = Plex;
+export default Plex;

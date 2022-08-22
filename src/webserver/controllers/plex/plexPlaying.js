@@ -1,5 +1,7 @@
-const PlexRepository = require("../../../plex/plexRepository");
-const configuration = require("../../../config/configuration").getInstance();
+import PlexRepository from "../../../plex/plexRepository";
+import Configuration from "../../../config/configuration";
+
+const configuration = Configuration.getInstance();
 
 const plexRepository = new PlexRepository(
   configuration.get("plex", "ip"),

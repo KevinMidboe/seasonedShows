@@ -16,12 +16,10 @@ const randomEmoji = () => {
  * @param {Response} res
  * @returns {Callback}
  */
-function emojiController(req, res) {
+export default function emojiController(req, res) {
   res.send({
     success: true,
     emoji: randomEmoji(),
     message: "Happy emoji-ing! 🌝"
   });
 }
-
-module.exports = emojiController;

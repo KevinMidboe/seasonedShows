@@ -1,4 +1,4 @@
-const RequestRepository = require("../../../request/request");
+import RequestRepository from "../../../request/request";
 
 const request = new RequestRepository();
 
@@ -24,4 +24,4 @@ function fetchAllRequests(req, res) {
     });
 }
 
-module.exports = fetchAllRequests;
+export default fetchAllRequests;

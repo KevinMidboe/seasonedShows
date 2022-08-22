@@ -12,4 +12,4 @@ class EnvironmentVariables {
   }
 }
 
-module.exports = EnvironmentVariables;
+export default EnvironmentVariables;

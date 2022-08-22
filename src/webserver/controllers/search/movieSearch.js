@@ -1,7 +1,8 @@
-const configuration = require("../../../config/configuration").getInstance();
-const TMDB = require("../../../tmdb/tmdb");
-const SearchHistory = require("../../../searchHistory/searchHistory");
+import TMDB from "../../../tmdb/tmdb";
+import SearchHistory from "../../../searchHistory/searchHistory";
+import Configuration from "../../../config/configuration";
 
+const configuration = Configuration.getInstance();
 const tmdb = new TMDB(configuration.get("tmdb", "apiKey"));
 const searchHistory = new SearchHistory();
 
@@ -33,4 +34,4 @@ function movieSearchController(req, res) {
     });
 }
 
-module.exports = movieSearchController;
+export default movieSearchController;

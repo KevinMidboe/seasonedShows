@@ -1,4 +1,4 @@
-const RequestRepository = require("../../../plex/requestRepository");
+import RequestRepository from "../../../plex/requestRepository";
 
 const requestRepository = new RequestRepository();
 
@@ -23,4 +23,4 @@ function updateRequested(req, res) {
     });
 }
 
-module.exports = updateRequested;
+export default updateRequested;

@@ -89,4 +89,4 @@ class ReleaseDates {
   }
 }
 
-module.exports = ReleaseDates;
+export default ReleaseDates;

@@ -1,4 +1,4 @@
-const StrayRepository = require("../../../seasoned/strayRepository");
+import StrayRepository from "../../../seasoned/strayRepository";
 
 const strayRepository = new StrayRepository();
 
@@ -15,4 +15,4 @@ function verifyStrayController(req, res) {
     });
 }
 
-module.exports = verifyStrayController;
+export default verifyStrayController;

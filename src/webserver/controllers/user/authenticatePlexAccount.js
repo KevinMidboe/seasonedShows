@@ -1,5 +1,5 @@
-const FormData = require("form-data");
-const UserRepository = require("../../../user/userRepository");
+import FormData from "form-data";
+import UserRepository from "../../../user/userRepository";
 
 const userRepository = new UserRepository();
 
@@ -67,7 +67,7 @@ function plexAuthenticate(username, password) {
   return fetch(url, options).then(resp => handleResponse(resp));
 }
 
-function link(req, res) {
+export function link(req, res) {
   const user = req.loggedInUser;
   const { username, password } = req.body;
 
@@ -80,10 +80,19 @@ function link(req, res) {
           "Successfully authenticated and linked plex account with seasoned request."
       })
     )
-    .catch(error => handleError(error, res));
+    .catch(error =>
+      res.status(error?.statusCode || 500).send({
+        message:
+          error?.message ||
+          "Unexptected error occured while linking plex account",
+        success: error?.success || false,
+        source: error?.source,
+        errorResponse: error?.errorResponse
+      })
+    );
 }
 
-function unlink(req, res) {
+export function unlink(req, res) {
   const username = req.loggedInUser ? req.loggedInUser.username : null;
 
   return userRepository
@@ -94,10 +103,14 @@ function unlink(req, res) {
         message: "Successfully unlinked plex account from seasoned request."
       })
     )
-    .catch(error => handleError(error, res));
+    .catch(error =>
+      res.status(error?.statusCode || 500).send({
+        message:
+          error?.message ||
+          "Unexptected error occured while unlinking plex account",
+        success: error?.success || false,
+        source: error?.source,
+        errorResponse: error?.errorResponse
+      })
+    );
 }
-
-module.exports = {
-  link,
-  unlink
-};

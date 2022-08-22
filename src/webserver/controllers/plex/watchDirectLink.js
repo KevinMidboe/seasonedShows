@@ -1,6 +1,7 @@
-const configuration = require("../../../config/configuration").getInstance();
-const Plex = require("../../../plex/plex");
+import Plex from "../../../plex/plex";
+import Configuration from "../../../config/configuration";
 
+const configuration = Configuration.getInstance();
 const plex = new Plex(configuration.get("plex", "ip"));
 
 /**
@@ -25,4 +26,4 @@ function watchDirectLink(req, res) {
     });
 }
 
-module.exports = watchDirectLink;
+export default watchDirectLink;

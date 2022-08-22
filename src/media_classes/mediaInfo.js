@@ -12,4 +12,4 @@ class MediaInfo {
   }
 }
 
-module.exports = MediaInfo;
+export default MediaInfo;

@@ -1,5 +1,5 @@
-const moviedb = require("km-moviedb");
-const redisCache = require("../cache/redis");
+import moviedb from "km-moviedb";
+import redisCache from "../cache/redis";
 
 const { Movie, Show, Person, Credits, ReleaseDates } = require("./types");
 
@@ -339,4 +339,4 @@ class TMDB {
   }
 }
 
-module.exports = TMDB;
+export default TMDB;

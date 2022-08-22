@@ -1,7 +1,7 @@
-const assert = require("assert");
+import assert from "assert";
 // const configuration = require("../config/configuration").getInstance();
 // const TMDB = require("../tmdb/tmdb");
-const establishedDatabase = require("../database/database");
+import establishedDatabase from "../database/database";
 
 // const tmdb = new TMDB(configuration.get("tmdb", "apiKey"));
 
@@ -156,4 +156,4 @@ class RequestRepository {
   }
 }
 
-module.exports = RequestRepository;
+export default RequestRepository;

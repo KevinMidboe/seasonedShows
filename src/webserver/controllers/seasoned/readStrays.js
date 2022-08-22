@@ -1,4 +1,4 @@
-const StrayRepository = require("../../../seasoned/strayRepository");
+import StrayRepository from "../../../seasoned/strayRepository";
 
 const strayRepository = new StrayRepository();
 
@@ -14,4 +14,4 @@ function readStraysController(req, res) {
     });
 }
 
-module.exports = readStraysController;
+export default readStraysController;

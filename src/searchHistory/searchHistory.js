@@ -1,4 +1,4 @@
-const establishedDatabase = require("../database/database");
+import establishedDatabase from "../database/database";
 
 class SearchHistoryCreateDatabaseError extends Error {
   constructor(message = "an unexpected error occured", errorResponse = null) {
@@ -55,4 +55,4 @@ class SearchHistory {
   }
 }
 
-module.exports = SearchHistory;
+export default SearchHistory;

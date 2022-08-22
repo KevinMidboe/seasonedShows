@@ -1,4 +1,4 @@
-const SearchHistory = require("../../../searchHistory/searchHistory");
+import SearchHistory from "../../../searchHistory/searchHistory";
 
 const searchHistory = new SearchHistory();
 
@@ -21,4 +21,4 @@ function historyController(req, res) {
     });
 }
 
-module.exports = historyController;
+export default historyController;

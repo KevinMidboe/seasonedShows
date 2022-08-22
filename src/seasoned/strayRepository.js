@@ -1,7 +1,7 @@
-const assert = require("assert");
-const pythonShell = require("python-shell");
-const Stray = require("./stray");
-const establishedDatabase = require("../database/database");
+import assert from "assert";
+import pythonShell from "python-shell";
+import Stray from "./stray";
+import establishedDatabase from "../database/database";
 
 class StrayRepository {
   constructor(database) {
@@ -65,4 +65,4 @@ class StrayRepository {
   }
 }
 
-module.exports = StrayRepository;
+export default StrayRepository;

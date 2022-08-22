@@ -1,7 +1,8 @@
-const configuration = require("../../../config/configuration").getInstance();
-const TMDB = require("../../../tmdb/tmdb");
+import TMDB from "../../../tmdb/tmdb";
+import Configuration from "../../../config/configuration";
 
-const tmdb = new TMDB(configuration.get("tmdb", "apiKey"));
+const configuration = Configuration.getInstance();
+const tmdb = new TMDB(Configuration.get("tmdb", "apiKey"));
 
 const personCreditsController = (req, res) => {
   const personId = req.params.id;
@@ -19,4 +20,4 @@ const personCreditsController = (req, res) => {
     });
 };
 
-module.exports = personCreditsController;
+export default personCreditsController;

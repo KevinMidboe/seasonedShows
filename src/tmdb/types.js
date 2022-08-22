@@ -1,7 +1,7 @@
-const Movie = require("./types/movie");
-const Show = require("./types/show");
-const Person = require("./types/person");
-const Credits = require("./types/credits");
-const ReleaseDates = require("./types/releaseDates");
+import Movie from "./types/movie";
+import Show from "./types/show";
+import Person from "./types/person";
+import Credits from "./types/credits";
+import ReleaseDates from "./types/releaseDates";
 
-module.exports = { Movie, Show, Person, Credits, ReleaseDates };
+export default { Movie, Show, Person, Credits, ReleaseDates };

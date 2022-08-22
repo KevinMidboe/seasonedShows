@@ -1,7 +1,8 @@
-const configuration = require("../../../config/configuration").getInstance();
-const TMDB = require("../../../tmdb/tmdb");
-const RequestRepository = require("../../../request/request");
+import TMDB from "../../../tmdb/tmdb";
+import RequestRepository from "../../../request/request";
+import Configuration from "../../../config/configuration";
 
+const configuration = Configuration.getInstance();
 const tmdb = new TMDB(configuration.get("tmdb", "apiKey"));
 const request = new RequestRepository();
 // const { sendSMS } = require("src/notifications/sms");
@@ -65,4 +66,4 @@ function requestTmdbIdController(req, res) {
     });
 }
 
-module.exports = requestTmdbIdController;
+export default requestTmdbIdController;

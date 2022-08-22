@@ -5,7 +5,7 @@
  * @Last Modified time: 2018-02-26 19:56:32
  */
 
-const PirateRepository = require("../../../pirate/pirateRepository");
+import PirateRepository from "../../../pirate/pirateRepository";
 // const pirateRepository = new PirateRepository();
 
 /**
@@ -26,4 +26,4 @@ function updateRequested(req, res) {
     });
 }
 
-module.exports = updateRequested;
+export default updateRequested;

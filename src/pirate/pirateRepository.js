@@ -1,10 +1,9 @@
-const http = require("http");
-const { URL } = require("url");
-const PythonShell = require("python-shell");
+import http from "http";
+import { URL } from "url";
+import PythonShell from "python-shell";
 
-const establishedDatabase = require("../database/database");
-
-const cache = require("../cache/redis");
+import establishedDatabase from "../database/database";
+import cache from "../cache/redis";
 
 function getMagnetFromURL(url) {
   return new Promise(resolve => {
@@ -46,7 +45,7 @@ async function callPythonAddMagnet(url, callback) {
     });
 }
 
-async function SearchPiratebay(_query) {
+export async function SearchPiratebay(_query) {
   let query = String(_query);
 
   if (query?.includes("+")) {
@@ -76,7 +75,7 @@ async function SearchPiratebay(_query) {
   );
 }
 
-function AddMagnet(magnet, name, tmdbId) {
+export function AddMagnet(magnet, name, tmdbId) {
   return new Promise((resolve, reject) =>
     callPythonAddMagnet(magnet, (err, results) => {
       if (err) {
@@ -98,5 +97,3 @@ function AddMagnet(magnet, name, tmdbId) {
     })
   );
 }
-
-module.exports = { SearchPiratebay, AddMagnet };

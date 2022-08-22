@@ -1,7 +1,9 @@
-const config = require("../config/configuration").getInstance();
-const app = require("./app");
+import Configuration from "../config/configuration";
+import app from "./app";
 
-module.exports = app.listen(config.get("webserver", "port"), () => {
+const configuration = Configuration.getInstance();
+
+export default app.listen(config.get("webserver", "port"), () => {
   /* eslint-disable no-console */
   console.log("seasonedAPI");
   console.log(`Database is located at ${config.get("database", "host")}`);

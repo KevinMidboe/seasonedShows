@@ -1,5 +1,5 @@
-const Filters = require("./filters");
-const EnvironmentVariables = require("./environmentVariables");
+import Filters from "./filters";
+import EnvironmentVariables from "./environmentVariables";
 
 class Field {
   constructor(rawValue, environmentVariables) {
@@ -50,4 +50,4 @@ class Field {
   }
 }
 
-module.exports = Field;
+export default Field;

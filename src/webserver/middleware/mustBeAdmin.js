@@ -1,4 +1,4 @@
-const establishedDatabase = require("../../database/database");
+import establishedDatabase from "../../database/database";
 
 // eslint-disable-next-line consistent-return
 const mustBeAdmin = (req, res, next) => {
@@ -28,4 +28,4 @@ const mustBeAdmin = (req, res, next) => {
     });
 };
 
-module.exports = mustBeAdmin;
+export default mustBeAdmin;

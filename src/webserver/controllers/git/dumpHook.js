@@ -1,4 +1,4 @@
-const GitRepository = require("../../../git/gitRepository");
+import GitRepository from "../../../git/gitRepository";
 
 const gitRepository = new GitRepository();
 
@@ -9,4 +9,4 @@ function dumpHookController(req, res) {
     .catch(() => res.status(500));
 }
 
-module.exports = dumpHookController;
+export default dumpHookController;

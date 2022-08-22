@@ -1,10 +1,11 @@
-const configuration = require("../config/configuration").getInstance();
+import redis from "redis";
+import Configuration from "../config/configuration";
 
+const configuration = Configuration.getInstance();
 let client;
 const mockCache = {};
 
 try {
-  const redis = require("redis"); // eslint-disable-line global-require
   console.log("Trying to connect with redis.."); // eslint-disable-line no-console
   const host = configuration.get("redis", "host");
   const port = configuration.get("redis", "port");
@@ -37,7 +38,7 @@ try {
   });
 } catch (e) {}
 
-function set(key, value, TTL = 10800) {
+export function set(key, value, TTL = 10800) {
   if (value == null || key == null) return null;
 
   const json = JSON.stringify(value);
@@ -60,7 +61,7 @@ function set(key, value, TTL = 10800) {
   return value;
 }
 
-function get(key) {
+export function get(key) {
   return new Promise((resolve, reject) => {
     client.get(key, (error, reply) => {
       if (reply === null) {
@@ -71,8 +72,3 @@ function get(key) {
     });
   });
 }
-
-module.exports = {
-  get,
-  set
-};

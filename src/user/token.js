@@ -1,5 +1,5 @@
-const jwt = require("jsonwebtoken");
-const User = require("./user");
+import jwt from "jsonwebtoken";
+import User from "./user";
 
 class Token {
   constructor(user, admin = false, settings = null) {
@@ -38,4 +38,4 @@ class Token {
   }
 }
 
-module.exports = Token;
+export default Token;

@@ -1,4 +1,4 @@
-const Movie = require("./types/movie");
+import Movie from "./types/movie";
 
 function convertPlexToMovie(plexMovie) {
   const movie = new Movie(plexMovie.title, plexMovie.year);
@@ -12,4 +12,4 @@ function convertPlexToMovie(plexMovie) {
   return movie;
 }
 
-module.exports = convertPlexToMovie;
+export default convertPlexToMovie;

@@ -5,7 +5,7 @@
  * @Last Modified time: 2017-10-21 15:32:43
  */
 
-const PirateRepository = require("../../../pirate/pirateRepository");
+import PirateRepository from "../../../pirate/pirateRepository";
 
 function addMagnet(req, res) {
   const { magnet, name } = req.body;
@@ -18,4 +18,4 @@ function addMagnet(req, res) {
     });
 }
 
-module.exports = addMagnet;
+export default addMagnet;

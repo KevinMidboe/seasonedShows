@@ -4,4 +4,4 @@ class Stray {
   }
 }
 
-module.exports = Stray;
+export default Stray;

@@ -1,7 +1,8 @@
-const configuration = require("../../../config/configuration").getInstance();
-const RequestRepository = require("../../../request/request");
-const TMDB = require("../../../tmdb/tmdb");
+import RequestRepository from "../../../request/request";
+import TMDB from "../../../tmdb/tmdb";
+import Configuration from "../../../config/configuration";
 
+const configuration = Configuration.getInstance();
 const tmdb = new TMDB(configuration.get("tmdb", "apiKey"));
 const request = new RequestRepository();
 
@@ -57,4 +58,4 @@ function submitRequestController(req, res) {
     );
 }
 
-module.exports = submitRequestController;
+export default submitRequestController;

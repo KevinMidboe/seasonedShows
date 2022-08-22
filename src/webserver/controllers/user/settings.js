@@ -1,4 +1,4 @@
-const UserRepository = require("../../../user/userRepository");
+import UserRepository from "../../../user/userRepository";
 
 const userRepository = new UserRepository();
 /**
@@ -7,7 +7,7 @@ const userRepository = new UserRepository();
  * @param {Response} res
  * @returns {Callback}
  */
-const getSettingsController = (req, res) => {
+export function getSettingsController(req, res) {
   const username = req.loggedInUser ? req.loggedInUser.username : null;
 
   userRepository
@@ -18,9 +18,9 @@ const getSettingsController = (req, res) => {
     .catch(error => {
       res.status(404).send({ success: false, message: error.message });
     });
-};
+}
 
-const updateSettingsController = (req, res) => {
+export function updateSettingsController(req, res) {
   const username = req.loggedInUser ? req.loggedInUser.username : null;
 
   // const idempotencyKey = req.headers("Idempotency-Key"); // TODO implement better transactions
@@ -35,9 +35,4 @@ const updateSettingsController = (req, res) => {
     .catch(error => {
       res.status(404).send({ success: false, message: error.message });
     });
-};
-
-module.exports = {
-  getSettingsController,
-  updateSettingsController
-};
+}

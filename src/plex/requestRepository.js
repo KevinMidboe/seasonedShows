@@ -1,8 +1,9 @@
-const PlexRepository = require("./plexRepository");
-const configuration = require("../config/configuration").getInstance();
-const TMDB = require("../tmdb/tmdb");
-const establishedDatabase = require("../database/database");
+import PlexRepository from "./plexRepository";
+import TMDB from "../tmdb/tmdb";
+import establishedDatabase from "../database/database";
+import Configuration from "../config/configuration";
 
+const configuration = Configuration.getInstance();
 const plexRepository = new PlexRepository(
   configuration.get("plex", "ip"),
   configuration.get("plex", "token")
@@ -128,4 +129,4 @@ class RequestRepository {
   }
 }
 
-module.exports = RequestRepository;
+export default RequestRepository;
