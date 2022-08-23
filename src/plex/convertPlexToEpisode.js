@@ -1,4 +1,4 @@
-import Episode from "./types/episode";
+import Episode from "./types/episode.js";
 
 function convertPlexToEpisode(plexEpisode) {
   const episode = new Episode(

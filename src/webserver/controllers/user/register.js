@@ -1,7 +1,7 @@
-import User from "../../../user/user";
-import Token from "../../../user/token";
-import UserSecurity from "../../../user/userSecurity";
-import Configuration from "../../../config/configuration";
+import User from "../../../user/user.js";
+import Token from "../../../user/token.js";
+import UserSecurity from "../../../user/userSecurity.js";
+import Configuration from "../../../config/configuration.js";
 
 const configuration = Configuration.getInstance();
 const secret = configuration.get("authentication", "secret");

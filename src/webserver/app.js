@@ -3,67 +3,69 @@ import Raven from "raven";
 import cookieParser from "cookie-parser";
 import bodyParser from "body-parser";
 
-import Configuration from "../config/configuration";
-
-import reqTokenToUser from "./middleware/reqTokenToUser";
-import mustBeAuthenticated from "./middleware/mustBeAuthenticated";
-import mustBeAdmin from "./middleware/mustBeAdmin";
-import mustHaveAccountLinkedToPlex from "./middleware/mustHaveAccountLinkedToPlex";
-
-import listController from "./controllers/list/listController";
-import tautulli from "./controllers/user/viewHistory";
-import SettingsController from "./controllers/user/settings";
-import AuthenticatePlexAccountController from "./controllers/user/authenticatePlexAccount";
-
+import Configuration from "../config/configuration.js";
 const configuration = Configuration.getInstance();
 
-import UserRegisterController from "./controller/user/register";
-import UserLoginController from "./controller/user/login";
-import UserLogoutController from "./controller/user/logout";
-import UserSearchHistoryController from "./controllers/user/searchHistory";
-import UserRequestsController from "./controllers/user/requests";
+import reqTokenToUser from "./middleware/reqTokenToUser.js";
+import mustBeAuthenticated from "./middleware/mustBeAuthenticated.js";
+import mustBeAdmin from "./middleware/mustBeAdmin.js";
+import mustHaveAccountLinkedToPlex from "./middleware/mustHaveAccountLinkedToPlex.js";
 
-import SearchMultiController from "./controllers/search/multiSearch";
-import SearchMovieController from "./controllers/search/movieSearch";
-import SearchShowController from "./controllers/search/showSearch";
-import SearchPersonController from "./controllers/search/personSearch";
+import tautulli from "./controllers/user/viewHistory.js";
+import {
+  getSettingsController,
+  updateSettingsController
+} from "./controllers/user/settings.js";
+import AuthenticatePlexAccountController from "./controllers/user/authenticatePlexAccount.js";
 
-import MovieCreditsController from "./controllers/movie/credits";
-import MovieReleaseDatesController from "./controllers/movie/releaseDates";
-import MovieInfoController from "./controllers/movie/info";
+import UserRegisterController from "./controllers/user/register.js";
+import UserLoginController from "./controllers/user/login.js";
+import UserLogoutController from "./controllers/user/logout.js";
+import UserSearchHistoryController from "./controllers/user/searchHistory.js";
+import UserRequestsController from "./controllers/user/requests.js";
 
-import ShowCreditsController from "./controllers/show/credits";
-import ShowInfoController from "./controllers/show/info";
+import SearchMultiController from "./controllers/search/multiSearch.js";
+import SearchMovieController from "./controllers/search/movieSearch.js";
+import SearchShowController from "./controllers/search/showSearch.js";
+import SearchPersonController from "./controllers/search/personSearch.js";
 
-import PersonCreditsController from "./controllers/person/credits";
-import PersonInfoController from "./controllers/person/info";
+import listController from "./controllers/list/listController.js";
 
-import SeasonedAllController from "./controllers/seasoned/readStrays";
-import SeasonedInfoController from "./controllers/seasoned/strayById";
-import SeasonedVerifyController from "./controllers/seasoned/verifyStray";
+import MovieCreditsController from "./controllers/movie/credits.js";
+import MovieReleaseDatesController from "./controllers/movie/releaseDates.js";
+import MovieInfoController from "./controllers/movie/info.js";
 
-import PlexSearchController from "./controllers/plex/search";
-import PlexRequestsAllController from "./controllres/plex/requests/all";
-import PlexRequestsInfo from "./controllers/plex/updateRequested";
-import PlexWatchLinkController from "./controllers/plex/watchDirectLink";
-import PlexHookController from "./controllers/plex/hookDump";
-import PlexSubmitRequestController from "./controllers/plex/submitRequest";
-import PlexRequestInfo from "./controllers/plex/readRequest";
-import PlexSearchRequestController from "./controllers/plex/searchRequest";
-import PlexPlayingController from "./controllers/plex/plexPlaying";
-import PlexSearchMediaController from "./controllres/plex/searchMedia";
-import PlexUpdateRequestedController from "./controllers/plex/updateRequested";
+import ShowCreditsController from "./controllers/show/credits.js";
+import ShowInfoController from "./controllers/show/info.js";
 
-import RequestFetchAllController from "./controllers/request/fetchAllRequests";
-import RequestAllController from "./controllers/plex/fetchRequested";
-import RequestInfoController from "./controllers/request/getRequest";
-import RequestSubmitController from "./controllers/request/requestTmdbId";
+import PersonCreditsController from "./controllers/person/credits.js";
+import PersonInfoController from "./controllers/person/info.js";
 
-import PirateSearchController from "./controllers/pirate/search";
-import PirateAddController from "./controllers/pirate/addMagnet";
+import SeasonedAllController from "./controllers/seasoned/readStrays.js";
+import SeasonedInfoController from "./controllers/seasoned/strayById.js";
+import SeasonedVerifyController from "./controllers/seasoned/verifyStray.js";
 
-import GitDumpController from "./controllres/git/dump";
-import EmojiController from "./controllers/misc/emoji";
+import PlexSearchController from "./controllers/plex/search.js";
+import PlexFetchRequestedController from "./controllers/plex/fetchRequested.js";
+import PlexRequestsInfo from "./controllers/plex/updateRequested.js";
+import PlexWatchLinkController from "./controllers/plex/watchDirectLink.js";
+import PlexHookController from "./controllers/plex/hookDump.js";
+import PlexSubmitRequestController from "./controllers/plex/submitRequest.js";
+import PlexRequestInfo from "./controllers/plex/readRequest.js";
+import PlexSearchRequestController from "./controllers/plex/searchRequest.js";
+import PlexPlayingController from "./controllers/plex/plexPlaying.js";
+import PlexSearchMediaController from "./controllers/plex/searchMedia.js";
+import PlexUpdateRequestedController from "./controllers/plex/updateRequested.js";
+
+import RequestFetchAllController from "./controllers/request/fetchAllRequests.js";
+import RequestInfoController from "./controllers/request/getRequest.js";
+import RequestSubmitController from "./controllers/request/requestTmdbId.js";
+
+import PirateSearchController from "./controllers/pirate/searchTheBay.js";
+import PirateAddController from "./controllers/pirate/addMagnet.js";
+
+import GitDumpController from "./controllers/git/dumpHook.js";
+import EmojiController from "./controllers/misc/emoji.js";
 
 // TODO: Have our raven router check if there is a value, if not don't enable raven.
 Raven.config(configuration.get("raven", "DSN")).install();
@@ -119,16 +121,8 @@ router.post("/v1/user", UserRegisterController);
 router.post("/v1/user/login", UserLoginController);
 router.post("/v1/user/logout", UserLogoutController);
 
-router.get(
-  "/v1/user/settings",
-  mustBeAuthenticated,
-  SettingsController.getSettingsController
-);
-router.put(
-  "/v1/user/settings",
-  mustBeAuthenticated,
-  SettingsController.updateSettingsController
-);
+router.get("/v1/user/settings", mustBeAuthenticated, getSettingsController);
+router.put("/v1/user/settings", mustBeAuthenticated, updateSettingsController);
 router.get(
   "/v1/user/search_history",
   mustBeAuthenticated,
@@ -220,7 +214,7 @@ router.get("/v1/plex/watch-link", mustBeAuthenticated, PlexWatchLinkController);
 router.get("/v2/request", RequestFetchAllController);
 router.get("/v2/request/:id", RequestInfoController);
 router.post("/v2/request", RequestSubmitController);
-router.get("/v1/plex/requests/all", RequestAllController);
+router.get("/v1/plex/requests/all", PlexFetchRequestedController);
 router.put(
   "/v1/plex/request/:requestId",
   mustBeAuthenticated,

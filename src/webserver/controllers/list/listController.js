@@ -1,5 +1,5 @@
-import TMDB from "../../../tmdb/tmdb";
-import Configuration from "../../../config/configuration";
+import TMDB from "../../../tmdb/tmdb.js";
+import Configuration from "../../../config/configuration.js";
 
 const configuration = Configuration.getInstance();
 const tmdb = new TMDB(configuration.get("tmdb", "apiKey"));
@@ -51,17 +51,27 @@ function fetchTmdbList(req, res, listname, type) {
   );
 }
 
-export const nowPlayingMovies = (req, res) =>
+const nowPlayingMovies = (req, res) =>
   fetchTmdbList(req, res, "miscNowPlayingMovies", "movie");
-export const popularMovies = (req, res) =>
+const popularMovies = (req, res) =>
   fetchTmdbList(req, res, "miscPopularMovies", "movie");
-export const topRatedMovies = (req, res) =>
+const topRatedMovies = (req, res) =>
   fetchTmdbList(req, res, "miscTopRatedMovies", "movie");
-export const upcomingMovies = (req, res) =>
+const upcomingMovies = (req, res) =>
   fetchTmdbList(req, res, "miscUpcomingMovies", "movie");
-export const nowPlayingShows = (req, res) =>
+const nowPlayingShows = (req, res) =>
   fetchTmdbList(req, res, "tvOnTheAir", "show");
-export const popularShows = (req, res) =>
+const popularShows = (req, res) =>
   fetchTmdbList(req, res, "miscPopularTvs", "show");
-export const topRatedShows = (req, res) =>
+const topRatedShows = (req, res) =>
   fetchTmdbList(req, res, "miscTopRatedTvs", "show");
+
+export default {
+  nowPlayingMovies,
+  popularMovies,
+  topRatedMovies,
+  upcomingMovies,
+  nowPlayingShows,
+  popularShows,
+  topRatedShows
+};

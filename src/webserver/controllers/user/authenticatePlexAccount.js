@@ -1,5 +1,5 @@
 import FormData from "form-data";
-import UserRepository from "../../../user/userRepository";
+import UserRepository from "../../../user/userRepository.js";
 
 const userRepository = new UserRepository();
 
@@ -61,7 +61,7 @@ function plexAuthenticate(username, password) {
   return fetch(url, options).then(resp => handleResponse(resp));
 }
 
-export function link(req, res) {
+function link(req, res) {
   const user = req.loggedInUser;
   const { username, password } = req.body;
 
@@ -86,7 +86,7 @@ export function link(req, res) {
     );
 }
 
-export function unlink(req, res) {
+function unlink(req, res) {
   const username = req.loggedInUser ? req.loggedInUser.username : null;
 
   return userRepository
@@ -108,3 +108,5 @@ export function unlink(req, res) {
       })
     );
 }
+
+export default { link, unlink };

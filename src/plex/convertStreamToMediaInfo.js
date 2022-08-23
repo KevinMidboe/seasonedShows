@@ -1,4 +1,4 @@
-import MediaInfo from "../media_classes/mediaInfo";
+import MediaInfo from "../media_classes/mediaInfo.js";
 
 function convertStreamToMediaInfo(plexStream) {
   const mediaInfo = new MediaInfo();

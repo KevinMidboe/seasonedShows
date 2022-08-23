@@ -1,4 +1,4 @@
-import establishedDatabase from "../../database/database";
+import establishedDatabase from "../../database/database.js";
 
 /* eslint-disable consistent-return */
 const mustHaveAccountLinkedToPlex = (req, res, next) => {

@@ -1,4 +1,4 @@
-import RequestRepository from "../../../plex/requestRepository";
+import RequestRepository from "../../../plex/requestRepository.js";
 
 const requestRepository = new RequestRepository();
 

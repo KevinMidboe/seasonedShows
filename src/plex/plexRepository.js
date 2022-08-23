@@ -1,5 +1,5 @@
-import convertPlexToSeasoned from "./convertPlexToSeasoned";
-import convertPlexToStream from "./convertPlexToStream";
+import convertPlexToSeasoned from "./convertPlexToSeasoned.js";
+import convertPlexToStream from "./convertPlexToStream.js";
 
 // eslint-disable-next-line
 function addAttributeIfTmdbInPlex(_tmdb, plexResult) {

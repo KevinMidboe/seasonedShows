@@ -75,4 +75,4 @@ class Tautulli {
   }
 }
 
-module.exports = Tautulli;
+export default Tautulli;

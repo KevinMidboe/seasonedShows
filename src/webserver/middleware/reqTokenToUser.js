@@ -1,6 +1,6 @@
 /* eslint-disable no-param-reassign */
-import Configuration from "../../config/configuration";
-import Token from "../../user/token";
+import Configuration from "../../config/configuration.js";
+import Token from "../../user/token.js";
 
 const configuration = Configuration.getInstance();
 const secret = configuration.get("authentication", "secret");

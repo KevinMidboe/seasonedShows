@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
-import Movie from "./movie";
-import Show from "./show";
+import Movie from "./movie.js";
+import Show from "./show.js";
 
 class CreditedMovie extends Movie {}
 class CreditedShow extends Show {}

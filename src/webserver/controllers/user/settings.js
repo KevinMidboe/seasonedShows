@@ -1,4 +1,4 @@
-import UserRepository from "../../../user/userRepository";
+import UserRepository from "../../../user/userRepository.js";
 
 const userRepository = new UserRepository();
 /**

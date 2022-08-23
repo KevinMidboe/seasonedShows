@@ -1,4 +1,4 @@
-import Configuration from "../config/configuration";
+import Configuration from "../config/configuration.js";
 
 const configuration = Configuration.getInstance();
 

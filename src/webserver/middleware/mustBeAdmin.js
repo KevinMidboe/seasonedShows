@@ -1,4 +1,4 @@
-import establishedDatabase from "../../database/database";
+import establishedDatabase from "../../database/database.js";
 
 // eslint-disable-next-line consistent-return
 const mustBeAdmin = (req, res, next) => {

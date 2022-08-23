@@ -1,7 +1,7 @@
 import assert from "assert";
 // const configuration = require("../config/configuration").getInstance();
 // const TMDB = require("../tmdb/tmdb");
-import establishedDatabase from "../database/database";
+import establishedDatabase from "../database/database.js";
 
 // const tmdb = new TMDB(configuration.get("tmdb", "apiKey"));
 

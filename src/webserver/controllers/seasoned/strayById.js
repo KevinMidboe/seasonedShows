@@ -1,4 +1,4 @@
-import StrayRepository from "../../../seasoned/strayRepository";
+import StrayRepository from "../../../seasoned/strayRepository.js";
 
 const strayRepository = new StrayRepository();
 

@@ -1,6 +1,6 @@
-import TMDB from "../../../tmdb/tmdb";
-import SearchHistory from "../../../searchHistory/searchHistory";
-import Configuration from "../../../config/configuration";
+import TMDB from "../../../tmdb/tmdb.js";
+import SearchHistory from "../../../searchHistory/searchHistory.js";
+import Configuration from "../../../config/configuration.js";
 
 const configuration = Configuration.getInstance();
 const tmdb = new TMDB(configuration.get("tmdb", "apiKey"));

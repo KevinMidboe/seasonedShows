@@ -6,6 +6,7 @@
     "url": "https://www.opensource.org/licenses/mit-license.php"
   },
   "main": "webserver/server.js",
+  "type": "module",
   "scripts": {
     "start": "SEASONED_CONFIG=configurations/production.json NODE_ENV=production node src/webserver/server.js",
     "dev": "SEASONED_CONFIG=configurations/development.json NODE_ENV=development node src/webserver/server.js",

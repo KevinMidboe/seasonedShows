@@ -1,4 +1,4 @@
-import SearchHistory from "../../../searchHistory/searchHistory";
+import SearchHistory from "../../../searchHistory/searchHistory.js";
 
 const searchHistory = new SearchHistory();
 

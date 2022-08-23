@@ -1,6 +1,6 @@
-import RequestRepository from "../../../request/request";
-import TMDB from "../../../tmdb/tmdb";
-import Configuration from "../../../config/configuration";
+import RequestRepository from "../../../request/request.js";
+import TMDB from "../../../tmdb/tmdb.js";
+import Configuration from "../../../config/configuration.js";
 
 const configuration = Configuration.getInstance();
 const tmdb = new TMDB(configuration.get("tmdb", "apiKey"));

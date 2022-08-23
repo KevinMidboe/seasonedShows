@@ -5,7 +5,7 @@
  * @Last Modified time: 2018-02-26 19:56:32
  */
 
-import PirateRepository from "../../../pirate/pirateRepository";
+import { SearchPiratebay } from "../../../pirate/pirateRepository.js";
 // const pirateRepository = new PirateRepository();
 
 /**
@@ -17,7 +17,7 @@ import PirateRepository from "../../../pirate/pirateRepository";
 function updateRequested(req, res) {
   const { query, page, type } = req.query;
 
-  PirateRepository.SearchPiratebay(query, page, type)
+  SearchPiratebay(query, page, type)
     .then(result => {
       res.send({ success: true, results: result });
     })

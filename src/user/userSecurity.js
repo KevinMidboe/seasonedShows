@@ -1,5 +1,5 @@
 import bcrypt from "bcrypt";
-import UserRepository from "./userRepository";
+import UserRepository from "./userRepository.js";
 
 class UserSecurity {
   constructor(database) {

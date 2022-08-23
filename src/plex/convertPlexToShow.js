@@ -1,4 +1,4 @@
-import Show from "./types/show";
+import Show from "./types/show.js";
 
 function convertPlexToShow(plexShow) {
   const show = new Show(plexShow.title, plexShow.year);

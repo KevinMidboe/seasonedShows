@@ -1,4 +1,4 @@
-import Player from "../../media_classes/player";
+import Player from "../../media_classes/player.js";
 
 function convertStreamToPlayer(plexStream) {
   const player = new Player(plexStream.device, plexStream.address);

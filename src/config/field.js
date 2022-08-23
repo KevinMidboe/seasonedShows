@@ -1,5 +1,5 @@
-import Filters from "./filters";
-import EnvironmentVariables from "./environmentVariables";
+import Filters from "./filters.js";
+import EnvironmentVariables from "./environmentVariables.js";
 
 class Field {
   constructor(rawValue, environmentVariables) {

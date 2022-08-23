@@ -2,8 +2,8 @@ import http from "http";
 import { URL } from "url";
 import PythonShell from "python-shell";
 
-import establishedDatabase from "../database/database";
-import cache from "../cache/redis";
+import establishedDatabase from "../database/database.js";
+import cache from "../cache/redis.js";
 
 function getMagnetFromURL(url) {
   return new Promise(resolve => {

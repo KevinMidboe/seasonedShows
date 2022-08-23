@@ -1,5 +1,5 @@
-import Plex from "../../../plex/plex";
-import Configuration from "../../../config/configuration";
+import Plex from "../../../plex/plex.js";
+import Configuration from "../../../config/configuration.js";
 
 const configuration = Configuration.getInstance();
 

@@ -1,7 +1,7 @@
-import Movie from "./types/movie";
-import Show from "./types/show";
-import Person from "./types/person";
-import Credits from "./types/credits";
-import ReleaseDates from "./types/releaseDates";
+import Movie from "./types/movie.js";
+import Show from "./types/show.js";
+import Person from "./types/person.js";
+import Credits from "./types/credits.js";
+import ReleaseDates from "./types/releaseDates.js";
 
-export default { Movie, Show, Person, Credits, ReleaseDates };
+export { Movie, Show, Person, Credits, ReleaseDates };

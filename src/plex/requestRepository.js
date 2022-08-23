@@ -1,7 +1,7 @@
-import PlexRepository from "./plexRepository";
-import TMDB from "../tmdb/tmdb";
-import establishedDatabase from "../database/database";
-import Configuration from "../config/configuration";
+import PlexRepository from "./plexRepository.js";
+import TMDB from "../tmdb/tmdb.js";
+import establishedDatabase from "../database/database.js";
+import Configuration from "../config/configuration.js";
 
 const configuration = Configuration.getInstance();
 const plexRepository = new PlexRepository(

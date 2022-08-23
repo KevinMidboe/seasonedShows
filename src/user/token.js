@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import User from "./user";
+import User from "./user.js";
 
 class Token {
   constructor(user, admin = false, settings = null) {

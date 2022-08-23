@@ -1,5 +1,5 @@
-import SqliteDatabase from "./sqliteDatabase";
-import Configuration from "../config/configuration";
+import SqliteDatabase from "./sqliteDatabase.js";
+import Configuration from "../config/configuration.js";
 
 const configuration = Configuration.getInstance();
 

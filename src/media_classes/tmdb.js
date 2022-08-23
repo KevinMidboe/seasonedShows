@@ -1,5 +1,5 @@
 /* eslint-disable camelcase */
-import Media from "./media";
+import Media from "./media.js";
 
 class TMDB extends Media {
   // constructor(...args) {

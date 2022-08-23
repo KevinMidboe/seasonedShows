@@ -1,7 +1,7 @@
 import moviedb from "km-moviedb";
-import redisCache from "../cache/redis";
+import redisCache from "../cache/redis.js";
 
-const { Movie, Show, Person, Credits, ReleaseDates } = require("./types");
+import { Movie, Show, Person, Credits, ReleaseDates } from "./types.js";
 
 class TMDBNotFoundError extends Error {
   constructor(message) {

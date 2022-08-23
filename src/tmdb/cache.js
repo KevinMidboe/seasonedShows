@@ -1,5 +1,5 @@
 import assert from "assert";
-import establishedDatabase from "../database/database";
+import establishedDatabase from "../database/database.js";
 
 class Cache {
   constructor(database) {

@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
 
-import Plex from "../media_classes/plex";
+import Plex from "../media_classes/plex.js";
 
 function translateAdded(date_string) {
   return new Date(date_string * 1000);

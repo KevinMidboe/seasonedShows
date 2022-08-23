@@ -1,4 +1,4 @@
-import establishedDatabase from "../database/database";
+import establishedDatabase from "../database/database.js";
 
 class SearchHistoryCreateDatabaseError extends Error {
   constructor(message = "an unexpected error occured", errorResponse = null) {

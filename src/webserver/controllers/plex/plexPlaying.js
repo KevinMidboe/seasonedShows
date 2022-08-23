@@ -1,5 +1,5 @@
-import PlexRepository from "../../../plex/plexRepository";
-import Configuration from "../../../config/configuration";
+import PlexRepository from "../../../plex/plexRepository.js";
+import Configuration from "../../../config/configuration.js";
 
 const configuration = Configuration.getInstance();
 
@@ -19,4 +19,4 @@ function playingController(req, res) {
     });
 }
 
-module.exports = playingController;
+export default playingController;

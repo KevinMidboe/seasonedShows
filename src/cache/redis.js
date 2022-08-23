@@ -1,5 +1,5 @@
 import redis from "redis";
-import Configuration from "../config/configuration";
+import Configuration from "../config/configuration.js";
 
 const configuration = Configuration.getInstance();
 let client;
@@ -38,7 +38,7 @@ try {
   });
 } catch (e) {}
 
-export function set(key, value, TTL = 10800) {
+function set(key, value, TTL = 10800) {
   if (value == null || key == null) return null;
 
   const json = JSON.stringify(value);
@@ -61,7 +61,7 @@ export function set(key, value, TTL = 10800) {
   return value;
 }
 
-export function get(key) {
+function get(key) {
   return new Promise((resolve, reject) => {
     client.get(key, (error, reply) => {
       if (reply === null) {
@@ -72,3 +72,8 @@ export function get(key) {
     });
   });
 }
+
+export default {
+  set,
+  get
+};

@@ -1,7 +1,7 @@
-import convertPlexToMovie from "./convertPlexToMovie";
-import convertPlexToShow from "./convertPlexToShow";
-import convertPlexToEpisode from "./convertPlexToEpisode";
-import redisCache from "../cache/redis";
+import convertPlexToMovie from "./convertPlexToMovie.js";
+import convertPlexToShow from "./convertPlexToShow.js";
+import convertPlexToEpisode from "./convertPlexToEpisode.js";
+import redisCache from "../cache/redis.js";
 
 class PlexRequestTimeoutError extends Error {
   constructor() {

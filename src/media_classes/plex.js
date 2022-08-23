@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
 
-import Media from "./media";
+import Media from "./media.js";
 
 class Plex extends Media {
   constructor(

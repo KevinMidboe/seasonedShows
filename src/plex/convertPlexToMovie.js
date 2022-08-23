@@ -1,4 +1,4 @@
-import Movie from "./types/movie";
+import Movie from "./types/movie.js";
 
 function convertPlexToMovie(plexMovie) {
   const movie = new Movie(plexMovie.title, plexMovie.year);

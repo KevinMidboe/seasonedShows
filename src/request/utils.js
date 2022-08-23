@@ -45,4 +45,4 @@ function validFilter(filterParam) {
   });
 }
 
-module.exports = { validSort, validFilter };
+export default { validSort, validFilter };

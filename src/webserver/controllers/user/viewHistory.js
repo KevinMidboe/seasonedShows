@@ -1,5 +1,5 @@
-import configuration from "../../../config/configuration";
-import Tautulli from "../../../tautulli/tautulli";
+import Tautulli from "../../../tautulli/tautulli.js";
+import Configuration from "../../../config/configuration.js";
 
 const configuration = Configuration.getInstance();
 const apiKey = configuration.get("tautulli", "apiKey");

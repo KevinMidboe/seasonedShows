@@ -1,6 +1,6 @@
-import SearchHistory from "../../../searchHistory/searchHistory";
-import Cache from "../../../tmdb/cache";
-import RequestRepository from "../../../plex/requestRepository";
+import SearchHistory from "../../../searchHistory/searchHistory.js";
+import Cache from "../../../tmdb/cache.js";
+import RequestRepository from "../../../plex/requestRepository.js";
 
 const cache = new Cache();
 const requestRepository = new RequestRepository(cache);

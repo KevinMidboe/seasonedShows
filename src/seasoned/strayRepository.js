@@ -1,7 +1,7 @@
 import assert from "assert";
 import pythonShell from "python-shell";
-import Stray from "./stray";
-import establishedDatabase from "../database/database";
+import Stray from "./stray.js";
+import establishedDatabase from "../database/database.js";
 
 class StrayRepository {
   constructor(database) {

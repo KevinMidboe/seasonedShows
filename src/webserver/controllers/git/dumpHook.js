@@ -1,4 +1,4 @@
-import GitRepository from "../../../git/gitRepository";
+import GitRepository from "../../../git/gitRepository.js";
 
 const gitRepository = new GitRepository();
 
