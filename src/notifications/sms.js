@@ -11,7 +11,7 @@ class SMSUnexpectedError extends Error {
   }
 }
 
-export function sendSMS(message) {
+export default function sendSMS(message) {
   const apiKey = configuration.get("sms", "apikey");
 
   if (!apiKey) {
