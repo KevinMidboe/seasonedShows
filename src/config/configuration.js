@@ -1,7 +1,11 @@
 import path from "path";
-import Field from "./field";
+import { fileURLToPath } from "url";
+
+import Field from "./field.js";
 
 let instance = null;
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 class Config {
   constructor() {
