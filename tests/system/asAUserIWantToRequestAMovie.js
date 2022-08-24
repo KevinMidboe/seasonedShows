@@ -7,22 +7,18 @@ import createUser from "../helpers/createUser.js";
 import createToken from "../helpers/createToken.js";
 import resetDatabase from "../helpers/resetDatabase.js";
 import createCacheEntry from "../helpers/createCacheEntry.js";
-
-const infoMovieSuccess = await import(
-  "../fixtures/blade_runner_2049-info-success-response.json",
-  {
-    assert: { type: "json" }
-  }
-);
+import readFixtureContents from "../helpers/importFixture.js";
 
 chai.use(chaiHttp);
+
+const infoMovieSuccess = readFixtureContents(
+  "blade_runner_2049-info-success-response.json"
+);
 
 describe("As a user I want to request a movie", () => {
   beforeEach(() => resetDatabase());
   beforeEach(() => createUser("test_user", "test@gmail.com", "password"));
-  beforeEach(() =>
-    createCacheEntry("mi:335984:false", infoMovieSuccess.default)
-  );
+  beforeEach(() => createCacheEntry("mi:335984:false", infoMovieSuccess));
 
   it("should return 200 when item is requested", () => {
     chai

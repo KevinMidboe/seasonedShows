@@ -5,18 +5,17 @@ import chaiHttp from "chai-http";
 import server from "../../src/webserver/server.js";
 import resetDatabase from "../helpers/resetDatabase.js";
 import createCacheEntry from "../helpers/createCacheEntry.js";
-const popularMoviesSuccess = await import(
-  "../fixtures/popular-movies-success-response.json",
-  {
-    assert: { type: "json" }
-  }
-);
+import readFixtureContents from "../helpers/importFixture.js";
 
 chai.use(chaiHttp);
 
+const popularMoviesSuccess = readFixtureContents(
+  "popular-movies-success-response.json"
+);
+
 describe("As a user I want to get popular movies", () => {
   beforeEach(() => resetDatabase());
-  beforeEach(() => createCacheEntry("tmdb/pm:1", popularMoviesSuccess.default));
+  beforeEach(() => createCacheEntry("tmdb/pm:1", popularMoviesSuccess));
 
   it("should return 200 with the information", done => {
     chai

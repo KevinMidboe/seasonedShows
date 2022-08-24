@@ -1,18 +1,17 @@
 import assert from "assert";
 // import convertTmdbToMovie = require('src/tmdb/convertTmdbToMovie');
 import { Movie } from "../../../src/tmdb/types.js";
-const bladeRunnerQuerySuccess = await import(
-  "../../fixtures/blade_runner_2049-info-success-response.json",
-  {
-    assert: { type: "json" }
-  }
+import readFixtureContents from "../../helpers/importFixture.js";
+
+const bladeRunnerQuerySuccess = readFixtureContents(
+  "blade_runner_2049-info-success-response.json"
 );
 
 let bladeRunnerTmdbMovie;
 
 describe("Convert tmdb movieInfo to movie", () => {
   beforeEach(() => {
-    bladeRunnerTmdbMovie = bladeRunnerQuerySuccess.default[0];
+    [bladeRunnerTmdbMovie] = bladeRunnerQuerySuccess;
   });
 
   it("should translate the tmdb release date to movie year", () => {
