@@ -4,7 +4,6 @@ import cookieParser from "cookie-parser";
 import bodyParser from "body-parser";
 
 import Configuration from "../config/configuration.js";
-const configuration = Configuration.getInstance();
 
 import reqTokenToUser from "./middleware/reqTokenToUser.js";
 import mustBeAuthenticated from "./middleware/mustBeAuthenticated.js";
@@ -47,7 +46,7 @@ import SeasonedVerifyController from "./controllers/seasoned/verifyStray.js";
 
 import PlexSearchController from "./controllers/plex/search.js";
 import PlexFetchRequestedController from "./controllers/plex/fetchRequested.js";
-import PlexRequestsInfo from "./controllers/plex/updateRequested.js";
+// import PlexRequestsInfo from "./controllers/plex/updateRequested.js";
 import PlexWatchLinkController from "./controllers/plex/watchDirectLink.js";
 import PlexHookController from "./controllers/plex/hookDump.js";
 import PlexSubmitRequestController from "./controllers/plex/submitRequest.js";
@@ -67,6 +66,7 @@ import PirateAddController from "./controllers/pirate/addMagnet.js";
 import GitDumpController from "./controllers/git/dumpHook.js";
 import EmojiController from "./controllers/misc/emoji.js";
 
+const configuration = Configuration.getInstance();
 // TODO: Have our raven router check if there is a value, if not don't enable raven.
 Raven.config(configuration.get("raven", "DSN")).install();
 
