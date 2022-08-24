@@ -1,7 +1,5 @@
-const redisCache = require("../../src/cache/redis");
+import redisCache from "../../src/cache/redis.js";
 
-function createCacheEntry(key, value) {
+export default function createCacheEntry(key, value) {
   return redisCache.set(key, value);
 }
-
-module.exports = createCacheEntry;

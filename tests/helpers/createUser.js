@@ -1,11 +1,9 @@
-const User = require("../../src/user/user");
-const UserSecurity = require("../../src/user/userSecurity");
+import User from "../../src/user/user.js";
+import UserSecurity from "../../src/user/userSecurity.js";
 
-function createUser(username, password) {
+export default function createUser(username, password) {
   const userSecurity = new UserSecurity();
   const user = new User(username);
 
   return userSecurity.createNewUser(user, password);
 }
-
-module.exports = createUser;

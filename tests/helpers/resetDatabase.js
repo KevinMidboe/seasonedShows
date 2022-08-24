@@ -10,13 +10,11 @@
 //   }
 // }
 
-const establishedDatabase = require("../../src/database/database");
+import establishedDatabase from "../../src/database/database.js";
 // const establishedDatabase = new EstablishedDatabase();
 
-function resetDatabase() {
+export default function resetDatabase() {
   return Promise.resolve()
     .then(() => establishedDatabase.tearDown())
     .then(() => establishedDatabase.setUp());
 }
-
-module.exports = resetDatabase;

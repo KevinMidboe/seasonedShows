@@ -1,5 +1,5 @@
-const assert = require("assert");
-const Field = require("../../../src/config/field");
+import assert from "assert";
+import Field from "../../../src/config/field.js";
 
 describe("Field", () => {
   it("should return an array if it is an array", () => {

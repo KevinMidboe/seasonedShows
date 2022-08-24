@@ -1,17 +1,22 @@
-const assert = require("assert");
-const chai = require("chai");
-const chaiHttp = require("chai-http");
+import assert from "assert";
+import chai from "chai";
+import chaiHttp from "chai-http";
 
-const server = require("../../src/webserver/server");
-const resetDatabase = require("../helpers/resetDatabase");
-const createCacheEntry = require("../helpers/createCacheEntry");
-const popularShowsSuccess = require("../fixtures/popular-show-success-response.json");
+import server from "../../src/webserver/server.js";
+import resetDatabase from "../helpers/resetDatabase.js";
+import createCacheEntry from "../helpers/createCacheEntry.js";
+const popularShowsSuccess = await import(
+  "../fixtures/popular-show-success-response.json",
+  {
+    assert: { type: "json" }
+  }
+);
 
 chai.use(chaiHttp);
 
 describe("As a user I want to get popular shows", () => {
   beforeEach(() => resetDatabase());
-  beforeEach(() => createCacheEntry("tmdb/pt:1", popularShowsSuccess));
+  beforeEach(() => createCacheEntry("tmdb/pt:1", popularShowsSuccess.default));
 
   it("should return 200 with the information", done => {
     chai

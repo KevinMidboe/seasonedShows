@@ -1,10 +1,10 @@
-const assert = require("assert");
-const chai = require("chai");
-const chaiHttp = require("chai-http");
+import assert from "assert";
+import chai from "chai";
+import chaiHttp from "chai-http";
 
-const server = require("../../src/webserver/server");
-const createUser = require("../helpers/createUser");
-const resetDatabase = require("../helpers/resetDatabase");
+import server from "../../src/webserver/server.js";
+import createUser from "../helpers/createUser.js";
+import resetDatabase from "../helpers/resetDatabase.js";
 
 chai.use(chaiHttp);
 

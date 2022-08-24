@@ -1,13 +1,13 @@
-const assert = require('assert');
-// const Movie = require('src/movie/movie');
-const TMDB = require('src/tmdb/tmdb');
-const Cache = require('src/tmdb/cache');
-const SqliteDatabase = require('src/database/sqliteDatabase');
-const tmdbMock = require('test/helpers/tmdbMock');
+import assert 'assert';
+// import require('src/movie/movie.js';
+import TMDB 'src/tmdb/tmdb.js';
+import Cache 'src/tmdb/cache.js';
+import SqliteDatabase 'src/database/sqliteDatabase.js';
+import tmdbMock 'test/helpers/tmdbMock.js';
 
-const emptyQuerySuccess = require('tests/fixtures/empty-query-success-response.json');
-const interstellarQuerySuccess = require('tests/fixtures/arrival-info-success-response.json');
-const popularMovieSuccessResponse = require('tests/fixtures/popular-movies-success-response.json');
+import emptyQuerySuccess 'tests/fixtures/empty-query-success-response.json';
+import interstellarQuerySuccess 'tests/fixture/arrival-info-success-response.json');
+import popularMovieSuccessResponse 'tests/fixture/popular-movies-success-response.json');
 
 describe('TMDB', function test() {
   beforeEach(() => {
