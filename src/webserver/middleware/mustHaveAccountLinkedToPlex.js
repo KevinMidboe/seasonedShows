@@ -18,7 +18,8 @@ const mustHaveAccountLinkedToPlex = (req, res, next) => {
       req.loggedInUser.username
     )
     .then(row => {
-      const plexUserId = row.plex_userid;
+      const plexUserId = row?.plex_userid || null;
+
       if (plexUserId === null) {
         return res.status(403).send({
           success: false,

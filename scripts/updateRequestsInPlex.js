@@ -16,11 +16,6 @@ const queries = {
 const getByStatus = () =>
   establishedDatabase.all(queries.getRequestsNotYetInPlex);
 
-const checkIfRequestExistInPlex = async request => {
-  request.existsInPlex = await plex.existsInPlex(request);
-  return request;
-};
-
 const commitNewStatus = (status, id, type, title) => {
   console.log(type, title, "updated to:", status);
   return establishedDatabase.run(queries.saveNewStatus, [status, id, type]);
@@ -29,12 +24,12 @@ const commitNewStatus = (status, id, type, title) => {
 const getNewRequestMatchesInPlex = async () => {
   const requests = await getByStatus();
 
-  return Promise.all(requests.map(checkIfRequestExistInPlex))
+  return Promise.all(requests.map(plex.inPlex))
     .catch(error =>
       console.log("error from checking plex for existance:", error)
     )
     .then(matchedRequests =>
-      matchedRequests.filter(request => request.existsInPlex)
+      matchedRequests.filter(request => request.matchedInPlex)
     );
 };
 
