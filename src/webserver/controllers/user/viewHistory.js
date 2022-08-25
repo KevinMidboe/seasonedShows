@@ -7,16 +7,40 @@ const ip = configuration.get("tautulli", "ip");
 const port = configuration.get("tautulli", "port");
 const tautulli = new Tautulli(apiKey, ip, port);
 
-function handleError(error, res) {
-  const { status, message } = error;
+class MissingDaysParameterError extends Error {
+  constructor() {
+    const message = "Missing parameter: days (number)";
+    super(message);
 
-  if (status && message) {
-    return res.status(status).send({ success: false, message });
+    this.statusCode = 422;
+  }
+}
+
+class MissingYAxisParameterError extends Error {
+  constructor(message = "Missing parameter: y_axis") {
+    super(message);
+
+    this.statusCode = 422;
+  }
+}
+
+function requiredPlaysByDayParams(req) {
+  const days = req.query?.days;
+  const yAxis = req.query?.y_axis;
+  let error;
+
+  if (days === undefined) {
+    error = new MissingDaysParameterError();
   }
 
-  return res.status(500).send({
-    message: "An unexpected error occured while fetching view history"
-  });
+  const allowedYAxisDataType = ["plays", "duration"];
+  if (!allowedYAxisDataType.includes(yAxis)) {
+    error = new MissingYAxisParameterError(
+      `Y axis parameter must be one of values: [${allowedYAxisDataType}]`
+    );
+  }
+
+  return error ? Promise.reject(error) : Promise.resolve();
 }
 
 function watchTimeStatsController(req, res) {
@@ -31,7 +55,15 @@ function watchTimeStatsController(req, res) {
         message: "watch time successfully fetched from tautulli"
       });
     })
-    .catch(error => handleError(error, res));
+    .catch(error => {
+      res.status(error?.statusCode || 500).send({
+        message:
+          error?.message ||
+          "An unexpected error occured while fetching watch time",
+        errorResponse: error?.errorResponse,
+        success: false
+      });
+    });
 }
 
 function getPlaysByDayOfWeekController(req, res) {
@@ -39,8 +71,8 @@ function getPlaysByDayOfWeekController(req, res) {
   const days = req.query?.days;
   const yAxis = req.query?.y_axis;
 
-  return tautulli
-    .getPlaysByDayOfWeek(user.plexUserId, days, yAxis)
+  return requiredPlaysByDayParams(req)
+    .then(() => tautulli.getPlaysByDayOfWeek(user.plexUserId, days, yAxis))
     .then(data =>
       res.send({
         success: true,
@@ -48,7 +80,15 @@ function getPlaysByDayOfWeekController(req, res) {
         message: "play by day of week successfully fetched from tautulli"
       })
     )
-    .catch(error => handleError(error, res));
+    .catch(error => {
+      res.status(error?.statusCode || 500).send({
+        message:
+          error?.message ||
+          "An unexpected error occured while fetching plays by day of week",
+        errorResponse: error?.errorResponse,
+        success: false
+      });
+    });
 }
 
 function getPlaysByDaysController(req, res) {
@@ -56,30 +96,23 @@ function getPlaysByDaysController(req, res) {
   const days = req.query?.days;
   const yAxis = req.query?.y_axis;
 
-  if (days === undefined) {
-    return res.status(422).send({
-      success: false,
-      message: "Missing parameter: days (number)"
-    });
-  }
-
-  const allowedYAxisDataType = ["plays", "duration"];
-  if (!allowedYAxisDataType.includes(yAxis)) {
-    return res.status(422).send({
-      success: false,
-      message: `Y axis parameter must be one of values: [${allowedYAxisDataType}]`
-    });
-  }
-
-  return tautulli
-    .getPlaysByDays(user.plexUserId, days, yAxis)
+  return requiredPlaysByDayParams(req, res)
+    .then(() => tautulli.getPlaysByDays(user.plexUserId, days, yAxis))
     .then(data =>
       res.send({
         success: true,
         data: data.response.data
       })
     )
-    .catch(error => handleError(error, res));
+    .catch(error => {
+      res.status(error?.statusCode || 500).send({
+        message:
+          error?.message ||
+          "An unexpected error occured while fetching plays by days",
+        errorResponse: error?.errorResponse,
+        success: false
+      });
+    });
 }
 
 function userViewHistoryController(req, res) {
@@ -97,7 +130,15 @@ function userViewHistoryController(req, res) {
         message: "view history successfully fetched from tautulli"
       });
     })
-    .catch(error => handleError(error, res));
+    .catch(error => {
+      res.status(error?.statusCode || 500).send({
+        message:
+          error?.message ||
+          "An unexpected error occured while fetching view history",
+        errorResponse: error?.errorResponse,
+        success: false
+      });
+    });
 
   // const username = user.username;
 }
