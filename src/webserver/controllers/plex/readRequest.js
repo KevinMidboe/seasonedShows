@@ -14,7 +14,7 @@ function readRequestController(req, res) {
   requestRepository
     .lookup(mediaId, type)
     .then(movies => {
-      res.send(movies);
+      res.send(movies || {});
     })
     .catch(error => {
       res.status(404).send({ success: false, message: error.message });

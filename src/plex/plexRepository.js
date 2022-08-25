@@ -41,9 +41,12 @@ class PlexRepository {
 
   inPlex(_tmdbResult) {
     const tmdbResult = { ..._tmdbResult };
-    this.search(tmdbResult.title)
+
+    return this.search(tmdbResult.title)
       .then(plexResult => addAttributeIfTmdbInPlex(tmdbResult, plexResult))
       .catch(() => {
+        // log("some error here::", error);
+
         /**
          * If something crashes with search from this function it probably
          * fine to set the `matchedInPlex` attribute to false and return
