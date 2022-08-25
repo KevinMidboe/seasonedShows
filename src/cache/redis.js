@@ -23,7 +23,7 @@ try {
       get(key, callback) {
         console.log(`redis-dummy get: ${key}`); // eslint-disable-line no-console
         const hit = mockCache[key];
-        return Promise.resolve().then(callback(null, hit));
+        return Promise.resolve().then(callback(null, JSON.parse(hit)));
       },
       set(key, json, callback) {
         console.log(`redis-dummy set: ${key}`); // eslint-disable-line no-console
