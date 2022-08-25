@@ -1,45 +1,39 @@
-const FormData = require("form-data");
-const UserRepository = require("../../../user/userRepository");
+import FormData from "form-data";
+import UserRepository from "../../../user/userRepository.js";
 
 const userRepository = new UserRepository();
 
 class PlexAuthenticationError extends Error {
-  constructor(errorResponse, statusCode) {
+  constructor(errorResponse) {
     const message =
       "Unexptected error while authenticating to plex signin api. View error response.";
     super(message);
 
     this.errorResponse = errorResponse;
-    this.statusCode = statusCode;
+    this.statusCode = 500;
     this.success = false;
+    this.source = "plex";
   }
 }
 
-function handleError(error, res) {
-  const status = error?.status;
-  let { message, source } = error;
+class PlexUnauthorizedError extends Error {
+  constructor(errorResponse) {
+    const message = "Unauthorized. Please check plex credentials.";
+    super(message);
 
-  if (status && message) {
-    if (status === 401) {
-      message = "Unauthorized. Please check plex credentials.";
-      source = "plex";
-    }
-
-    res.status(status).send({ success: false, message, source });
-  } else {
-    // eslint-disable-next-line no-console
-    console.log("caught authenticate plex account controller error", error);
-    res.status(500).send({
-      message:
-        "An unexpected error occured while authenticating your account with plex",
-      source
-    });
+    this.errorResponse = errorResponse;
+    this.statusCode = 401;
+    this.success = false;
+    this.source = "plex";
   }
 }
 
 function handleResponse(response) {
   if (!response.ok) {
-    throw new PlexAuthenticationError(response.statusText, response.status);
+    if (response?.status === 401)
+      throw new PlexUnauthorizedError(response?.statusText);
+
+    throw new PlexAuthenticationError(response?.statusText);
   }
 
   return response.json();
@@ -80,7 +74,16 @@ function link(req, res) {
           "Successfully authenticated and linked plex account with seasoned request."
       })
     )
-    .catch(error => handleError(error, res));
+    .catch(error =>
+      res.status(error?.statusCode || 500).send({
+        message:
+          error?.message ||
+          "Unexptected error occured while linking plex account",
+        success: error?.success || false,
+        source: error?.source,
+        errorResponse: error?.errorResponse
+      })
+    );
 }
 
 function unlink(req, res) {
@@ -94,10 +97,16 @@ function unlink(req, res) {
         message: "Successfully unlinked plex account from seasoned request."
       })
     )
-    .catch(error => handleError(error, res));
+    .catch(error =>
+      res.status(error?.statusCode || 500).send({
+        message:
+          error?.message ||
+          "Unexptected error occured while unlinking plex account",
+        success: error?.success || false,
+        source: error?.source,
+        errorResponse: error?.errorResponse
+      })
+    );
 }
 
-module.exports = {
-  link,
-  unlink
-};
+export default { link, unlink };

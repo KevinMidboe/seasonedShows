@@ -5,4 +5,4 @@ class GitRepository {
   }
 }
 
-module.exports = GitRepository;
+export default GitRepository;

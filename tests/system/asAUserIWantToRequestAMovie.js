@@ -1,15 +1,19 @@
-const assert = require("assert");
-const chai = require("chai");
-const chaiHttp = require("chai-http");
+import assert from "assert";
+import chai from "chai";
+import chaiHttp from "chai-http";
 
-const server = require("../../src/webserver/server");
-const createUser = require("../helpers/createUser");
-const createToken = require("../helpers/createToken");
-const resetDatabase = require("../helpers/resetDatabase");
-const createCacheEntry = require("../helpers/createCacheEntry");
-const infoMovieSuccess = require("../fixtures/blade_runner_2049-info-success-response.json");
+import server from "../../src/webserver/server.js";
+import createUser from "../helpers/createUser.js";
+import createToken from "../helpers/createToken.js";
+import resetDatabase from "../helpers/resetDatabase.js";
+import createCacheEntry from "../helpers/createCacheEntry.js";
+import readFixtureContents from "../helpers/importFixture.js";
 
 chai.use(chaiHttp);
+
+const infoMovieSuccess = readFixtureContents(
+  "blade_runner_2049-info-success-response.json"
+);
 
 describe("As a user I want to request a movie", () => {
   beforeEach(() => resetDatabase());

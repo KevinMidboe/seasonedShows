@@ -1,5 +1,5 @@
-const assert = require("assert");
-const Filters = require("../../../src/config/filters");
+import assert from "assert";
+import Filters from "../../../src/config/filters.js";
 
 describe("Filters", () => {
   it("should extract base64 as filter if it is at start of string followed by pipe", () => {

@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
 
-const Media = require("./media");
+import Media from "./media.js";
 
 class Plex extends Media {
   constructor(
@@ -30,4 +30,4 @@ class Plex extends Media {
   }
 }
 
-module.exports = Plex;
+export default Plex;

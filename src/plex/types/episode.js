@@ -13,4 +13,4 @@ class Episode {
   }
 }
 
-module.exports = Episode;
+export default Episode;

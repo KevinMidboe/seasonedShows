@@ -1,10 +1,11 @@
-const configuration = require("../config/configuration").getInstance();
+import redis from "redis";
+import Configuration from "../config/configuration.js";
 
+const configuration = Configuration.getInstance();
 let client;
 const mockCache = {};
 
 try {
-  const redis = require("redis"); // eslint-disable-line global-require
   console.log("Trying to connect with redis.."); // eslint-disable-line no-console
   const host = configuration.get("redis", "host");
   const port = configuration.get("redis", "port");
@@ -72,7 +73,7 @@ function get(key) {
   });
 }
 
-module.exports = {
-  get,
-  set
+export default {
+  set,
+  get
 };

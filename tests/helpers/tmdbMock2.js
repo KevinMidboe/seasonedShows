@@ -12,4 +12,4 @@ const tmdbMock = () => ({
   }
 });
 
-module.exports = tmdbMock;
+export default tmdbMock;

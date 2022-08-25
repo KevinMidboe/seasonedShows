@@ -1,7 +1,8 @@
 /* eslint-disable no-param-reassign */
-const configuration = require("../../config/configuration").getInstance();
-const Token = require("../../user/token");
+import Configuration from "../../config/configuration.js";
+import Token from "../../user/token.js";
 
+const configuration = Configuration.getInstance();
 const secret = configuration.get("authentication", "secret");
 
 // Token example:
@@ -25,4 +26,4 @@ const reqTokenToUser = (req, res, next) => {
   return next();
 };
 
-module.exports = reqTokenToUser;
+export default reqTokenToUser;

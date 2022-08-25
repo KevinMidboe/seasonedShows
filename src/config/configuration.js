@@ -1,13 +1,17 @@
-const path = require("path");
-const Field = require("./field");
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+
+import Field from "./field.js";
 
 let instance = null;
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 class Config {
   constructor() {
     this.location = Config.determineLocation();
-    // eslint-disable-next-line import/no-dynamic-require, global-require
-    this.fields = require(`${this.location}`);
+    this.fields = Config.readFileContents(this.location);
   }
 
   static getInstance() {
@@ -19,6 +23,17 @@ class Config {
 
   static determineLocation() {
     return path.join(__dirname, "..", "..", process.env.SEASONED_CONFIG);
+  }
+
+  static readFileContents(location) {
+    let content = {};
+    try {
+      content = JSON.parse(fs.readFileSync(location, { encoding: "utf-8" }));
+    } catch (err) {
+      console.error(`Error loading configuration file at path: ${location}`);
+    }
+
+    return content;
   }
 
   get(section, option) {
@@ -45,4 +60,4 @@ class Config {
   }
 }
 
-module.exports = Config;
+export default Config;

@@ -1,7 +1,12 @@
-const Plex = require("src/plex/plex");
-const configuration = require("src/config/configuration").getInstance();
-const plex = new Plex(configuration.get("plex", "ip"));
-const establishedDatabase = require("src/database/database");
+import Plex from "../src/plex/plexRepository";
+import establishedDatabase from "../src/database/database";
+import Configuration from "../src/config/configuration";
+
+const configuration = Configuration.getInstance();
+const plex = new Plex(
+  configuration.get("plex", "ip"),
+  configuration.get("plex", "token")
+);
 
 const queries = {
   getRequestsNotYetInPlex: `SELECT * FROM requests WHERE status = 'requested' OR status = 'downloading'`,

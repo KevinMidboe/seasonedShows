@@ -1,5 +1,7 @@
-const configuration = require("../config/configuration").getInstance();
-const SqliteDatabase = require("./sqliteDatabase");
+import SqliteDatabase from "./sqliteDatabase.js";
+import Configuration from "../config/configuration.js";
+
+const configuration = Configuration.getInstance();
 
 const database = new SqliteDatabase(configuration.get("database", "host"));
 /**
@@ -10,4 +12,4 @@ const database = new SqliteDatabase(configuration.get("database", "host"));
  */
 Promise.resolve().then(() => database.setUp());
 
-module.exports = database;
+export default database;

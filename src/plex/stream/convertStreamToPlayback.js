@@ -11,4 +11,4 @@ class convertStreamToPlayback {
   }
 }
 
-module.exports = convertStreamToPlayback;
+export default convertStreamToPlayback;

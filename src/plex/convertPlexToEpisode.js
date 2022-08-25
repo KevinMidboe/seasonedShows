@@ -1,4 +1,4 @@
-const Episode = require("./types/episode");
+import Episode from "./types/episode.js";
 
 function convertPlexToEpisode(plexEpisode) {
   const episode = new Episode(
@@ -21,4 +21,5 @@ function convertPlexToEpisode(plexEpisode) {
 
   return episode;
 }
-module.exports = convertPlexToEpisode;
+
+export default convertPlexToEpisode;

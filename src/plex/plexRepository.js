@@ -1,5 +1,5 @@
-const convertPlexToSeasoned = require("./convertPlexToSeasoned");
-const convertPlexToStream = require("./convertPlexToStream");
+import convertPlexToSeasoned from "./convertPlexToSeasoned.js";
+import convertPlexToStream from "./convertPlexToStream.js";
 
 // eslint-disable-next-line
 function addAttributeIfTmdbInPlex(_tmdb, plexResult) {
@@ -103,4 +103,4 @@ class PlexRepository {
   // }
 }
 
-module.exports = PlexRepository;
+export default PlexRepository;

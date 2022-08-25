@@ -1,5 +1,7 @@
-const PlexRepository = require("../../../plex/plexRepository");
-const configuration = require("../../../config/configuration").getInstance();
+import PlexRepository from "../../../plex/plexRepository.js";
+import Configuration from "../../../config/configuration.js";
+
+const configuration = Configuration.getInstance();
 
 const plexRepository = new PlexRepository(
   configuration.get("plex", "ip"),
@@ -33,4 +35,4 @@ function searchMediaController(req, res) {
     });
 }
 
-module.exports = searchMediaController;
+export default searchMediaController;

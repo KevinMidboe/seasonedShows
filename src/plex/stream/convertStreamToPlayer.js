@@ -1,4 +1,4 @@
-const Player = require("../../media_classes/player");
+import Player from "../../media_classes/player.js";
 
 function convertStreamToPlayer(plexStream) {
   const player = new Player(plexStream.device, plexStream.address);
@@ -10,4 +10,4 @@ function convertStreamToPlayer(plexStream) {
   return player;
 }
 
-module.exports = convertStreamToPlayer;
+export default convertStreamToPlayer;

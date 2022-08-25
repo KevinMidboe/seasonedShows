@@ -1,20 +1,72 @@
-const express = require("express");
-const Raven = require("raven");
-const cookieParser = require("cookie-parser");
-const bodyParser = require("body-parser");
+import express from "express";
+import Raven from "raven";
+import cookieParser from "cookie-parser";
+import bodyParser from "body-parser";
 
-const configuration = require("../config/configuration").getInstance();
+import Configuration from "../config/configuration.js";
 
-const reqTokenToUser = require("./middleware/reqTokenToUser");
-const mustBeAuthenticated = require("./middleware/mustBeAuthenticated");
-const mustBeAdmin = require("./middleware/mustBeAdmin");
-const mustHaveAccountLinkedToPlex = require("./middleware/mustHaveAccountLinkedToPlex");
+import reqTokenToUser from "./middleware/reqTokenToUser.js";
+import mustBeAuthenticated from "./middleware/mustBeAuthenticated.js";
+import mustBeAdmin from "./middleware/mustBeAdmin.js";
+import mustHaveAccountLinkedToPlex from "./middleware/mustHaveAccountLinkedToPlex.js";
 
-const listController = require("./controllers/list/listController");
-const tautulli = require("./controllers/user/viewHistory");
-const SettingsController = require("./controllers/user/settings");
-const AuthenticatePlexAccountController = require("./controllers/user/authenticatePlexAccount");
+import tautulli from "./controllers/user/viewHistory.js";
+import {
+  getSettingsController,
+  updateSettingsController
+} from "./controllers/user/settings.js";
+import AuthenticatePlexAccountController from "./controllers/user/authenticatePlexAccount.js";
 
+import UserRegisterController from "./controllers/user/register.js";
+import UserLoginController from "./controllers/user/login.js";
+import UserLogoutController from "./controllers/user/logout.js";
+import UserSearchHistoryController from "./controllers/user/searchHistory.js";
+import UserRequestsController from "./controllers/user/requests.js";
+
+import SearchMultiController from "./controllers/search/multiSearch.js";
+import SearchMovieController from "./controllers/search/movieSearch.js";
+import SearchShowController from "./controllers/search/showSearch.js";
+import SearchPersonController from "./controllers/search/personSearch.js";
+
+import listController from "./controllers/list/listController.js";
+
+import MovieCreditsController from "./controllers/movie/credits.js";
+import MovieReleaseDatesController from "./controllers/movie/releaseDates.js";
+import MovieInfoController from "./controllers/movie/info.js";
+
+import ShowCreditsController from "./controllers/show/credits.js";
+import ShowInfoController from "./controllers/show/info.js";
+
+import PersonCreditsController from "./controllers/person/credits.js";
+import PersonInfoController from "./controllers/person/info.js";
+
+import SeasonedAllController from "./controllers/seasoned/readStrays.js";
+import SeasonedInfoController from "./controllers/seasoned/strayById.js";
+import SeasonedVerifyController from "./controllers/seasoned/verifyStray.js";
+
+import PlexSearchController from "./controllers/plex/search.js";
+import PlexFetchRequestedController from "./controllers/plex/fetchRequested.js";
+// import PlexRequestsInfo from "./controllers/plex/updateRequested.js";
+import PlexWatchLinkController from "./controllers/plex/watchDirectLink.js";
+import PlexHookController from "./controllers/plex/hookDump.js";
+import PlexSubmitRequestController from "./controllers/plex/submitRequest.js";
+import PlexRequestInfo from "./controllers/plex/readRequest.js";
+import PlexSearchRequestController from "./controllers/plex/searchRequest.js";
+import PlexPlayingController from "./controllers/plex/plexPlaying.js";
+import PlexSearchMediaController from "./controllers/plex/searchMedia.js";
+import PlexUpdateRequestedController from "./controllers/plex/updateRequested.js";
+
+import RequestFetchAllController from "./controllers/request/fetchAllRequests.js";
+import RequestInfoController from "./controllers/request/getRequest.js";
+import RequestSubmitController from "./controllers/request/requestTmdbId.js";
+
+import PirateSearchController from "./controllers/pirate/searchTheBay.js";
+import PirateAddController from "./controllers/pirate/addMagnet.js";
+
+import GitDumpController from "./controllers/git/dumpHook.js";
+import EmojiController from "./controllers/misc/emoji.js";
+
+const configuration = Configuration.getInstance();
 // TODO: Have our raven router check if there is a value, if not don't enable raven.
 Raven.config(configuration.get("raven", "DSN")).install();
 
@@ -65,30 +117,18 @@ router.get("/", (req, res) => {
 /**
  * User
  */
-router.post("/v1/user", require("./controllers/user/register"));
-router.post("/v1/user/login", require("./controllers/user/login"));
-router.post("/v1/user/logout", require("./controllers/user/logout"));
+router.post("/v1/user", UserRegisterController);
+router.post("/v1/user/login", UserLoginController);
+router.post("/v1/user/logout", UserLogoutController);
 
-router.get(
-  "/v1/user/settings",
-  mustBeAuthenticated,
-  SettingsController.getSettingsController
-);
-router.put(
-  "/v1/user/settings",
-  mustBeAuthenticated,
-  SettingsController.updateSettingsController
-);
+router.get("/v1/user/settings", mustBeAuthenticated, getSettingsController);
+router.put("/v1/user/settings", mustBeAuthenticated, updateSettingsController);
 router.get(
   "/v1/user/search_history",
   mustBeAuthenticated,
-  require("./controllers/user/searchHistory")
+  UserSearchHistoryController
 );
-router.get(
-  "/v1/user/requests",
-  mustBeAuthenticated,
-  require("./controllers/user/requests")
-);
+router.get("/v1/user/requests", mustBeAuthenticated, UserRequestsController);
 
 router.post(
   "/v1/user/link_plex",
@@ -125,111 +165,80 @@ router.get(
 /**
  * Seasoned
  */
-router.get("/v1/seasoned/all", require("./controllers/seasoned/readStrays"));
-router.get(
-  "/v1/seasoned/:strayId",
-  require("./controllers/seasoned/strayById")
-);
-router.post(
-  "/v1/seasoned/verify/:strayId",
-  require("./controllers/seasoned/verifyStray")
-);
+router.get("/v1/seasoned/all", SeasonedAllController);
+router.get("/v1/seasoned/:strayId", SeasonedInfoController);
+router.post("/v1/seasoned/verify/:strayId", SeasonedVerifyController);
 
-router.get("/v2/search/", require("./controllers/search/multiSearch"));
-router.get("/v2/search/movie", require("./controllers/search/movieSearch"));
-router.get("/v2/search/show", require("./controllers/search/showSearch"));
-router.get("/v2/search/person", require("./controllers/search/personSearch"));
+router.get("/v2/search/", SearchMultiController);
+router.get("/v2/search/movie", SearchMovieController);
+router.get("/v2/search/show", SearchShowController);
+router.get("/v2/search/person", SearchPersonController);
 
 router.get("/v2/movie/now_playing", listController.nowPlayingMovies);
 router.get("/v2/movie/popular", listController.popularMovies);
 router.get("/v2/movie/top_rated", listController.topRatedMovies);
 router.get("/v2/movie/upcoming", listController.upcomingMovies);
-router.get("/v2/movie/:id/credits", require("./controllers/movie/credits"));
-router.get(
-  "/v2/movie/:id/release_dates",
-  require("./controllers/movie/releaseDates")
-);
-router.get("/v2/movie/:id", require("./controllers/movie/info"));
-
+router.get("/v2/movie/:id/credits", MovieCreditsController);
+router.get("/v2/movie/:id/release_dates", MovieReleaseDatesController);
+router.get("/v2/movie/:id", MovieInfoController);
 router.get("/v2/show/now_playing", listController.nowPlayingShows);
 router.get("/v2/show/popular", listController.popularShows);
 router.get("/v2/show/top_rated", listController.topRatedShows);
-router.get("/v2/show/:id/credits", require("./controllers/show/credits"));
-router.get("/v2/show/:id", require("./controllers/show/info"));
+router.get("/v2/show/:id/credits", ShowCreditsController);
+router.get("/v2/show/:id", ShowInfoController);
 
-router.get("/v2/person/:id/credits", require("./controllers/person/credits"));
-router.get("/v2/person/:id", require("./controllers/person/info"));
+router.get("/v2/person/:id/credits", PersonCreditsController);
+router.get("/v2/person/:id", PersonInfoController);
 
 /**
  * Plex
  */
-router.get("/v2/plex/search", require("./controllers/plex/search"));
+router.get("/v2/plex/search", PlexSearchController);
 
 /**
  * List
  */
-router.get("/v1/plex/search", require("./controllers/plex/searchMedia"));
-router.get("/v1/plex/playing", require("./controllers/plex/plexPlaying"));
-router.get("/v1/plex/request", require("./controllers/plex/searchRequest"));
-router.get(
-  "/v1/plex/request/:mediaId",
-  require("./controllers/plex/readRequest")
-);
-router.post(
-  "/v1/plex/request/:mediaId",
-  require("./controllers/plex/submitRequest")
-);
-router.post("/v1/plex/hook", require("./controllers/plex/hookDump"));
+router.get("/v1/plex/search", PlexSearchMediaController);
+router.get("/v1/plex/playing", PlexPlayingController);
+router.get("/v1/plex/request", PlexSearchRequestController);
+router.get("/v1/plex/request/:mediaId", PlexRequestInfo);
+router.post("/v1/plex/request/:mediaId", PlexSubmitRequestController);
+router.post("/v1/plex/hook", PlexHookController);
 
-router.get(
-  "/v1/plex/watch-link",
-  mustBeAuthenticated,
-  require("./controllers/plex/watchDirectLink")
-);
+router.get("/v1/plex/watch-link", mustBeAuthenticated, PlexWatchLinkController);
 
 /**
  * Requests
  */
 
-router.get("/v2/request", require("./controllers/request/fetchAllRequests"));
-router.get("/v2/request/:id", require("./controllers/request/getRequest"));
-router.post("/v2/request", require("./controllers/request/requestTmdbId"));
-router.get(
-  "/v1/plex/requests/all",
-  require("./controllers/plex/fetchRequested")
-);
+router.get("/v2/request", RequestFetchAllController);
+router.get("/v2/request/:id", RequestInfoController);
+router.post("/v2/request", RequestSubmitController);
+router.get("/v1/plex/requests/all", PlexFetchRequestedController);
 router.put(
   "/v1/plex/request/:requestId",
   mustBeAuthenticated,
-  require("./controllers/plex/updateRequested")
+  PlexUpdateRequestedController
 );
 
 /**
  * Pirate
  */
-router.get(
-  "/v1/pirate/search",
-  mustBeAdmin,
-  require("./controllers/pirate/searchTheBay")
-);
-router.post(
-  "/v1/pirate/add",
-  mustBeAdmin,
-  require("./controllers/pirate/addMagnet")
-);
+router.get("/v1/pirate/search", mustBeAdmin, PirateSearchController);
+router.post("/v1/pirate/add", mustBeAdmin, PirateAddController);
 
 /**
  * git
  */
-router.post("/v1/git/dump", require("./controllers/git/dumpHook"));
+router.post("/v1/git/dump", GitDumpController);
 
 /**
  * misc
  */
-router.get("/v1/emoji", require("./controllers/misc/emoji"));
+router.get("/v1/emoji", EmojiController);
 
 // REGISTER OUR ROUTES -------------------------------
 // all of our routes will be prefixed with /api
 app.use("/api", router);
 
-module.exports = app;
+export default app;

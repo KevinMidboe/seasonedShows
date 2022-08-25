@@ -9,4 +9,4 @@ class Show {
   }
 }
 
-module.exports = Show;
+export default Show;

@@ -1,7 +1,8 @@
-const configuration = require("../../../config/configuration").getInstance();
-const TMDB = require("../../../tmdb/tmdb");
-const SearchHistory = require("../../../searchHistory/searchHistory");
+import TMDB from "../../../tmdb/tmdb.js";
+import SearchHistory from "../../../searchHistory/searchHistory.js";
+import Configuration from "../../../config/configuration.js";
 
+const configuration = Configuration.getInstance();
 const tmdb = new TMDB(configuration.get("tmdb", "apiKey"));
 const searchHistory = new SearchHistory();
 
@@ -33,4 +34,4 @@ function multiSearchController(req, res) {
     });
 }
 
-module.exports = multiSearchController;
+export default multiSearchController;

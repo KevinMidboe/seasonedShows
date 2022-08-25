@@ -1,9 +1,15 @@
-const config = require("../config/configuration").getInstance();
-const app = require("./app");
+import Configuration from "../config/configuration.js";
+import app from "./app.js";
 
-module.exports = app.listen(config.get("webserver", "port"), () => {
+const configuration = Configuration.getInstance();
+
+export default app.listen(configuration.get("webserver", "port"), () => {
   /* eslint-disable no-console */
   console.log("seasonedAPI");
-  console.log(`Database is located at ${config.get("database", "host")}`);
-  console.log(`Webserver is listening on ${config.get("webserver", "port")}`);
+  console.log(
+    `Database is located at ${configuration.get("database", "host")}`
+  );
+  console.log(
+    `Webserver is listening on ${configuration.get("webserver", "port")}`
+  );
 });

@@ -5,17 +5,17 @@
  * @Last Modified time: 2017-10-21 15:32:43
  */
 
-const PirateRepository = require("../../../pirate/pirateRepository");
+import { AddMagnet } from "../../../pirate/pirateRepository.js";
 
 function addMagnet(req, res) {
   const { magnet, name } = req.body;
   const tmdbId = req.body?.tmdb_id;
 
-  PirateRepository.AddMagnet(magnet, name, tmdbId)
+  AddMagnet(magnet, name, tmdbId)
     .then(result => res.send(result))
     .catch(error => {
       res.status(500).send({ success: false, message: error.message });
     });
 }
 
-module.exports = addMagnet;
+export default addMagnet;

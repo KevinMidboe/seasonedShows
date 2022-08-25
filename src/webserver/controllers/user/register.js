@@ -1,8 +1,9 @@
-const User = require("../../../user/user");
-const Token = require("../../../user/token");
-const UserSecurity = require("../../../user/userSecurity");
-const configuration = require("../../../config/configuration").getInstance();
+import User from "../../../user/user.js";
+import Token from "../../../user/token.js";
+import UserSecurity from "../../../user/userSecurity.js";
+import Configuration from "../../../config/configuration.js";
 
+const configuration = Configuration.getInstance();
 const secret = configuration.get("authentication", "secret");
 const userSecurity = new UserSecurity();
 
@@ -42,4 +43,4 @@ function registerController(req, res) {
     });
 }
 
-module.exports = registerController;
+export default registerController;

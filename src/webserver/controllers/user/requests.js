@@ -1,4 +1,4 @@
-const RequestRepository = require("../../../plex/requestRepository");
+import RequestRepository from "../../../plex/requestRepository.js";
 
 const requestRepository = new RequestRepository();
 
@@ -25,4 +25,4 @@ function requestsController(req, res) {
     });
 }
 
-module.exports = requestsController;
+export default requestsController;

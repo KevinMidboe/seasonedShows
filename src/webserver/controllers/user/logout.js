@@ -13,4 +13,4 @@ async function logoutController(req, res) {
   });
 }
 
-module.exports = logoutController;
+export default logoutController;

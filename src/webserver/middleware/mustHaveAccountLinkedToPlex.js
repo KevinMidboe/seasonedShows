@@ -1,4 +1,4 @@
-const establishedDatabase = require("../../database/database");
+import establishedDatabase from "../../database/database.js";
 
 /* eslint-disable consistent-return */
 const mustHaveAccountLinkedToPlex = (req, res, next) => {
@@ -33,4 +33,4 @@ const mustHaveAccountLinkedToPlex = (req, res, next) => {
 };
 /* eslint-enable consistent-return */
 
-module.exports = mustHaveAccountLinkedToPlex;
+export default mustHaveAccountLinkedToPlex;

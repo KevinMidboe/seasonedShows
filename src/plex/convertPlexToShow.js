@@ -1,4 +1,4 @@
-const Show = require("./types/show");
+import Show from "./types/show.js";
 
 function convertPlexToShow(plexShow) {
   const show = new Show(plexShow.title, plexShow.year);
@@ -10,4 +10,4 @@ function convertPlexToShow(plexShow) {
   return show;
 }
 
-module.exports = convertPlexToShow;
+export default convertPlexToShow;

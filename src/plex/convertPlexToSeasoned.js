@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
 
-const Plex = require("../media_classes/plex");
+import Plex from "../media_classes/plex.js";
 
 function translateAdded(date_string) {
   return new Date(date_string * 1000);
@@ -32,4 +32,4 @@ function convertPlexToSeasoned(plex) {
   return seasoned;
 }
 
-module.exports = convertPlexToSeasoned;
+export default convertPlexToSeasoned;

@@ -1,7 +1,8 @@
-const SearchHistory = require("../../../searchHistory/searchHistory");
-const configuration = require("../../../config/configuration").getInstance();
-const TMDB = require("../../../tmdb/tmdb");
+import TMDB from "../../../tmdb/tmdb.js";
+import SearchHistory from "../../../searchHistory/searchHistory.js";
+import Configuration from "../../../config/configuration.js";
 
+const configuration = Configuration.getInstance();
 const tmdb = new TMDB(configuration.get("tmdb", "apiKey"));
 const searchHistory = new SearchHistory();
 
@@ -35,4 +36,4 @@ function showSearchController(req, res) {
     });
 }
 
-module.exports = showSearchController;
+export default showSearchController;

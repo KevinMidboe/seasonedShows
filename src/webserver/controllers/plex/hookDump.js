@@ -5,4 +5,4 @@ function hookDumpController(req, res) {
   res.status(200);
 }
 
-module.exports = hookDumpController;
+export default hookDumpController;

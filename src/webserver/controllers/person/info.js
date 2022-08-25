@@ -1,6 +1,7 @@
-const configuration = require("../../../config/configuration").getInstance();
-const TMDB = require("../../../tmdb/tmdb");
+import TMDB from "../../../tmdb/tmdb.js";
+import Configuration from "../../../config/configuration.js";
 
+const configuration = Configuration.getInstance();
 const tmdb = new TMDB(configuration.get("tmdb", "apiKey"));
 
 /**
@@ -36,4 +37,4 @@ async function personInfoController(req, res) {
   }
 }
 
-module.exports = personInfoController;
+export default personInfoController;

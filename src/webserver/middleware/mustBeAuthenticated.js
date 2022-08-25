@@ -10,4 +10,4 @@ const mustBeAuthenticated = (req, res, next) => {
   next();
 };
 
-module.exports = mustBeAuthenticated;
+export default mustBeAuthenticated;

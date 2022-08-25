@@ -7,6 +7,7 @@
 	"extends": ["eslint-config-airbnb-base", "plugin:prettier/recommended"],
 	"plugins": ["mocha"],
 	"rules": {
+		"import/extensions": 0,
 		"max-classes-per-file": 1,
 		"no-empty": [
 			2,

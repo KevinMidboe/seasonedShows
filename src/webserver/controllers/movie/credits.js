@@ -1,6 +1,7 @@
-const configuration = require("../../../config/configuration").getInstance();
-const TMDB = require("../../../tmdb/tmdb");
+import TMDB from "../../../tmdb/tmdb.js";
+import Configuration from "../../../config/configuration.js";
 
+const configuration = Configuration.getInstance();
 const tmdb = new TMDB(configuration.get("tmdb", "apiKey"));
 
 const movieCreditsController = (req, res) => {
@@ -19,4 +20,4 @@ const movieCreditsController = (req, res) => {
     });
 };
 
-module.exports = movieCreditsController;
+export default movieCreditsController;

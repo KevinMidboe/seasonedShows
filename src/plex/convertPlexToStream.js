@@ -1,8 +1,8 @@
-const convertPlexToSeasoned = require("./convertPlexToSeasoned");
-const convertStreamToMediaInfo = require("./convertStreamToMediaInfo");
-const convertStreamToPlayer = require("./stream/convertStreamToPlayer");
-const convertStreamToUser = require("./stream/convertStreamToUser");
-const ConvertStreamToPlayback = require("./stream/convertStreamToPlayback");
+import convertPlexToSeasoned from "./convertPlexToSeasoned.js";
+import convertStreamToMediaInfo from "./convertStreamToMediaInfo.js";
+import convertStreamToPlayer from "./stream/convertStreamToPlayer.js";
+import convertStreamToUser from "./stream/convertStreamToUser.js";
+import ConvertStreamToPlayback from "./stream/convertStreamToPlayback.js";
 
 function convertPlexToStream(plexStream) {
   const stream = convertPlexToSeasoned(plexStream);
@@ -16,4 +16,4 @@ function convertPlexToStream(plexStream) {
   return stream;
 }
 
-module.exports = convertPlexToStream;
+export default convertPlexToStream;

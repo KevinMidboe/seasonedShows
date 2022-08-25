@@ -1,6 +1,5 @@
 /* eslint-disable camelcase */
-
-const Media = require("./media");
+import Media from "./media.js";
 
 class TMDB extends Media {
   // constructor(...args) {
@@ -45,4 +44,4 @@ class TMDB extends Media {
   }
 }
 
-module.exports = TMDB;
+export default TMDB;

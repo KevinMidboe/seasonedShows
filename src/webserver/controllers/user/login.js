@@ -1,9 +1,10 @@
-const User = require("../../../user/user");
-const Token = require("../../../user/token");
-const UserSecurity = require("../../../user/userSecurity");
-const UserRepository = require("../../../user/userRepository");
-const configuration = require("../../../config/configuration").getInstance();
+import User from "../../../user/user.js";
+import Token from "../../../user/token.js";
+import UserSecurity from "../../../user/userSecurity.js";
+import UserRepository from "../../../user/userRepository.js";
+import Configuration from "../../../config/configuration.js";
 
+const configuration = Configuration.getInstance();
 const secret = configuration.get("authentication", "secret");
 const userSecurity = new UserSecurity();
 const userRepository = new UserRepository();
@@ -54,4 +55,4 @@ async function loginController(req, res) {
   }
 }
 
-module.exports = loginController;
+export default loginController;

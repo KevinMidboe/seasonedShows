@@ -5,7 +5,7 @@
  * @Last Modified time: 2018-02-26 19:56:32
  */
 
-const PirateRepository = require("../../../pirate/pirateRepository");
+import { SearchPiratebay } from "../../../pirate/pirateRepository.js";
 // const pirateRepository = new PirateRepository();
 
 /**
@@ -17,7 +17,7 @@ const PirateRepository = require("../../../pirate/pirateRepository");
 function updateRequested(req, res) {
   const { query, page, type } = req.query;
 
-  PirateRepository.SearchPiratebay(query, page, type)
+  SearchPiratebay(query, page, type)
     .then(result => {
       res.send({ success: true, results: result });
     })
@@ -26,4 +26,4 @@ function updateRequested(req, res) {
     });
 }
 
-module.exports = updateRequested;
+export default updateRequested;

@@ -22,4 +22,4 @@ class mailTemplate {
   }
 }
 
-module.exports = mailTemplate;
+export default mailTemplate;

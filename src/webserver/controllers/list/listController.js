@@ -1,6 +1,7 @@
-const configuration = require("../../../config/configuration").getInstance();
-const TMDB = require("../../../tmdb/tmdb");
+import TMDB from "../../../tmdb/tmdb.js";
+import Configuration from "../../../config/configuration.js";
 
+const configuration = Configuration.getInstance();
 const tmdb = new TMDB(configuration.get("tmdb", "apiKey"));
 
 // there should be a translate function from query params to
@@ -65,7 +66,7 @@ const popularShows = (req, res) =>
 const topRatedShows = (req, res) =>
   fetchTmdbList(req, res, "miscTopRatedTvs", "show");
 
-module.exports = {
+export default {
   nowPlayingMovies,
   popularMovies,
   topRatedMovies,

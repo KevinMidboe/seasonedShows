@@ -1,13 +1,17 @@
-const assert = require("assert");
-const chai = require("chai");
-const chaiHttp = require("chai-http");
+import assert from "assert";
+import chai from "chai";
+import chaiHttp from "chai-http";
 
-const server = require("../../src/webserver/server");
-const resetDatabase = require("../helpers/resetDatabase");
-const createCacheEntry = require("../helpers/createCacheEntry");
-const interstellarQuerySuccess = require("../fixtures/interstellar-query-movie-success-response.json");
+import server from "../../src/webserver/server.js";
+import resetDatabase from "../helpers/resetDatabase.js";
+import createCacheEntry from "../helpers/createCacheEntry.js";
+import readFixtureContents from "../helpers/importFixture.js";
 
 chai.use(chaiHttp);
+
+const interstellarQuerySuccess = readFixtureContents(
+  "interstellar-query-movie-success-response.json"
+);
 
 describe("As an anonymous user I want to search for a movie", () => {
   beforeEach(() => resetDatabase());

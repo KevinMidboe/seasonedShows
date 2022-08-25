@@ -1,7 +1,8 @@
-const configuration = require("../../../config/configuration").getInstance();
-const TMDB = require("../../../tmdb/tmdb");
-const Plex = require("../../../plex/plex");
+import TMDB from "../../../tmdb/tmdb.js";
+import Plex from "../../../plex/plex.js";
+import Configuration from "../../../config/configuration.js";
 
+const configuration = Configuration.getInstance();
 const tmdb = new TMDB(configuration.get("tmdb", "apiKey"));
 const plex = new Plex(configuration.get("plex", "ip"));
 
@@ -47,4 +48,4 @@ async function showInfoController(req, res) {
   }
 }
 
-module.exports = showInfoController;
+export default showInfoController;

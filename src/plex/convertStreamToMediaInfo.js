@@ -1,4 +1,4 @@
-const MediaInfo = require("../media_classes/mediaInfo");
+import MediaInfo from "../media_classes/mediaInfo.js";
 
 function convertStreamToMediaInfo(plexStream) {
   const mediaInfo = new MediaInfo();
@@ -19,4 +19,4 @@ function convertStreamToMediaInfo(plexStream) {
   return mediaInfo;
 }
 
-module.exports = convertStreamToMediaInfo;
+export default convertStreamToMediaInfo;

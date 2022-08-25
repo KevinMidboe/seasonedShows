@@ -1,13 +1,17 @@
-const assert = require("assert");
-const chai = require("chai");
-const chaiHttp = require("chai-http");
+import assert from "assert";
+import chai from "chai";
+import chaiHttp from "chai-http";
 
-const server = require("../../src/webserver/server");
-const resetDatabase = require("../helpers/resetDatabase");
-const createCacheEntry = require("../helpers/createCacheEntry");
-const popularMoviesSuccess = require("../fixtures/popular-movies-success-response.json");
+import server from "../../src/webserver/server.js";
+import resetDatabase from "../helpers/resetDatabase.js";
+import createCacheEntry from "../helpers/createCacheEntry.js";
+import readFixtureContents from "../helpers/importFixture.js";
 
 chai.use(chaiHttp);
+
+const popularMoviesSuccess = readFixtureContents(
+  "popular-movies-success-response.json"
+);
 
 describe("As a user I want to get popular movies", () => {
   beforeEach(() => resetDatabase());
