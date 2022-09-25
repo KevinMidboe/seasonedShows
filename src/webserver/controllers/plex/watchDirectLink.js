@@ -2,7 +2,10 @@ import Plex from "../../../plex/plex.js";
 import Configuration from "../../../config/configuration.js";
 
 const configuration = Configuration.getInstance();
-const plex = new Plex(configuration.get("plex", "ip"));
+const plex = new Plex(
+  configuration.get("plex", "ip"),
+  configuration.get("plex", "token")
+);
 
 /**
  * Controller: Search plex for movies, shows and episodes by query

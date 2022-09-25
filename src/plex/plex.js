@@ -97,8 +97,9 @@ function mapResults(response) {
 }
 
 class Plex {
-  constructor(ip, port = 32400, cache = null) {
+  constructor(ip, token, port = 32400, cache = null) {
     this.plexIP = ip;
+    this.token = token;
     this.plexPort = port;
 
     this.cache = cache || redisCache;
