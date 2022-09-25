@@ -18,4 +18,4 @@ EXPOSE 31459
 
 CMD ["yarn", "start"]
 
-LABEL org.opencontainers.image.source https://github.com/kevinmidboe/seasoned
+LABEL org.opencontainers.image.source https://github.com/kevinmidboe/seasonedShows
