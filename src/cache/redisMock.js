@@ -12,7 +12,7 @@ const redisMockClient = {
     return Promise.resolve(callback(null, "OK"));
   },
   expire(key, TTL) {
-    // console.log(`redis-dummy expire: ${key} with TTL ${TTL}`); // eslint-disable-line no-console
+    console.log(`redis-dummy expire: ${key} with TTL ${TTL}`); // eslint-disable-line no-console
   }
 };
 
