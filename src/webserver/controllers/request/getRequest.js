@@ -12,7 +12,7 @@ function fetchAllRequests(req, res) {
   const { id } = req.params;
   const { type } = req.query;
 
-  request
+  return request
     .getRequestByIdAndType(id, type)
     .then(result => {
       if (!result) {
