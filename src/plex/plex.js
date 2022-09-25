@@ -194,9 +194,12 @@ class Plex {
     return new Promise((resolve, reject) =>
       this.cache
         .get(cacheKey)
-        .catch(() => fetch(url, options)) // else fetch fresh data
-        .then(successfullResponse)
-        .then(results => this.cache.set(cacheKey, results, 21600)) // 6 hours
+        .catch(error => {
+          // else fetch fresh data
+          return fetch(url, options)
+            .then(successfullResponse)
+            .then(results => this.cache.set(cacheKey, results, 21600)); // 6 hours
+        })
         .then(mapResults)
         .then(resolve)
         .catch(error => {
