@@ -19,26 +19,18 @@ function getMagnetFromURL(url) {
 }
 
 async function find(searchterm, callback) {
-  const options = {
-    pythonPath: "../torrent_search/env/bin/python3",
-    scriptPath: "../torrent_search",
-    args: [searchterm, "-s", "jackett", "--print"]
-  };
+  const options = { args: [searchterm, "-s", "jackett", "--print"] };
 
-  PythonShell.run("torrentSearch/search.py", options, callback);
+  PythonShell.run("torrentsearch", options, callback);
   // PythonShell does not support return
 }
 
 async function callPythonAddMagnet(url, callback) {
   getMagnetFromURL(url)
     .then(magnet => {
-      const options = {
-        pythonPath: "../delugeClient/env/bin/python3",
-        scriptPath: "../delugeClient",
-        args: ["add", magnet]
-      };
+      const options = { args: ["add", magnet] };
 
-      PythonShell.run("deluge_cli.py", options, callback);
+      PythonShell.run("delugeClient", options, callback);
     })
     .catch(err => {
       throw new Error(err);
