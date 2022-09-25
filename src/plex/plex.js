@@ -117,7 +117,7 @@ class Plex {
       headers: { Accept: "application/json" }
     };
 
-    return new Promise((resolve, reject) =>
+    return new Promise((resolve, reject) => {
       this.cache
         .get(cacheKey)
         .then(machineInfo => resolve(machineInfo?.machineIdentifier))
@@ -133,8 +133,8 @@ class Plex {
           }
 
           reject(new PlexUnexpectedError());
-        })
-    );
+        });
+    });
   }
 
   async existsInPlex(tmdb) {
@@ -186,18 +186,24 @@ class Plex {
 
     const url = `http://${this.plexIP}:${
       this.plexPort
-    }/hubs/search?query=${fixedEncodeURIComponent(query)}`;
+    }/hubs/search?query=${fixedEncodeURIComponent(query)}&X-Plex-Token=${
+      this.token
+    }`;
+
     const options = {
       timeout: 20000,
       headers: { Accept: "application/json" }
     };
 
-    return new Promise((resolve, reject) =>
+    return new Promise((resolve, reject) => {
       this.cache
         .get(cacheKey)
-        .catch(() => fetch(url, options)) // else fetch fresh data
-        .then(successfullResponse)
-        .then(results => this.cache.set(cacheKey, results, 21600)) // 6 hours
+        .catch(() => {
+          // else fetch fresh data
+          return fetch(url, options)
+            .then(successfullResponse)
+            .then(results => this.cache.set(cacheKey, results, 21600)); // 6 hours
+        })
         .then(mapResults)
         .then(resolve)
         .catch(error => {
@@ -206,8 +212,8 @@ class Plex {
           }
 
           reject(new PlexUnexpectedError());
-        })
-    );
+        });
+    });
   }
 
   // this is not guarenteed to work, but if we see a movie or
@@ -222,7 +228,7 @@ class Plex {
       // TODO improve cache key matching by lowercasing it on the backend.
       // what do we actually need to check for if the key was deleted or not
       // it might be an error or another response code.
-      console.log("Unable to delete, key might not exists");
+      console.log("Unable to delete, key might not exists"); // eslint-disable-line no-console
       return response === 1;
     });
   }
