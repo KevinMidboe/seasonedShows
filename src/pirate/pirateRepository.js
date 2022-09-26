@@ -1,6 +1,6 @@
 import http from "http";
 import { URL } from "url";
-import PythonShell from "python-shell";
+import { spawn } from "child_process";
 
 import establishedDatabase from "../database/database.js";
 import cache from "../cache/redis.js";
@@ -18,8 +18,27 @@ function getMagnetFromURL(url) {
   });
 }
 
+function removeNewLineListItem(list) {
+  return list.filter(el => !el.includes("\n"));
+}
+
 async function find(searchterm, callback) {
-  const options = { args: [searchterm, "-s", "jackett", "--print"] };
+  let data = [];
+  const args = [searchterm, "-s", "jackett", "--print"];
+  const torrentSearch = spawn("torrentsearch", args);
+
+  torrentSearch.stdout.on("data", d => {
+    console.log("got data, appending:", d);
+    data.push(d.toString());
+  });
+
+  torrentSearch.on("exit", () => {
+    data = removeNewLineListItem(data);
+    data = data.join("");
+    console.log("returning to callback:", data);
+
+    callback(null, data);
+  });
 
   PythonShell.run("torrentsearch", options, callback);
   // PythonShell does not support return
@@ -58,7 +77,7 @@ export async function SearchPiratebay(_query) {
           }
 
           if (results) {
-            const jsonData = JSON.parse(results[1], null, "\t");
+            const jsonData = JSON.parse(results, null, "\t");
             cache.set(cacheKey, jsonData);
             resolve(jsonData);
           }
