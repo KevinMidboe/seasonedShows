@@ -40,9 +40,10 @@ import ShowInfoController from "./controllers/show/info.js";
 import PersonCreditsController from "./controllers/person/credits.js";
 import PersonInfoController from "./controllers/person/info.js";
 
-import SeasonedAllController from "./controllers/seasoned/readStrays.js";
-import SeasonedInfoController from "./controllers/seasoned/strayById.js";
-import SeasonedVerifyController from "./controllers/seasoned/verifyStray.js";
+// TODO refactor python-shell dependency or remove stray admin functions
+// import SeasonedAllController from "./controllers/seasoned/readStrays.js";
+// import SeasonedInfoController from "./controllers/seasoned/strayById.js";
+// import SeasonedVerifyController from "./controllers/seasoned/verifyStray.js";
 
 import PlexSearchController from "./controllers/plex/search.js";
 import PlexFetchRequestedController from "./controllers/plex/fetchRequested.js";
@@ -165,9 +166,9 @@ router.get(
 /**
  * Seasoned
  */
-router.get("/v1/seasoned/all", SeasonedAllController);
-router.get("/v1/seasoned/:strayId", SeasonedInfoController);
-router.post("/v1/seasoned/verify/:strayId", SeasonedVerifyController);
+// router.get("/v1/seasoned/all", SeasonedAllController);
+// router.get("/v1/seasoned/:strayId", SeasonedInfoController);
+// router.post("/v1/seasoned/verify/:strayId", SeasonedVerifyController);
 
 router.get("/v2/search/", SearchMultiController);
 router.get("/v2/search/movie", SearchMovieController);

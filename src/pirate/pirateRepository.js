@@ -1,48 +1,121 @@
 import http from "http";
 import { URL } from "url";
-import PythonShell from "python-shell";
+import { spawn } from "child_process";
 
 import establishedDatabase from "../database/database.js";
 import cache from "../cache/redis.js";
 
-function getMagnetFromURL(url) {
-  return new Promise(resolve => {
-    const options = new URL(url);
-    if (options.protocol.includes("magnet")) resolve(url);
+class SearchPackageNotFoundError extends Error {
+  constructor() {
+    const message = "Search is not setup, view logs.";
+    super(message);
 
+    const warningMessage = `Warning! Package 'torrentSearch' not setup! View project README.`;
+    console.log(warningMessage); /* eslint-disable-line no-console */
+  }
+}
+
+class AddMagnetPackageNotFoundError extends Error {
+  constructor() {
+    const message = "Adding magnet is not setup, view logs.";
+    super(message);
+
+    const warningMessage = `Warning! Package 'delugeClient' not setup! View project README.`;
+    console.log(warningMessage); /* eslint-disable-line no-console */
+  }
+}
+
+class InvalidMagnetUrlError extends Error {
+  constructor() {
+    const message = "Invalid magnet url.";
+    super(message);
+  }
+}
+
+class UnexpectedScriptError extends Error {
+  constructor(_package, error = null) {
+    const message = `There was an unexpected error while running package: ${_package}`;
+    super(message);
+    this.error = error;
+
+    // console.log("Unexpected script error:", error);
+  }
+}
+
+function getMagnetFromURL(url) {
+  const options = new URL(url);
+  if (options?.protocol?.includes("magnet")) return Promise.resolve(url);
+
+  return new Promise((resolve, reject) => {
     http.get(options, res => {
-      if (res.statusCode === 301 || res.statusCode === 302) {
-        resolve(res.headers.location);
-      }
+      if (res.statusCode !== 301 && res.statusCode !== 302)
+        reject(new InvalidMagnetUrlError());
+      if (!res?.headers?.location?.includes("magnet"))
+        reject(new InvalidMagnetUrlError());
+
+      return resolve(res.headers.location);
     });
   });
 }
 
-async function find(searchterm, callback) {
-  const options = {
-    pythonPath: "../torrent_search/env/bin/python3",
-    scriptPath: "../torrent_search",
-    args: [searchterm, "-s", "jackett", "--print"]
-  };
-
-  PythonShell.run("torrentSearch/search.py", options, callback);
-  // PythonShell does not support return
+function removeNewLineListItem(list) {
+  return list.map(el => el.replace("\n", "")).filter(el => el.length !== 0);
 }
 
-async function callPythonAddMagnet(url, callback) {
-  getMagnetFromURL(url)
-    .then(magnet => {
-      const options = {
-        pythonPath: "../delugeClient/env/bin/python3",
-        scriptPath: "../delugeClient",
-        args: ["add", magnet]
-      };
+function decodeBufferListToString(bufferList) {
+  let data = bufferList.map(bufferElement => bufferElement.toString());
+  if (data.length === 0) return null;
 
-      PythonShell.run("deluge_cli.py", options, callback);
-    })
-    .catch(err => {
-      throw new Error(err);
-    });
+  data = removeNewLineListItem(data);
+  return data.join("");
+}
+
+function addMagnetScript(magnet, callback) {
+  const data = [];
+  let error = null;
+  const args = ["add", magnet];
+
+  const addMagnet = spawn("delugeclient", args);
+
+  addMagnet.stdout.on("data", bufferedData => data.push(bufferedData));
+  addMagnet.stderr.on("data", bufferedError => {
+    error = bufferedError.toString();
+  });
+
+  addMagnet.on("exit", () => callback(error, decodeBufferListToString(data)));
+  addMagnet.on("error", error => {
+    callback(error);
+  });
+}
+
+function handleAddMagnetScriptError(error) {
+  if (error?.code === "ENOENT") return new AddMagnetPackageNotFoundError();
+
+  return new UnexpectedScriptError("delugeClient", error);
+}
+
+function searchScript(searchterm, callback) {
+  const data = [];
+  let error = null;
+  const args = [searchterm, "-s", "jackett", "--print"];
+
+  const torrentSearch = spawn("torrentsearch", args);
+
+  torrentSearch.stdout.on("data", bufferedData => data.push(bufferedData));
+  torrentSearch.stderr.on("data", bufferedError => {
+    error = bufferedError.toString();
+  });
+
+  torrentSearch.on("exit", () =>
+    callback(error, decodeBufferListToString(data))
+  );
+  torrentSearch.on("error", error => callback(error));
+}
+
+function handleSearchScriptError(error) {
+  if (error?.code === "ENOENT") return new SearchPackageNotFoundError();
+
+  return new UnexpectedScriptError("torrentSearch", error);
 }
 
 export async function SearchPiratebay(_query) {
@@ -53,47 +126,46 @@ export async function SearchPiratebay(_query) {
   }
 
   const cacheKey = `pirate/${query}`;
+  try {
+    const hit = await cache.get(cacheKey);
 
-  return new Promise((resolve, reject) =>
-    cache
-      .get(cacheKey)
-      .then(resolve)
-      .catch(() =>
-        find(query, (err, results) => {
-          if (err) {
-            console.log("THERE WAS A FUCKING ERROR!\n", err); // eslint-disable-line no-console
-            reject(Error("There was a error when searching for torrents"));
-          }
+    if (hit) {
+      return Promise.resolve(hit);
+    }
+  } catch (_) {}
 
-          if (results) {
-            const jsonData = JSON.parse(results[1], null, "\t");
-            cache.set(cacheKey, jsonData);
-            resolve(jsonData);
-          }
-        })
-      )
-  );
+  return new Promise((resolve, reject) => {
+    searchScript(query, (error, results) => {
+      if (error || !results) return reject(handleSearchScriptError(error));
+
+      const jsonData = JSON.parse(results, null, "\t");
+      cache.set(cacheKey, jsonData);
+      return resolve(jsonData);
+    });
+  });
 }
 
-export function AddMagnet(magnet, name, tmdbId) {
-  return new Promise((resolve, reject) =>
-    callPythonAddMagnet(magnet, (err, results) => {
-      if (err) {
-        /* eslint-disable no-console */
-        console.log(err);
-        reject(Error("Enable to add torrent", err));
-      }
-      /* eslint-disable no-console */
-      console.log("result/error:", err, results);
+export async function AddMagnet(magnetUrl, name, tmdbId) {
+  const magnet = await getMagnetFromURL(magnetUrl);
+  const insertRequestedMagnetQuery =
+    "INSERT INTO requested_torrent(magnet, torrent_name, tmdb_id) VALUES (?,?,?)";
 
+  return new Promise((resolve, reject) => {
+    addMagnetScript(magnet, (error, result) => {
+      if (error || !result) return reject(handleAddMagnetScriptError(error));
+
+      const magnetHash = result; // TODO save to database
       const database = establishedDatabase;
-      const insertQuery =
-        "INSERT INTO requested_torrent(magnet,torrent_name,tmdb_id) VALUES (?,?,?)";
-
-      const response = database.run(insertQuery, [magnet, name, tmdbId]);
-      console.log(`Response from requsted_torrent insert: ${response}`);
-
-      resolve({ success: true });
-    })
-  );
+      return database
+        .run(insertRequestedMagnetQuery, [magnet, name, tmdbId])
+        .catch(error => reject(error))
+        .then(() =>
+          resolve({
+            success: true,
+            message: "Successfully added magnet",
+            hash: magnetHash
+          })
+        );
+    });
+  });
 }
