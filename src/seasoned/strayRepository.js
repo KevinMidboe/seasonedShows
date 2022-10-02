@@ -1,5 +1,5 @@
 import assert from "assert";
-import pythonShell from "python-shell";
+// import pythonShell from "python-shell";
 import Stray from "./stray.js";
 import establishedDatabase from "../database/database.js";
 
@@ -48,17 +48,17 @@ class StrayRepository {
     return this.database.get(this.queries.checkVerified, strayId).then(row => {
       assert.notEqual(row, undefined, `Stray '${strayId}' already verified.`);
 
-      const options = {
-        pythonPath: "../app/env/bin/python3",
-        args: [strayId]
-      };
+      // const options = {
+      //   pythonPath: "../app/env/bin/python3",
+      //   args: [strayId]
+      // };
 
-      pythonShell.run("../app/moveSeasoned.py", options, (err, results) => {
-        if (err) throw err;
-        // TODO Add error handling!! StrayRepository.ERROR
-        // results is an array consisting of messages collected during execution
-        console.log("results: %j", results);
-      });
+      // pythonShell.run("../app/moveSeasoned.py", options, (err, results) => {
+      //   if (err) throw err;
+      //   // TODO Add error handling!! StrayRepository.ERROR
+      //   // results is an array consisting of messages collected during execution
+      //   console.log("results: %j", results);
+      // });
 
       return this.database.run(this.queries.verify, strayId);
     });
