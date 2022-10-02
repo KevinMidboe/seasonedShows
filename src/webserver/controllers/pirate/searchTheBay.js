@@ -22,7 +22,10 @@ function updateRequested(req, res) {
       res.send({ success: true, results: result });
     })
     .catch(error => {
-      res.status(401).send({ success: false, message: error.message });
+      res.status(error?.statusCode || 500).send({
+        success: false,
+        message: error?.message || "Unexpected error while searching."
+      });
     });
 }
 

@@ -14,7 +14,12 @@ function addMagnet(req, res) {
   AddMagnet(magnet, name, tmdbId)
     .then(result => res.send(result))
     .catch(error => {
-      res.status(500).send({ success: false, message: error.message });
+      res
+        .status(error?.statusCode || 500)
+        .send({
+          success: false,
+          message: error?.message || "Unexpected error while adding magnet."
+        });
     });
 }
 
