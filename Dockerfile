@@ -1,4 +1,4 @@
-FROM node:18
+FROM node:19-bullseye-slim
 LABEL org.opencontainers.image.source https://github.com/kevinmidboe/seasonedShows
 
 RUN mkdir -p /opt/seasonedShows/src
