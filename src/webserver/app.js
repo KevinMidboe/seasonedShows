@@ -145,24 +145,10 @@ router.post(
 );
 
 router.get(
-  "/v1/user/view_history",
+  "/v1/user/stats/:resource",
+  mustBeAuthenticated,
   mustHaveAccountLinkedToPlex,
-  tautulli.userViewHistoryController
-);
-router.get(
-  "/v1/user/watch_time",
-  mustHaveAccountLinkedToPlex,
-  tautulli.watchTimeStatsController
-);
-router.get(
-  "/v1/user/plays_by_day",
-  mustHaveAccountLinkedToPlex,
-  tautulli.getPlaysByDaysController
-);
-router.get(
-  "/v1/user/plays_by_dayofweek",
-  mustHaveAccountLinkedToPlex,
-  tautulli.getPlaysByDayOfWeekController
+  tautulli.getUserStatsOfType
 );
 
 /**
