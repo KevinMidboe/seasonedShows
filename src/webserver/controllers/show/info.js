@@ -4,10 +4,7 @@ import Configuration from "../../../config/configuration.js";
 
 const configuration = Configuration.getInstance();
 const tmdb = new TMDB(configuration.get("tmdb", "apiKey"));
-const plex = new Plex(
-  configuration.get("plex", "ip"),
-  configuration.get("plex", "token")
-);
+const plex = new Plex(configuration.get("plex", "host"));
 
 /**
  * Controller: Retrieve information for a show

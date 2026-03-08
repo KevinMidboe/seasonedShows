@@ -1,32 +1,8 @@
 import FormData from "form-data";
 import UserRepository from "../../../user/userRepository.js";
+import { PlexAuthenticationError, PlexUnauthorizedError } from "./errors.js";
 
 const userRepository = new UserRepository();
-
-class PlexAuthenticationError extends Error {
-  constructor(errorResponse) {
-    const message =
-      "Unexptected error while authenticating to plex signin api. View error response.";
-    super(message);
-
-    this.errorResponse = errorResponse;
-    this.statusCode = 500;
-    this.success = false;
-    this.source = "plex";
-  }
-}
-
-class PlexUnauthorizedError extends Error {
-  constructor(errorResponse) {
-    const message = "Unauthorized. Please check plex credentials.";
-    super(message);
-
-    this.errorResponse = errorResponse;
-    this.statusCode = 401;
-    this.success = false;
-    this.source = "plex";
-  }
-}
 
 function handleResponse(response) {
   if (!response.ok) {
@@ -61,7 +37,7 @@ function plexAuthenticate(username, password) {
   return fetch(url, options).then(resp => handleResponse(resp));
 }
 
-function link(req, res) {
+async function link(req, res) {
   const user = req.loggedInUser;
   const { username, password } = req.body;
 
@@ -86,7 +62,7 @@ function link(req, res) {
     );
 }
 
-function unlink(req, res) {
+async function unlink(req, res) {
   const username = req.loggedInUser ? req.loggedInUser.username : null;
 
   return userRepository

@@ -1,37 +1,51 @@
-import establishedDatabase from "../../database/database.js";
+import Plex from "../../plex/plex.js";
+import redisCache from "../../cache/redis.js";
+import Configuration from "../../config/configuration.js";
 
-/* eslint-disable consistent-return */
-const mustHaveAccountLinkedToPlex = (req, res, next) => {
-  const database = establishedDatabase;
+const configuration = Configuration.getInstance();
+const plex = new Plex(configuration.get("plex", "host"));
 
-  // TODO use mustByAuthenticated middleware
-  if (!req.loggedInUser) {
-    return res.status(401).send({
+const mustHaveAccountLinkedToPlex = async (req, res, next) => {
+  const plexAuthToken = {
+    cookie: req.cookies?.plex_auth_token || null,
+    header: req.headers.plex_auth || null
+  };
+
+  if (!(plexAuthToken.cookie || plexAuthToken.header)) {
+    return res.status(403).send({
       success: false,
-      message: "You must have your account linked to a plex account."
+      message:
+        "No plex account user id found for your user. Please authenticate your plex account at /user/authenticate."
     });
   }
 
-  database
-    .get(
-      `SELECT plex_userid FROM settings WHERE user_name IS ?`,
-      req.loggedInUser.username
-    )
-    .then(row => {
-      const plexUserId = row?.plex_userid || null;
+  req.plexAuthToken = plexAuthToken.cookie || plexAuthToken.header;
 
-      if (plexUserId === null) {
-        return res.status(403).send({
-          success: false,
-          message:
-            "No plex account user id found for your user. Please authenticate your plex account at /user/authenticate."
-        });
-      }
+  const cacheKey = `plex/u:${req.plexAuthToken}`;
+  const cacheTTL = 10;
 
-      req.loggedInUser.plexUserId = plexUserId;
-      next();
+  try {
+    const hit = await redisCache.get(cacheKey);
+    if (hit) {
+      req.plexUserId = JSON.parse(hit)?.id;
+      return next();
+    }
+  } catch {}
+
+  try {
+    const userData = await plex.fetchPlexUserData(req.plexAuthToken);
+
+    redisCache.set(cacheKey, JSON.stringify(userData), cacheTTL);
+    req.plexUserId = userData.id;
+    return next();
+  } catch (error) {
+    console.log("[PlexController]", error);
+    return res.status(403).send({
+      success: false,
+      message: "invalid plex auth session!",
+      error: error?.message
     });
+  }
 };
-/* eslint-enable consistent-return */
 
 export default mustHaveAccountLinkedToPlex;

@@ -2,25 +2,7 @@ import convertPlexToMovie from "./convertPlexToMovie.js";
 import convertPlexToShow from "./convertPlexToShow.js";
 import convertPlexToEpisode from "./convertPlexToEpisode.js";
 import redisCache from "../cache/redis.js";
-
-class PlexRequestTimeoutError extends Error {
-  constructor() {
-    const message = "Timeout: Plex did not respond.";
-
-    super(message);
-    this.statusCode = 408;
-  }
-}
-
-class PlexUnexpectedError extends Error {
-  constructor(plexError = null) {
-    const message = "Unexpected plex error occured.";
-
-    super(message);
-    this.statusCode = 500;
-    this.plexError = plexError;
-  }
-}
+import { PlexRequestTimeoutError, PlexUnexpectedError } from "./errors.js";
 
 const sanitize = string => string.toLowerCase().replace(/[^\w]/gi, "");
 const matchingTitleAndYear = (plex, tmdb) => {
@@ -97,16 +79,98 @@ function mapResults(response) {
 }
 
 class Plex {
-  constructor(ip, token, port = 32400, cache = null) {
-    this.plexIP = ip;
-    this.token = token;
-    this.plexPort = port;
+  constructor(host, cache = null) {
+    this.host = host;
+    this.appName = "seasoned api";
+    this.clientId = `seasoned-api-${Math.random().toString(36).substring(7)}`;
 
     this.cache = cache || redisCache;
     this.cacheTags = {
       machineInfo: "plex/mi",
-      search: "plex/s"
+      search: "plex/s",
+      userInfo: "plex/u",
+      recentlyAdded: "plex/add"
     };
+  }
+
+  async fetchPlexUserData(authToken) {
+    const url = "https://plex.tv/api/v2/user";
+    const options = {
+      method: "GET",
+      headers: {
+        accept: "application/json",
+        "X-Plex-Product": this.appName,
+        "X-Plex-Client-Identifier": this.clientId,
+        "X-Plex-Token": authToken
+      }
+    };
+
+    return fetch(url, options)
+      .then(resp => {
+        if (!resp.ok) {
+          throw new Error("Failed to fetch Plex user info");
+        }
+
+        return resp.json();
+      })
+      .then(data => {
+        // Convert Unix timestamp to ISO date string if needed
+        let joinedDate = null;
+        if (data.joinedAt) {
+          if (typeof data.joinedAt === "number") {
+            joinedDate = new Date(data.joinedAt * 1000).toISOString();
+          } else {
+            joinedDate = data.joinedAt;
+          }
+        }
+
+        const userData = {
+          id: data.id,
+          uuid: data.uuid,
+          username: data.username || data.title || "Plex User",
+          email: data.email,
+          thumb: data.thumb,
+          joined_at: joinedDate,
+          two_factor_enabled: data.twoFactorEnabled || false,
+          experimental_features: data.experimentalFeatures || false,
+          subscription: {
+            active: data.subscription?.active,
+            plan: data.subscription?.plan,
+            features: data.subscription?.features
+          },
+          profile: {
+            auto_select_audio: data.profile?.autoSelectAudio,
+            default_audio_language: data.profile?.defaultAudioLanguage,
+            default_subtitle_language: data.profile?.defaultSubtitleLanguage
+          },
+          entitlements: data.entitlements || [],
+          roles: data.roles || [],
+          created_at: new Date().toISOString()
+        };
+
+        return userData;
+      });
+  }
+
+  async fetchRecentlyAdded(authToken, libraryId) {
+    const url = `${this.host}/library/sections/${libraryId}/recentlyAdded?X-Plex-Container-Start=0&X-Plex-Container-Size=20`;
+    const options = {
+      headers: {
+        Accept: "application/json",
+        "X-Plex-Token": authToken
+      }
+    };
+
+    return fetch(url, options).then(resp => {
+      if (resp.ok) return resp.json();
+
+      if (resp.status === 401) {
+        throw new Error("invalid plex auth session");
+      } else if (resp.status === 404) {
+        throw new Error("library id not found");
+      }
+      throw new Error("error fetching recetnyl added from pelx library");
+    });
   }
 
   fetchMachineIdentifier() {
@@ -143,6 +207,93 @@ class Plex {
       tmdb.year
     );
     return !!plexMatch;
+  }
+
+  static calculateGenreStats(metadata) {
+    const genreMap = new Map();
+
+    metadata.forEach(item => {
+      if (item.Genre) {
+        item.Genre.forEach(genre => {
+          genreMap.set(genre.tag, (genreMap.get(genre.tag) || 0) + 1);
+        });
+      }
+    });
+
+    return Array.from(genreMap.entries())
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 5)
+      .map(([name, count]) => ({ name, count }));
+  }
+
+  async fetchLibraryStats(authToken) {
+    const urlSections = `${this.host}/library/sections`;
+    const options = {
+      headers: {
+        Accept: "application/json",
+        "X-Plex-Token": authToken
+      }
+    };
+
+    let libraries = [];
+    try {
+      libraries = await fetch(urlSections, options)
+        .then(resp => resp.json())
+        .then(data => data.MediaContainer.Directory);
+    } catch (error) {
+      throw error;
+    }
+
+    const sections = {};
+    if (libraries?.length < 0) return sections;
+
+    try {
+      await Promise.all(
+        libraries.map(library => {
+          const url = `${this.host}/library/sections/${library?.key}/all`;
+          const options = {
+            headers: {
+              Accept: "application/json",
+              "X-Plex-Token": authToken
+            }
+          };
+
+          return fetch(url, options)
+            .then(resp => resp.json())
+            .then(data => {
+              const { librarySectionID, librarySectionTitle, size, Metadata } =
+                data?.MediaContainer || {};
+              const key = librarySectionTitle?.toLowerCase();
+              const obj = {
+                id: librarySectionID,
+                title: librarySectionTitle,
+                total: size,
+                leafCount: 0,
+                childCount: 0,
+                duration: 0,
+                genres: []
+              };
+
+              const genres = Plex.calculateGenreStats(Metadata);
+              if (genres && genres?.length > 0) obj.genres = genres;
+
+              Metadata.forEach(item => {
+                if (item?.leafCount) obj.leafCount += item.leafCount;
+                if (item?.childCount) obj.childCount += item.childCount;
+                if (item.duration && item?.leafCount) {
+                  obj.duration += item.duration * item.leafCount;
+                } else if (item?.duration) obj.duration += item.duration;
+              });
+
+              sections[key] = obj;
+            });
+        })
+      );
+
+      return sections || [];
+    } catch (error) {
+      console.log("ASDFASDF", error);
+    }
   }
 
   findPlexItemByTitleAndYear(title, year) {

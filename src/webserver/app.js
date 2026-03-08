@@ -56,6 +56,8 @@ import PlexSearchRequestController from "./controllers/plex/searchRequest.js";
 import PlexPlayingController from "./controllers/plex/plexPlaying.js";
 import PlexSearchMediaController from "./controllers/plex/searchMedia.js";
 import PlexUpdateRequestedController from "./controllers/plex/updateRequested.js";
+import plexRecentlyAdded from "./controllers/plex/recentlyAdded.js";
+import plexLibrary from "./controllers/plex/library.js";
 
 import RequestFetchAllController from "./controllers/request/fetchAllRequests.js";
 import RequestInfoController from "./controllers/request/getRequest.js";
@@ -132,12 +134,12 @@ router.get(
 router.get("/v1/user/requests", mustBeAuthenticated, UserRequestsController);
 
 router.post(
-  "/v1/user/link_plex",
+  "/v1/user/plex/link",
   mustBeAuthenticated,
   AuthenticatePlexAccountController.link
 );
 router.post(
-  "/v1/user/unlink_plex",
+  "/v1/user/plex/unlink",
   mustBeAuthenticated,
   AuthenticatePlexAccountController.unlink
 );
@@ -195,6 +197,18 @@ router.get("/v2/person/:id", PersonInfoController);
  * Plex
  */
 router.get("/v2/plex/search", PlexSearchController);
+router.get(
+  "/v2/plex/library",
+  mustBeAuthenticated,
+  mustHaveAccountLinkedToPlex,
+  plexLibrary
+);
+router.get(
+  "/v2/plex/recently_added/:library",
+  mustBeAuthenticated,
+  mustHaveAccountLinkedToPlex,
+  plexRecentlyAdded
+);
 
 /**
  * List

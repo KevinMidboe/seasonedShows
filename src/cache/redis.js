@@ -49,13 +49,18 @@ function set(key, value, TTL = 10800) {
 
 function get(key) {
   return new Promise((resolve, reject) => {
-    client.get(key, (error, reply) => {
-      if (reply === null) {
-        return reject();
-      }
+    try {
+      client.get(key, (error, reply) => {
+        if (reply === null) {
+          return reject();
+        }
 
-      return resolve(JSON.parse(reply));
-    });
+        return resolve(JSON.parse(reply));
+      });
+    } catch (error) {
+      console.log("redis get error:", error);
+      reject(error);
+    }
   });
 }
 

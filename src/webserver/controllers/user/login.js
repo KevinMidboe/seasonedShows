@@ -15,9 +15,10 @@ const userRepository = new UserRepository();
 const isProduction = process.env.NODE_ENV === "production";
 const cookieOptions = {
   httpOnly: false,
+  domain: "",
   secure: isProduction,
   maxAge: 90 * 24 * 3600000, // 90 days
-  sameSite: isProduction ? "Strict" : "Lax"
+  sameSite: "Strict"
 };
 
 /**
@@ -45,6 +46,8 @@ async function loginController(req, res) {
     }
 
     const token = new Token(user, isAdmin === 1, settings).toString(secret);
+    const { origin } = req.headers;
+    cookieOptions.domain = new URL(origin)?.domain ?? cookieOptions.domain;
 
     return res.cookie("authorization", token, cookieOptions).status(200).send({
       success: true,

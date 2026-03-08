@@ -4,10 +4,7 @@ import establishedDatabase from "../database/database.js";
 import Configuration from "../config/configuration.js";
 
 const configuration = Configuration.getInstance();
-const plexRepository = new PlexRepository(
-  configuration.get("plex", "ip"),
-  configuration.get("plex", "token")
-);
+const plexRepository = new PlexRepository(configuration.get("plex", "host"));
 const tmdb = new TMDB(configuration.get("tmdb", "apiKey"));
 
 class RequestRepository {
