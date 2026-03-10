@@ -36,7 +36,6 @@ async function plexLibrary(req, res) {
       return res.send(data);
     })
     .catch(error => {
-      console.log("ggg");
       console.log(error);
       res.status(500).send({ success: false, message: error.message });
     });

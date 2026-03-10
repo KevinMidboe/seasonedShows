@@ -1,5 +1,6 @@
 import TMDB from "../../../tmdb/tmdb.js";
 import Plex from "../../../plex/plex.js";
+import redisCache from "../../../cache/redis.js";
 import Configuration from "../../../config/configuration.js";
 
 const configuration = Configuration.getInstance();
@@ -15,13 +16,17 @@ const plex = new Plex(configuration.get("plex", "host"));
 async function movieInfoController(req, res) {
   const movieId = req.params.id;
 
-  let credits = req.query?.credits;
-  let releaseDates = req.query?.release_dates;
-  let checkExistance = req.query?.check_existance;
+  let { credits, release_dates, check_existance } = req.query;
 
   credits = credits?.toLowerCase() === "true";
-  releaseDates = releaseDates?.toLowerCase() === "true";
-  checkExistance = checkExistance?.toLowerCase() === "true";
+  const releaseDates = release_dates?.toLowerCase() === "true";
+  const checkExistance = check_existance?.toLowerCase() === "true";
+
+  const cacheKey = `tmdb/m:${movieId}:${credits}:${releaseDates}:${check_existance}`;
+  try {
+    const hit = await redisCache(cacheKey);
+    if (hit) return res.send(hit);
+  } catch {}
 
   const tmdbQueue = [tmdb.movieInfo(movieId)];
   if (credits) tmdbQueue.push(tmdb.movieCredits(movieId));
@@ -41,6 +46,7 @@ async function movieInfoController(req, res) {
       } catch {}
     }
 
+    redisCache.set(cacheKey, data, 1000);
     return res.send(movie);
   } catch (error) {
     return res.status(error?.statusCode || 500).send({

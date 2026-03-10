@@ -31,7 +31,7 @@ function set(key, value, TTL = 10800) {
   client.set(key, json, (error, reply) => {
     if (reply === "OK") {
       // successfully set value with key, now set TTL for key
-      client.expire(key, TTL, "NX", e => {
+      client.expire(key, TTL, e => {
         if (e)
           // eslint-disable-next-line no-console
           console.error(
