@@ -1,7 +1,7 @@
 import TMDB from "../../../tmdb/tmdb.js";
 import RequestRepository from "../../../request/request.js";
 import Configuration from "../../../config/configuration.js";
-// import sendSMS from "../../../notifications/sms.js";
+import sendSMS from "../../../notifications/sms.js";
 
 const configuration = Configuration.getInstance();
 const tmdb = new TMDB(configuration.get("tmdb", "apiKey"));
@@ -24,7 +24,10 @@ const tmdbShowInfo = id => {
 function requestTmdbIdController(req, res) {
   const { id, type } = req.body;
 
-  const ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
+  const ip =
+    req.headers["cf-connecting-ip"] ||
+    req.headers["x-forwarded-for"] ||
+    req.connection.remoteAddress;
   const userAgent = req.headers["user-agent"];
   const username = req.loggedInUser ? req.loggedInUser.username : null;
 
@@ -54,9 +57,9 @@ function requestTmdbIdController(req, res) {
       request.requestFromTmdb(tmdbMedia, ip, userAgent, username);
 
       // TODO enable SMS
-      // const url = `https://request.movie?${tmdbMedia.type}=${tmdbMedia.id}`;
-      // const message = `${tmdbMedia.title} (${tmdbMedia.year}) requested!\n${url}`;
-      // sendSMS(message);
+      const url = `https://request.movie?${tmdbMedia.type}=${tmdbMedia.id}`;
+      const message = `${tmdbMedia.title} (${tmdbMedia.year}) requested!\n${url}`;
+      sendSMS(message);
     })
     .then(() =>
       res.send({ success: true, message: "Request has been submitted." })

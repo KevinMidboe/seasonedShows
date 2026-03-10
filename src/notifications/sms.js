@@ -11,7 +11,7 @@ class SMSUnexpectedError extends Error {
   }
 }
 
-export default function sendSMS(message) {
+export default async function sendSMS(message) {
   const apiKey = configuration.get("sms", "apikey");
 
   if (!apiKey) {
@@ -28,13 +28,16 @@ export default function sendSMS(message) {
     recipients: [{ msisdn: `47${recipient}` }]
   };
 
-  return new Promise((resolve, reject) => {
-    fetch(`https://gatewayapi.com/rest/mtsms?token=${apiKey}`, {
-      body: JSON.stringify(smsRequestBody),
-      headers: smsRequestHeaders
-    })
-      .then(resp => resp.json())
-      .then(response => resolve(response))
-      .catch(error => reject(new SMSUnexpectedError(error)));
-  });
+  try {
+    const url = `https://gatewayapi.com/rest/mtsms?token=${apiKey}`;
+    const options = {
+      method: "POST",
+      headers: smsRequestHeaders,
+      body: JSON.stringify(smsRequestBody)
+    };
+
+    return fetch(url, options).then(resp => resp.json());
+  } catch (error) {
+    throw new SMSUnexpectedError(error);
+  }
 }
