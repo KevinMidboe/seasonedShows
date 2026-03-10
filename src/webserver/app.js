@@ -33,6 +33,7 @@ import listController from "./controllers/list/listController.js";
 import MovieCreditsController from "./controllers/movie/credits.js";
 import MovieReleaseDatesController from "./controllers/movie/releaseDates.js";
 import MovieInfoController from "./controllers/movie/info.js";
+import DiscoverMovieController from "./controllers/movie/discover.js";
 
 import ShowCreditsController from "./controllers/show/credits.js";
 import ShowInfoController from "./controllers/show/info.js";
@@ -163,6 +164,7 @@ router.get("/v2/search/movie", SearchMovieController);
 router.get("/v2/search/show", SearchShowController);
 router.get("/v2/search/person", SearchPersonController);
 
+router.get("/v2/movie/discover/:id", DiscoverMovieController);
 router.get("/v2/movie/now_playing", listController.nowPlayingMovies);
 router.get("/v2/movie/popular", listController.popularMovies);
 router.get("/v2/movie/top_rated", listController.topRatedMovies);
