@@ -98,10 +98,8 @@ router.use(reqTokenToUser);
 // TODO: Should have a separate middleware/router for handling headers.
 router.use((req, res, next) => {
   // TODO add logging of all incoming
-  // const origin = req.headers.origin;
-  // if (allowedOrigins.indexOf(origin) > -1) {
-  //   res.setHeader("Access-Control-Allow-Origin", origin);
-  // }
+  const { origin } = req.headers;
+  res.setHeader("Access-Control-Allow-Origin", origin ?? "");
 
   res.header(
     "Access-Control-Allow-Headers",
