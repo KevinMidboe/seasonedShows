@@ -9,6 +9,7 @@ import reqTokenToUser from "./middleware/reqTokenToUser.js";
 import mustBeAuthenticated from "./middleware/mustBeAuthenticated.js";
 import mustBeAdmin from "./middleware/mustBeAdmin.js";
 import mustHaveAccountLinkedToPlex from "./middleware/mustHaveAccountLinkedToPlex.js";
+import analyticEvents from "./middleware/analyticsTrackEvent.js";
 
 import tautulli from "./controllers/user/viewHistory.js";
 import {
@@ -70,6 +71,10 @@ import PirateAddController from "./controllers/pirate/addMagnet.js";
 import GitDumpController from "./controllers/git/dumpHook.js";
 import EmojiController from "./controllers/misc/emoji.js";
 
+import Analytics from "../analytics/index.js";
+
+const analytics = new Analytics();
+
 const configuration = Configuration.getInstance();
 // TODO: Have our raven router check if there is a value, if not don't enable raven.
 Raven.config(configuration.get("raven", "DSN")).install();
@@ -78,6 +83,7 @@ const app = express(); // define our app using express
 app.use(Raven.requestHandler());
 app.use(bodyParser.json());
 app.use(cookieParser());
+app.use(analytics.middleware());
 
 const router = express.Router();
 // const allowedOrigins = configuration.get("webserver", "origins");
@@ -122,7 +128,7 @@ router.get("/", (req, res) => {
  * User
  */
 router.post("/v1/user", UserRegisterController);
-router.post("/v1/user/login", UserLoginController);
+router.post("/v1/user/login", analyticEvents.trackLogin, UserLoginController);
 router.post("/v1/user/logout", UserLogoutController);
 
 router.get("/v1/user/settings", mustBeAuthenticated, getSettingsController);
@@ -216,7 +222,11 @@ router.get("/v1/plex/watch-link", mustBeAuthenticated, PlexWatchLinkController);
 
 router.get("/v2/request", RequestFetchAllController);
 router.get("/v2/request/:id", RequestInfoController);
-router.post("/v2/request", RequestSubmitController);
+router.post(
+  "/v2/request",
+  analyticEvents.trackRequest,
+  RequestSubmitController
+);
 router.get("/v1/plex/requests/all", PlexFetchRequestedController);
 router.put(
   "/v1/plex/request/:requestId",
@@ -228,7 +238,12 @@ router.put(
  * Pirate
  */
 router.get("/v1/pirate/search", mustBeAdmin, PirateSearchController);
-router.post("/v1/pirate/add", mustBeAdmin, PirateAddController);
+router.post(
+  "/v1/pirate/add",
+  mustBeAdmin,
+  analyticEvents.trackMagnet,
+  PirateAddController
+);
 
 /**
  * git
@@ -244,4 +259,13 @@ router.get("/v1/emoji", EmojiController);
 // all of our routes will be prefixed with /api
 app.use("/api", router);
 
+// Metrics route
+app.get("/metrics", async (_, res) => {
+  try {
+    const metrics = await analytics.getMetrics();
+    res.json(metrics);
+  } catch (err) {
+    res.status(500).json({ error: "Failed to fetch metrics" });
+  }
+});
 export default app;
