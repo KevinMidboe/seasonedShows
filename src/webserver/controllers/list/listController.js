@@ -28,43 +28,24 @@ function handleError(listname, error, res) {
 function fetchTmdbList(req, res, listname, type) {
   const { page } = req.query;
 
-  if (type === "movie") {
-    return tmdb
-      .movieList(listname, page)
-      .then(listResponse => res.send(listResponse))
-      .catch(error => handleError(listname, error, res));
-  }
-  if (type === "show") {
-    return tmdb
-      .showList(listname, page)
-      .then(listResponse => res.send(listResponse))
-      .catch(error => handleError(listname, error, res));
-  }
-
-  return handleError(
-    listname,
-    {
-      status: 400,
-      message: `'${type}' is not a valid list type.`
-    },
-    res
-  );
+  return tmdb
+    .list(listname, type, page)
+    .then(listResponse => res.send(listResponse))
+    .catch(error => handleError(listname, error, res));
 }
 
 const nowPlayingMovies = (req, res) =>
-  fetchTmdbList(req, res, "miscNowPlayingMovies", "movie");
-const popularMovies = (req, res) =>
-  fetchTmdbList(req, res, "miscPopularMovies", "movie");
+  fetchTmdbList(req, res, "now_playing", "movie");
+const popularMovies = (req, res) => fetchTmdbList(req, res, "popular", "movie");
 const topRatedMovies = (req, res) =>
-  fetchTmdbList(req, res, "miscTopRatedMovies", "movie");
+  fetchTmdbList(req, res, "top_rated", "movie");
 const upcomingMovies = (req, res) =>
-  fetchTmdbList(req, res, "miscUpcomingMovies", "movie");
+  fetchTmdbList(req, res, "upcoming", "movie");
 const nowPlayingShows = (req, res) =>
-  fetchTmdbList(req, res, "tvOnTheAir", "show");
-const popularShows = (req, res) =>
-  fetchTmdbList(req, res, "miscPopularTvs", "show");
+  fetchTmdbList(req, res, "on_the_air", "show");
+const popularShows = (req, res) => fetchTmdbList(req, res, "popular", "show");
 const topRatedShows = (req, res) =>
-  fetchTmdbList(req, res, "miscTopRatedTvs", "show");
+  fetchTmdbList(req, res, "top_rated", "show");
 
 export default {
   nowPlayingMovies,

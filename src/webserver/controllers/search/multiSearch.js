@@ -13,16 +13,24 @@ const searchHistory = new SearchHistory();
  * @returns {Callback}
  */
 function multiSearchController(req, res) {
-  const { query, page, adult } = req.query;
+  const { query, page, adult, type } = req.query;
   const username = req.loggedInUser ? req.loggedInUser.username : null;
   const includeAdult = adult === "true";
+
+  if (type && type !== "" && !tmdb.validSearchTypes.includes(type)) {
+    return res
+      .status(404)
+      .send({ success: false, message: "Search type invalid." });
+  }
 
   if (username) {
     searchHistory.create(username, query);
   }
 
+  const _type = !type ? "multi" : type;
+
   return tmdb
-    .multiSearch(query, page, includeAdult)
+    .search(query, _type, page, includeAdult)
     .then(multiSearchResults => res.send(multiSearchResults))
     .catch(error => {
       return res.status(error?.statusCode || 500).send({

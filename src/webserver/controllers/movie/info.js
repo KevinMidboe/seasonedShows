@@ -46,7 +46,7 @@ async function movieInfoController(req, res) {
       } catch {}
     }
 
-    redisCache.set(cacheKey, data, 1000);
+    redisCache.set(cacheKey, movie, 1000);
     return res.send(movie);
   } catch (error) {
     return res.status(error?.statusCode || 500).send({

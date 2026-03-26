@@ -74,7 +74,6 @@ class Movie {
   }
 
   static convertFromPlexResponse(response) {
-    // console.log('response', response)
     const { title, year, rating, tagline, summary } = response;
     const _ = undefined;
 
