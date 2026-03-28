@@ -1,92 +1,89 @@
 import fs from "fs";
 import path from "path";
-import sqlite3 from "sqlite3";
+import { DatabaseSync } from "node:sqlite";
 import { fileURLToPath } from "url";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+const toParamsArray = params => {
+  if (params === undefined || params === null) return [];
+  return Array.isArray(params) ? params : [params];
+};
+
 class SqliteDatabase {
   constructor(host) {
     this.host = host;
-    this.connection = new sqlite3.Database(this.host);
-    this.execute("pragma foreign_keys = on;");
+    this.connection = new DatabaseSync(this.host);
+    this.connection.exec("pragma foreign_keys = on;");
     this.schemaDirectory = path.join(__dirname, "schemas");
   }
 
   /**
-   * Connect to the database.
-   * @returns {Promise} succeeds if connection was established
-   */
-  // connect() {
-  //    let database = ;
-  //    this.connection = database;
-  //    return database;
-  // }
-
-  /**
-   * Run a SQL query against the database.
+   * Run a SQL query against the database (INSERT, UPDATE, DELETE).
    * @param {String} sql SQL query
-   * @param {Array} parameters in the SQL query
-   * @returns {Promise}
+   * @param {Array|*} parameters positional parameters for the query
+   * @returns {Promise<{changes: number, lastInsertRowid: number}>}
    */
   run(sql, parameters) {
     return new Promise((resolve, reject) => {
-      this.connection.run(sql, parameters, (error, result) => {
-        if (error) reject(error);
+      try {
+        const result = this.connection.prepare(sql).run(...toParamsArray(parameters));
         resolve(result);
-      });
+      } catch (error) {
+        reject(error);
+      }
     });
   }
 
   /**
-   * Run a SQL query against the database and retrieve all the rows.
+   * Run a SQL query and retrieve all matching rows.
    * @param {String} sql SQL query
-   * @param {Array} parameters in the SQL query
-   * @returns {Promise}
+   * @param {Array|*} parameters positional parameters for the query
+   * @returns {Promise<Array>}
    */
   all(sql, parameters) {
     return new Promise((resolve, reject) => {
-      this.connection.all(sql, parameters, (err, rows) => {
-        if (err) {
-          reject(err);
-        }
+      try {
+        const rows = this.connection.prepare(sql).all(...toParamsArray(parameters));
         resolve(rows);
-      });
+      } catch (error) {
+        reject(error);
+      }
     });
   }
 
   /**
-   * Run a SQL query against the database and retrieve one row.
+   * Run a SQL query and retrieve the first matching row.
    * @param {String} sql SQL query
-   * @param {Array} parameters in the SQL query
-   * @returns {Promise}
+   * @param {Array|*} parameters positional parameters for the query
+   * @returns {Promise<Object|undefined>}
    */
   get(sql, parameters) {
     return new Promise((resolve, reject) => {
-      this.connection.get(sql, parameters, (err, rows) => {
-        if (err) {
-          reject(err);
-        }
-        resolve(rows);
-      });
+      try {
+        const row = this.connection.prepare(sql).get(...toParamsArray(parameters));
+        resolve(row);
+      } catch (error) {
+        reject(error);
+      }
     });
   }
 
   /**
-   * Run a SQL query against the database and retrieve the status.
-   * @param {String} sql SQL query
-   * @returns {Promise}
+   * Execute one or more SQL statements (no parameter binding).
+   * @param {String} sql SQL statements
+   * @returns {Promise<void>}
    */
   execute(sql) {
     return new Promise((resolve, reject) => {
-      this.connection.exec(sql, err => {
-        if (err) {
-          console.log("ERROR: ", err);
-          reject(err);
-        }
+      try {
+        this.connection.exec(sql);
         resolve();
-      });
+      } catch (error) {
+        console.log("ERROR: ", error);
+        reject(error);
+      }
     });
   }
 
@@ -96,7 +93,7 @@ class SqliteDatabase {
    */
   setUp() {
     const setupSchema = this.readSqlFile("setup.sql");
-    return Promise.resolve(this.execute(setupSchema));
+    return this.execute(setupSchema);
   }
 
   /**
@@ -105,7 +102,7 @@ class SqliteDatabase {
    */
   tearDown() {
     const tearDownSchema = this.readSqlFile("teardown.sql");
-    return Promise.resolve(this.execute(tearDownSchema));
+    return this.execute(tearDownSchema);
   }
 
   /**
@@ -114,8 +111,7 @@ class SqliteDatabase {
    */
   readSqlFile(filename) {
     const schemaPath = path.join(this.schemaDirectory, filename);
-    const schema = fs.readFileSync(schemaPath).toString("utf-8");
-    return schema;
+    return fs.readFileSync(schemaPath).toString("utf-8");
   }
 }
 

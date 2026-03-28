@@ -19,11 +19,11 @@ class RequestRepository {
     this.queries = {
       add: "insert into requests (id,title,year,poster_path,background_path,requested_by,ip,user_agent,type) values(?,?,?,?,?,?,?,?,?)",
       fetchAll:
-        'select * from requests where status == "requested" order by date desc LIMIT 25 OFFSET ?*25-25',
+        "select * from requests where status == 'requested' order by date desc LIMIT 25 OFFSET ?*25-25",
       fetchAllFilteredStatus:
         "select * from requests where status = ? order by date desc LIMIT 25 offset ?*25-25",
       totalRequests:
-        'select count(*) as totalRequests from requests where status == "requested"',
+        "select count(*) as totalRequests from requests where status == 'requested'",
       totalRequestsFilteredStatus:
         "select count(*) as totalRequests from requests where status = ?",
       // fetchAllSort: `select id, type from request order by ? ?`,
