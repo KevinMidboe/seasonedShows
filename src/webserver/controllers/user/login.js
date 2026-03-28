@@ -46,8 +46,24 @@ async function loginController(req, res) {
     }
 
     const token = new Token(user, isAdmin === 1, settings).toString(secret);
-    const { origin } = req.headers;
-    cookieOptions.domain = new URL(origin)?.domain ?? cookieOptions.domain;
+    try {
+      const { origin } = req.headers;
+
+      // domain
+      const { hostname, protocol } = new URL(origin);
+      if (hostname && !hostname.includes("localhost")) {
+        cookieOptions.domain = hostname ?? cookieOptions.domain;
+      }
+
+      // secure
+      if (
+        hostname.includes("localhost") &&
+        protocol === "http:" &&
+        !isProduction
+      ) {
+        cookieOptions.secure = false;
+      }
+    } catch (e) {}
 
     return res.cookie("authorization", token, cookieOptions).status(200).send({
       success: true,
