@@ -24,7 +24,7 @@
     "body-parser": "~1.19.2",
     "cookie-parser": "^1.4.6",
     "express": "~4.17.3",
-    "form-data": "^2.5.1",
+    "form-data": "^2.5.5",
     "jsonwebtoken": "^8.5.1",
     "raven": "^2.4.2",
     "redis": "^3.0.2"
